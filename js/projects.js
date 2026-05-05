@@ -16,6 +16,7 @@
     return base;
   }
 
+  /** Grid cards only; openModal never applies this (popup uses solid --surface). */
   function cardBackgroundStyle(p) {
     const file = safeBackgroundFilename(p.backgroundImage);
     if (!file) return '';
