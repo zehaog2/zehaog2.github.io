@@ -213,12 +213,25 @@
 
   .card:hover::before { opacity: 1; }
 
-  .card-index {
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    margin-bottom: 20px;
-    font-family: 'DM Mono', monospace;
+  .card.card-with-bg {
+    background-image: linear-gradient(
+      165deg,
+      rgba(35, 46, 41, 0.85) 0%,
+      rgba(39, 50, 46, 0.92) 100%
+    ), var(--card-bg-image);
+    background-size: cover, cover;
+    background-position: center, center;
+    background-repeat: no-repeat;
+  }
+
+  .card.card-with-bg .card-title,
+  .card.card-with-bg .card-desc {
+    text-shadow: 0 1px 14px rgba(0, 0, 0, 0.45);
+  }
+
+  .card.card-with-bg .tag {
+    background: rgba(15, 22, 18, 0.45);
+    border-color: rgba(255, 255, 255, 0.14);
   }
 
   .card-title {
@@ -391,6 +404,15 @@
     font-size: 13px;
     line-height: 1.8;
     color: #c9c2b4;
+  }
+
+  .modal-under-construction {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(18px, 2.5vw, 24px);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    margin-bottom: 12px;
   }
 
   /* Metrics row */

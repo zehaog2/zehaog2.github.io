@@ -1,0 +1,17 @@
+{
+  "id": "lobster",
+  "cardTitle": "Lobster Survival",
+  "cardDesc": "Modeling and analysis of lobster population dynamics and environmental stressors.",
+  "cardTags": ["Ecology", "Modeling", "WIP"],
+  "label": "Lobster Survival",
+  "title": "Lobster Survival",
+  "period": "In development",
+  "overview": "",
+  "metrics": [],
+  "details": [],
+  "tags": [],
+  "images": 0,
+  "github": "https://github.com/zehaog2",
+  "published": false,
+  "backgroundImage": "lobster.jpg"
+}
