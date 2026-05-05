@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Henry Guo — Data Scientist</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --border: #1e1e2e;
+    --accent: #7efff5;
+    --accent2: #ff6b6b;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --card-bg: #13131c;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Subtle grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(126,255,245,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(126,255,245,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Glow blob */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -200px;
+    left: -200px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(126,255,245,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 80px 32px 120px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    margin-bottom: 80px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-label::before {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(42px, 7vw, 76px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+
+  h1 span {
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 480px;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+  }
+
+  .hero-links {
+    margin-top: 28px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .hero-links a {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 3px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .hero-links a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .section-header span {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .section-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── PROJECT GRID ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px;
+    cursor: pointer;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(126,255,245,0.04) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .card:hover {
+    border-color: rgba(126,255,245,0.35);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(126,255,245,0.1);
+  }
+
+  .card:hover::before { opacity: 1; }
+
+  .card-index {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.25;
+    color: var(--text);
+  }
+
+  .card-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .card-arrow {
+    position: absolute;
+    bottom: 28px;
+    right: 28px;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 12px;
+    transition: border-color 0.25s, color 0.25s, transform 0.25s;
+  }
+
+  .card:hover .card-arrow {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translate(2px, -2px);
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5,5,10,0.85);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 720px;
+    max-height: 85vh;
+    overflow-y: auto;
+    transform: translateY(20px) scale(0.98);
+    transition: transform 0.3s;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .modal-overlay.active .modal {
+    transform: translateY(0) scale(1);
+  }
+
+  .modal-header {
+    padding: 32px 32px 0;
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    z-index: 2;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    color: var(--muted);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .modal-close:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  .modal-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .modal-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(22px, 3.5vw, 32px);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  .modal-period {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .modal-body {
+    padding: 28px 32px 32px;
+  }
+
+  .modal-section {
+    margin-bottom: 28px;
+  }
+
+  .modal-section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .modal-section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .modal-overview {
+    font-size: 13px;
+    line-height: 1.8;
+    color: #b0b0c0;
+  }
+
+  /* Metrics row */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+  }
+
+  .metric {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+  }
+
+  .metric-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .metric-label {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
+  /* Image placeholder */
+  .img-placeholder {
+    width: 100%;
+    aspect-ratio: 16/7;
+    background: var(--bg);
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .img-placeholder svg { opacity: 0.3; }
+
+  .img-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .img-grid .img-placeholder { aspect-ratio: 4/3; }
+
+  /* Bullet list */
+  .detail-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .detail-list li {
+    font-size: 12px;
+    color: #9090a8;
+    line-height: 1.7;
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .detail-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 10px;
+    top: 2px;
+  }
+
+  /* Tags in modal */
+  .modal-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+
+  .modal-tag {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 3px;
+    border: 1px solid rgba(126,255,245,0.2);
+    color: var(--accent);
+    text-transform: uppercase;
+    background: rgba(126,255,245,0.04);
+  }
+
+  .github-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px 18px;
+    transition: border-color 0.2s, color 0.2s;
+    margin-top: 8px;
+  }
+
+  .github-link:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-label">Data Scientist</p>
+    <h1>Zehao<br><span>Henry</span> Guo</h1>
+    <p class="hero-sub">MS Data Science @ Northeastern. Building end-to-end data pipelines, ML models, and analytics systems.</p>
+    <div class="hero-links">
+      <a href="https://www.linkedin.com/in/henryguo518" target="_blank">LinkedIn</a>
+      <a href="https://github.com/zehaog2" target="_blank">GitHub</a>
+      <a href="mailto:guo.zeh@northeastern.edu">Email</a>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <div class="section-header">
+    <span>Selected Projects</span>
+  </div>
+
+  <div class="projects-grid">
+
+    <!-- Card 1 -->
+    <div class="card" onclick="openModal('met')">
+      <div class="card-index">01 / 03</div>
+      <div class="card-title">Real-Time Meteorological Forecasting</div>
+      <div class="card-desc">Probabilistic temperature forecasting across 100+ stations using 21 NWP ensemble models.</div>
+      <div class="card-tags">
+        <span class="tag">Python</span>
+        <span class="tag">Ensemble ML</span>
+        <span class="tag">Geospatial</span>
+      </div>
+      <div class="card-arrow">↗</div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="card" onclick="openModal('ml')">
+      <div class="card-index">02 / 03</div>
+      <div class="card-title">ML Ensemble for Time Series Classification</div>
+      <div class="card-desc">133-feature XGBoost pipeline for 3-class financial time series classification with temporal validation.</div>
+      <div class="card-tags">
+        <span class="tag">Python</span>
+        <span class="tag">XGBoost</span>
+        <span class="tag">Time Series</span>
+      </div>
+      <div class="card-arrow">↗</div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="card" onclick="openModal('db')">
+      <div class="card-index">03 / 03</div>
+      <div class="card-title">Restaurant Analytics Database</div>
+      <div class="card-desc">Full-stack analytics system: 3NF schema, ETL pipeline loading 179K+ records, and automated KPI reporting.</div>
+      <div class="card-tags">
+        <span class="tag">MySQL</span>
+        <span class="tag">R</span>
+        <span class="tag">ETL</span>
+      </div>
+      <div class="card-arrow">↗</div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ══ MODAL OVERLAY ══ -->
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal-content">
+    <!-- injected by JS -->
+  </div>
+</div>
+
+<script>
+  const projects = {
+    met: {
+      label: "Project 01 — Forecasting",
+      title: "Real-Time Meteorological Forecasting System",
+      period: "Jan 2026 – Present",
+      overview: "A probabilistic temperature forecasting system that ingests output from 21 NWP models across 100+ ASOS/METAR stations. Uses ensemble spread analysis and IQR-based model ranking to outperform NWS and commercial baselines on edge cases like marine-layer and boundary-layer regimes.",
+      metrics: [
+        { value: "21", label: "NWP Models" },
+        { value: "100+", label: "ASOS/METAR Stations" },
+        { value: "12", label: "City Microclimate Models" },
+      ],
+      details: [
+        "Ensemble spread analysis with IQR-based model ranking for dynamic weighting",
+        "12 city-specific microclimate models covering boundary-layer, marine-layer, solar/stability regimes",
+        "Forecast reliability validated via freshness rules, staleness discounting, and geospatial cross-referencing",
+        "Demonstrated superior edge-case accuracy over NWS and commercial baselines"
+      ],
+      tags: ["Python", "Ensemble ML", "Geospatial", "NWP", "METAR/ASOS"],
+      images: 2,
+      github: "https://github.com/zehaog2"
+    },
+    ml: {
+      label: "Project 02 — Machine Learning",
+      title: "ML Ensemble for Time Series Classification",
+      period: "May 2025 – Dec 2025",
+      overview: "End-to-end ML pipeline for classifying financial time series into 3 market regimes. Engineered 133 features from multi-modal data sources including technical indicators, fundamental data, and macroeconomic signals. XGBoost model achieved 67.4% accuracy with strict temporal validation to prevent data leakage.",
+      metrics: [
+        { value: "133", label: "Engineered Features" },
+        { value: "67.4%", label: "3-Class Accuracy" },
+        { value: "3", label: "Data Sources" },
+      ],
+      details: [
+        "Volatility-adjusted classification scheme and momentum/lag indicator engineering",
+        "Multi-modal ingestion: Yahoo Finance and Alpha Vantage APIs for technical, fundamental, macro data",
+        "Strict temporal train/test split to prevent lookahead bias in validation",
+        "Modular pipeline architecture for swappable feature sets and model backends"
+      ],
+      tags: ["Python", "XGBoost", "Scikit-learn", "Time Series", "Feature Engineering"],
+      images: 2,
+      github: "https://github.com/zehaog2"
+    },
+    db: {
+      label: "Project 03 — Data Engineering",
+      title: "Database Design for Restaurant Analytics",
+      period: "Aug 2025 – Nov 2025",
+      overview: "End-to-end analytics system built on a normalized MySQL schema with automated ETL, KPI reporting, and revenue visualization. Designed for correctness and scale: 9+ CHECK constraints, deduplication logic, and $6.9M revenue reconciliation across 179K+ records.",
+      metrics: [
+        { value: "179K+", label: "Records Loaded" },
+        { value: "$6.9M", label: "Revenue Reconciled" },
+        { value: "3NF", label: "Schema Normal Form" },
+      ],
+      details: [
+        "Architected 3NF MySQL schema with full ERD and 9+ CHECK constraints for data integrity",
+        "R ETL pipeline with deduplication, validation, and automated reconciliation workflows",
+        "Automated KPI reporting and YoY revenue visualization in R Markdown",
+        "Stored procedures encapsulating visit inserts with automatic customer/entity creation"
+      ],
+      tags: ["MySQL", "Aiven", "R", "SQLite", "ETL", "R Markdown"],
+      images: 2,
+      github: "https://github.com/zehaog2"
+    }
+  };
+
+  function openModal(id) {
+    const p = projects[id];
+    const overlay = document.getElementById('modal-overlay');
+
+    // Build metrics HTML
+    const metricsHTML = p.metrics.map(m => `
+      <div class="metric">
+        <div class="metric-value">${m.value}</div>
+        <div class="metric-label">${m.label}</div>
+      </div>
+    `).join('');
+
+    // Build placeholder images
+    const imgIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>`;
+    const imgsHTML = `
+      <div class="img-grid">
+        <div class="img-placeholder">${imgIcon}<span>Screenshot / Chart</span></div>
+        <div class="img-placeholder">${imgIcon}<span>Screenshot / Chart</span></div>
+      </div>
+    `;
+
+    // Build detail bullets
+    const detailsHTML = p.details.map(d => `<li>${d}</li>`).join('');
+
+    // Build tags
+    const tagsHTML = p.tags.map(t => `<span class="modal-tag">${t}</span>`).join('');
+
+    document.getElementById('modal-content').innerHTML = `
+      <div class="modal-header">
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <div class="modal-label">${p.label}</div>
+        <div class="modal-title">${p.title}</div>
+        <div class="modal-period">${p.period}</div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section">
+          <div class="modal-section-label">Overview</div>
+          <p class="modal-overview">${p.overview}</p>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-label">Key Results</div>
+          <div class="metrics">${metricsHTML}</div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-label">Visuals</div>
+          ${imgsHTML}
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-label">Technical Highlights</div>
+          <ul class="detail-list">${detailsHTML}</ul>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-label">Stack</div>
+          <div class="modal-tags">${tagsHTML}</div>
+        </div>
+        <a class="github-link" href="${p.github}" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          View on GitHub
+        </a>
+      </div>
+    `;
+
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('modal-overlay')) closeModal();
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
