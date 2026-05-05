@@ -1,0 +1,24 @@
+{
+  "id": "db",
+  "cardTitle": "Restaurant Analytics Database",
+  "cardDesc": "Full-stack analytics system: 3NF schema, ETL pipeline loading 179K+ records, and automated KPI reporting.",
+  "cardTags": ["MySQL", "R", "ETL"],
+  "label": "Data Engineering",
+  "title": "Database Design for Restaurant Analytics",
+  "period": "Aug 2025 – Nov 2025",
+  "overview": "End-to-end analytics system built on a normalized MySQL schema with automated ETL, KPI reporting, and revenue visualization. Designed for correctness and scale: 9+ CHECK constraints, deduplication logic, and $6.9M revenue reconciliation across 179K+ records.",
+  "metrics": [
+    { "value": "179K+", "label": "Records Loaded" },
+    { "value": "$6.9M", "label": "Revenue Reconciled" },
+    { "value": "3NF", "label": "Schema Normal Form" }
+  ],
+  "details": [
+    "Architected 3NF MySQL schema with full ERD and 9+ CHECK constraints for data integrity",
+    "R ETL pipeline with deduplication, validation, and automated reconciliation workflows",
+    "Automated KPI reporting and YoY revenue visualization in R Markdown",
+    "Stored procedures encapsulating visit inserts with automatic customer/entity creation"
+  ],
+  "tags": ["MySQL", "Aiven", "R", "SQLite", "ETL", "R Markdown"],
+  "images": 2,
+  "github": "https://github.com/zehaog2"
+}

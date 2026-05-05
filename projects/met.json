@@ -1,0 +1,24 @@
+{
+  "id": "met",
+  "cardTitle": "Real-Time Meteorological Forecasting",
+  "cardDesc": "Probabilistic temperature forecasting across 100+ stations using 21 NWP ensemble models.",
+  "cardTags": ["Python", "Ensemble ML", "Geospatial"],
+  "label": "Forecasting",
+  "title": "Real-Time Meteorological Forecasting System",
+  "period": "Jan 2026 – Present",
+  "overview": "A probabilistic temperature forecasting system that ingests output from 21 NWP models across 100+ ASOS/METAR stations. Uses ensemble spread analysis and IQR-based model ranking to outperform NWS and commercial baselines on edge cases like marine-layer and boundary-layer regimes.",
+  "metrics": [
+    { "value": "21", "label": "NWP Models" },
+    { "value": "100+", "label": "ASOS/METAR Stations" },
+    { "value": "12", "label": "City Microclimate Models" }
+  ],
+  "details": [
+    "Ensemble spread analysis with IQR-based model ranking for dynamic weighting",
+    "12 city-specific microclimate models covering boundary-layer, marine-layer, solar/stability regimes",
+    "Forecast reliability validated via freshness rules, staleness discounting, and geospatial cross-referencing",
+    "Demonstrated superior edge-case accuracy over NWS and commercial baselines"
+  ],
+  "tags": ["Python", "Ensemble ML", "Geospatial", "NWP", "METAR/ASOS"],
+  "images": 2,
+  "github": "https://github.com/zehaog2"
+}

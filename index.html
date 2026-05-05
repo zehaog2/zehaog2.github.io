@@ -83,15 +83,23 @@
     background: var(--accent);
   }
 
-  h1.hero-title {
+  /* Same Syne treatment as hero name: section heading, cards, modal titles */
+  h1.hero-title,
+  .section-header .section-heading,
+  .card-title,
+  .modal-title {
     font-family: 'Syne', sans-serif;
     font-size: clamp(14px, 2.1vw, 22px);
     font-weight: 600;
     line-height: 1.2;
     letter-spacing: 0.03em;
-    margin-bottom: 18px;
+    color: var(--text);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1.hero-title {
+    margin-bottom: 18px;
   }
 
   .hero-name-mid {
@@ -117,6 +125,17 @@
     max-width: 480px;
     line-height: 1.7;
     letter-spacing: 0.01em;
+  }
+
+  .hero-sub-tagline {
+    display: block;
+    margin-top: 0.35em;
+    font-style: italic;
+    font-family: 'Syne', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   .hero-links {
@@ -149,15 +168,6 @@
     gap: 16px;
     margin-bottom: 32px;
     animation: fadeUp 0.8s 0.2s ease both;
-  }
-
-  .section-header span {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(22px, 3.2vw, 32px);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    text-transform: none;
-    color: var(--text);
   }
 
   .section-header::after {
@@ -212,12 +222,7 @@
   }
 
   .card-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
     margin-bottom: 10px;
-    line-height: 1.25;
-    color: var(--text);
   }
 
   .card-desc {
@@ -347,10 +352,6 @@
   }
 
   .modal-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(22px, 3.5vw, 32px);
-    font-weight: 800;
-    line-height: 1.1;
     margin-bottom: 12px;
   }
 
@@ -533,7 +534,7 @@
   <section class="hero">
     <p class="hero-label">Data Scientist</p>
     <h1 class="hero-title">Zehao <span class="hero-name-mid">(Henry)</span> Guo<span class="hero-name-zh" lang="zh-Hans">郭泽灏</span></h1>
-    <p class="hero-sub">BS Applied Mathematics @ UIUC.<br>MS Data Science @ Northeastern.<br>Building end-to-end data pipelines, ML models, and analytics systems.</p>
+    <p class="hero-sub">BS Applied Mathematics @ UIUC<br>MS Data Science @ Northeastern<br><em class="hero-sub-tagline">I build end-to-end data pipelines, ML models, and analytics systems.</em></p>
     <div class="hero-links">
       <a href="https://www.linkedin.com/in/henryguo518" target="_blank">LinkedIn</a>
       <a href="https://github.com/zehaog2" target="_blank">GitHub</a>
@@ -543,51 +544,10 @@
 
   <!-- PROJECTS -->
   <div class="section-header">
-    <span>Projects</span>
+    <span class="section-heading">Projects</span>
   </div>
 
-  <div class="projects-grid">
-
-    <!-- Card 1 -->
-    <div class="card" onclick="openModal('met')">
-      <div class="card-index">01 / 03</div>
-      <div class="card-title">Real-Time Meteorological Forecasting</div>
-      <div class="card-desc">Probabilistic temperature forecasting across 100+ stations using 21 NWP ensemble models.</div>
-      <div class="card-tags">
-        <span class="tag">Python</span>
-        <span class="tag">Ensemble ML</span>
-        <span class="tag">Geospatial</span>
-      </div>
-      <div class="card-arrow">↗</div>
-    </div>
-
-    <!-- Card 2 -->
-    <div class="card" onclick="openModal('ml')">
-      <div class="card-index">02 / 03</div>
-      <div class="card-title">ML Ensemble for Time Series Classification</div>
-      <div class="card-desc">133-feature XGBoost pipeline for 3-class financial time series classification with temporal validation.</div>
-      <div class="card-tags">
-        <span class="tag">Python</span>
-        <span class="tag">XGBoost</span>
-        <span class="tag">Time Series</span>
-      </div>
-      <div class="card-arrow">↗</div>
-    </div>
-
-    <!-- Card 3 -->
-    <div class="card" onclick="openModal('db')">
-      <div class="card-index">03 / 03</div>
-      <div class="card-title">Restaurant Analytics Database</div>
-      <div class="card-desc">Full-stack analytics system: 3NF schema, ETL pipeline loading 179K+ records, and automated KPI reporting.</div>
-      <div class="card-tags">
-        <span class="tag">MySQL</span>
-        <span class="tag">R</span>
-        <span class="tag">ETL</span>
-      </div>
-      <div class="card-arrow">↗</div>
-    </div>
-
-  </div>
+  <div class="projects-grid"></div>
 </main>
 
 <!-- ══ MODAL OVERLAY ══ -->
@@ -597,146 +557,6 @@
   </div>
 </div>
 
-<script>
-  const projects = {
-    met: {
-      label: "Project 01 — Forecasting",
-      title: "Real-Time Meteorological Forecasting System",
-      period: "Jan 2026 – Present",
-      overview: "A probabilistic temperature forecasting system that ingests output from 21 NWP models across 100+ ASOS/METAR stations. Uses ensemble spread analysis and IQR-based model ranking to outperform NWS and commercial baselines on edge cases like marine-layer and boundary-layer regimes.",
-      metrics: [
-        { value: "21", label: "NWP Models" },
-        { value: "100+", label: "ASOS/METAR Stations" },
-        { value: "12", label: "City Microclimate Models" },
-      ],
-      details: [
-        "Ensemble spread analysis with IQR-based model ranking for dynamic weighting",
-        "12 city-specific microclimate models covering boundary-layer, marine-layer, solar/stability regimes",
-        "Forecast reliability validated via freshness rules, staleness discounting, and geospatial cross-referencing",
-        "Demonstrated superior edge-case accuracy over NWS and commercial baselines"
-      ],
-      tags: ["Python", "Ensemble ML", "Geospatial", "NWP", "METAR/ASOS"],
-      images: 2,
-      github: "https://github.com/zehaog2"
-    },
-    ml: {
-      label: "Project 02 — Machine Learning",
-      title: "ML Ensemble for Time Series Classification",
-      period: "May 2025 – Dec 2025",
-      overview: "End-to-end ML pipeline for classifying financial time series into 3 market regimes. Engineered 133 features from multi-modal data sources including technical indicators, fundamental data, and macroeconomic signals. XGBoost model achieved 67.4% accuracy with strict temporal validation to prevent data leakage.",
-      metrics: [
-        { value: "133", label: "Engineered Features" },
-        { value: "67.4%", label: "3-Class Accuracy" },
-        { value: "3", label: "Data Sources" },
-      ],
-      details: [
-        "Volatility-adjusted classification scheme and momentum/lag indicator engineering",
-        "Multi-modal ingestion: Yahoo Finance and Alpha Vantage APIs for technical, fundamental, macro data",
-        "Strict temporal train/test split to prevent lookahead bias in validation",
-        "Modular pipeline architecture for swappable feature sets and model backends"
-      ],
-      tags: ["Python", "XGBoost", "Scikit-learn", "Time Series", "Feature Engineering"],
-      images: 2,
-      github: "https://github.com/zehaog2"
-    },
-    db: {
-      label: "Project 03 — Data Engineering",
-      title: "Database Design for Restaurant Analytics",
-      period: "Aug 2025 – Nov 2025",
-      overview: "End-to-end analytics system built on a normalized MySQL schema with automated ETL, KPI reporting, and revenue visualization. Designed for correctness and scale: 9+ CHECK constraints, deduplication logic, and $6.9M revenue reconciliation across 179K+ records.",
-      metrics: [
-        { value: "179K+", label: "Records Loaded" },
-        { value: "$6.9M", label: "Revenue Reconciled" },
-        { value: "3NF", label: "Schema Normal Form" },
-      ],
-      details: [
-        "Architected 3NF MySQL schema with full ERD and 9+ CHECK constraints for data integrity",
-        "R ETL pipeline with deduplication, validation, and automated reconciliation workflows",
-        "Automated KPI reporting and YoY revenue visualization in R Markdown",
-        "Stored procedures encapsulating visit inserts with automatic customer/entity creation"
-      ],
-      tags: ["MySQL", "Aiven", "R", "SQLite", "ETL", "R Markdown"],
-      images: 2,
-      github: "https://github.com/zehaog2"
-    }
-  };
-
-  function openModal(id) {
-    const p = projects[id];
-    const overlay = document.getElementById('modal-overlay');
-
-    // Build metrics HTML
-    const metricsHTML = p.metrics.map(m => `
-      <div class="metric">
-        <div class="metric-value">${m.value}</div>
-        <div class="metric-label">${m.label}</div>
-      </div>
-    `).join('');
-
-    // Build placeholder images
-    const imgIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>`;
-    const imgsHTML = `
-      <div class="img-grid">
-        <div class="img-placeholder">${imgIcon}<span>Screenshot / Chart</span></div>
-        <div class="img-placeholder">${imgIcon}<span>Screenshot / Chart</span></div>
-      </div>
-    `;
-
-    // Build detail bullets
-    const detailsHTML = p.details.map(d => `<li>${d}</li>`).join('');
-
-    // Build tags
-    const tagsHTML = p.tags.map(t => `<span class="modal-tag">${t}</span>`).join('');
-
-    document.getElementById('modal-content').innerHTML = `
-      <div class="modal-header">
-        <button class="modal-close" onclick="closeModal()">✕</button>
-        <div class="modal-label">${p.label}</div>
-        <div class="modal-title">${p.title}</div>
-        <div class="modal-period">${p.period}</div>
-      </div>
-      <div class="modal-body">
-        <div class="modal-section">
-          <div class="modal-section-label">Overview</div>
-          <p class="modal-overview">${p.overview}</p>
-        </div>
-        <div class="modal-section">
-          <div class="modal-section-label">Key Results</div>
-          <div class="metrics">${metricsHTML}</div>
-        </div>
-        <div class="modal-section">
-          <div class="modal-section-label">Visuals</div>
-          ${imgsHTML}
-        </div>
-        <div class="modal-section">
-          <div class="modal-section-label">Technical Highlights</div>
-          <ul class="detail-list">${detailsHTML}</ul>
-        </div>
-        <div class="modal-section">
-          <div class="modal-section-label">Stack</div>
-          <div class="modal-tags">${tagsHTML}</div>
-        </div>
-        <a class="github-link" href="${p.github}" target="_blank">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-          View on GitHub
-        </a>
-      </div>
-    `;
-
-    overlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeModal() {
-    document.getElementById('modal-overlay').classList.remove('active');
-    document.body.style.overflow = '';
-  }
-
-  function handleOverlayClick(e) {
-    if (e.target === document.getElementById('modal-overlay')) closeModal();
-  }
-
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-</script>
+<script src="js/projects.js" defer></script>
 </body>
 </html>
