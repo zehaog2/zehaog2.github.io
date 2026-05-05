@@ -30,7 +30,8 @@
     if (!file) return '';
     let path = 'Project_Background/' + encodeURIComponent(file);
     if (assetVersion) path += '?v=' + encodeURIComponent(assetVersion);
-    return `--card-bg-image:url("${path}");`;
+    /* Single-quoted url() so outer HTML style="..." is not broken by nested double quotes */
+    return `--card-bg-image:url('${path}');`;
   }
 
   function cardClass(p) {
