@@ -1,6 +1,14 @@
 (function () {
   let projectsList = [];
 
+  /** Matches `?v=` on `projects.js` so card photos refresh when you bump the script version in index.html */
+  const assetVersion = (function () {
+    const el = document.querySelector('script[src*="projects.js"]');
+    const src = el && el.getAttribute('src');
+    const m = src && src.match(/[?&]v=(\d+)/);
+    return m ? m[1] : '';
+  })();
+
   function escapeHtml(text) {
     if (text == null) return '';
     const d = document.createElement('div');
@@ -20,7 +28,8 @@
   function cardBackgroundStyle(p) {
     const file = safeBackgroundFilename(p.backgroundImage);
     if (!file) return '';
-    const path = 'Project_Background/' + encodeURIComponent(file);
+    let path = 'Project_Background/' + encodeURIComponent(file);
+    if (assetVersion) path += '?v=' + encodeURIComponent(assetVersion);
     return `--card-bg-image:url("${path}");`;
   }
 
@@ -210,8 +219,15 @@
       projectsList = loaded;
       renderProjectCards(grid, projectsList);
     } catch {
+      const fileHelp =
+        location.protocol === 'file:'
+          ? ' Opening this file directly (file://) blocks loading project data in most browsers. From the site folder run a local server, e.g. python3 -m http.server 8000, then open http://localhost:8000'
+          : '';
+      const msg = 'Projects could not be loaded. Try refreshing the page.' + fileHelp;
       grid.innerHTML =
-        '<p class="projects-error" style="color:var(--muted);font-size:13px;grid-column:1/-1;">Projects could not be loaded. Try refreshing the page.</p>';
+        '<p class="projects-error" style="color:var(--muted);font-size:13px;line-height:1.65;grid-column:1/-1;max-width:42em;">' +
+        escapeHtml(msg) +
+        '</p>';
     }
   }
 
