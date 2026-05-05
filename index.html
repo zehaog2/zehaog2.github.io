@@ -183,6 +183,7 @@
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 16px;
     animation: fadeUp 0.8s 0.3s ease both;
+    align-items: stretch;
   }
 
   .card {
@@ -190,10 +191,22 @@
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 28px;
+    padding-bottom: 56px;
     cursor: pointer;
     transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
     position: relative;
     overflow: hidden;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+    min-height: 400px;
+    max-height: 400px;
+  }
+
+  .card > * {
+    position: relative;
+    z-index: 1;
   }
 
   .card::before {
@@ -242,13 +255,19 @@
     font-size: 12px;
     color: var(--muted);
     line-height: 1.7;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .card-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
+    flex-shrink: 0;
+    margin-top: auto;
   }
 
   .tag {
@@ -281,6 +300,14 @@
     border-color: var(--accent);
     color: var(--accent);
     transform: translate(2px, -2px);
+  }
+
+  @media (max-width: 480px) {
+    .card {
+      height: min(400px, 78vh);
+      min-height: min(400px, 78vh);
+      max-height: min(400px, 78vh);
+    }
   }
 
   /* ── MODAL ── */
@@ -579,6 +606,6 @@
   </div>
 </div>
 
-<script src="js/projects.js?v=2" defer></script>
+<script src="js/projects.js?v=3" defer></script>
 </body>
 </html>
