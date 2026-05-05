@@ -40,17 +40,12 @@
     z-index: 0;
   }
 
-  /* Glow blob */
+  /* Soft centered wash — avoids a bright patch in the top-left corner */
   body::after {
     content: '';
     position: fixed;
-    top: -200px;
-    left: -200px;
-    width: 600px;
-    height: 600px;
-    background:
-      radial-gradient(circle at 12% 5%, rgba(90, 135, 115, 0.14) 0%, transparent 55%),
-      radial-gradient(circle at 88% 95%, rgba(65, 95, 80, 0.12) 0%, transparent 50%);
+    inset: 0;
+    background: radial-gradient(ellipse 100% 55% at 50% 0%, rgba(90, 135, 115, 0.06) 0%, transparent 62%);
     pointer-events: none;
     z-index: 0;
   }
@@ -262,13 +257,11 @@
     background: rgba(22, 30, 26, 0.84);
     backdrop-filter: blur(8px);
     z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
+    padding: 0;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s;
+    box-sizing: border-box;
   }
 
   .modal-overlay.active {
@@ -277,14 +270,19 @@
   }
 
   .modal {
+    position: absolute;
+    top: max(12px, env(safe-area-inset-top, 0px));
+    right: max(12px, env(safe-area-inset-right, 0px));
+    bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    left: max(12px, env(safe-area-inset-left, 0px));
+    width: auto;
+    height: auto;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    width: 100%;
-    max-width: 720px;
-    max-height: 85vh;
+    border-radius: clamp(8px, 2vw, 14px);
     overflow-y: auto;
-    transform: translateY(20px) scale(0.98);
+    -webkit-overflow-scrolling: touch;
+    transform: translateY(12px) scale(0.99);
     transition: transform 0.3s;
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
@@ -520,7 +518,7 @@
   <section class="hero">
     <p class="hero-label">Data Scientist</p>
     <h1>Zehao<br><span>Henry</span> Guo</h1>
-    <p class="hero-sub">MS Data Science @ Northeastern. BS Applied Mathematics @ UIUC.<br>Building end-to-end data pipelines, ML models, and analytics systems.</p>
+    <p class="hero-sub">BS Applied Mathematics @ UIUC.<br>MS Data Science @ Northeastern.<br>Building end-to-end data pipelines, ML models, and analytics systems.</p>
     <div class="hero-links">
       <a href="https://www.linkedin.com/in/henryguo518" target="_blank">LinkedIn</a>
       <a href="https://github.com/zehaog2" target="_blank">GitHub</a>
@@ -530,7 +528,7 @@
 
   <!-- PROJECTS -->
   <div class="section-header">
-    <span>project</span>
+    <span>Projects</span>
   </div>
 
   <div class="projects-grid">
