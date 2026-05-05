@@ -8,11 +8,6 @@
     return d.innerHTML;
   }
 
-  function projectLabelLine(index, p) {
-    const n = String(index + 1).padStart(2, '0');
-    return `Project ${n} — ${p.label}`;
-  }
-
   /** Only the filename; strips paths so JSON cannot reference files outside Project_Background */
   function safeBackgroundFilename(name) {
     if (!name || typeof name !== 'string') return null;
@@ -49,7 +44,7 @@
     if (!p) return;
 
     const overlay = document.getElementById('modal-overlay');
-    const labelLine = projectLabelLine(index, p);
+    const labelText = p.label != null && String(p.label).trim() ? String(p.label).trim() : '';
     const isPublished = p.published !== false;
 
     if (!isPublished) {
@@ -69,7 +64,7 @@
       document.getElementById('modal-content').innerHTML = `
       <div class="modal-header">
         <button type="button" class="modal-close" onclick="closeModal()">✕</button>
-        <div class="modal-label">${escapeHtml(labelLine)}</div>
+        ${labelText ? `<div class="modal-label">${escapeHtml(labelText)}</div>` : ''}
         <div class="modal-title">${escapeHtml(p.title)}</div>
         ${periodHtml}
       </div>
@@ -113,7 +108,7 @@
     document.getElementById('modal-content').innerHTML = `
       <div class="modal-header">
         <button type="button" class="modal-close" onclick="closeModal()">✕</button>
-        <div class="modal-label">${escapeHtml(labelLine)}</div>
+        ${labelText ? `<div class="modal-label">${escapeHtml(labelText)}</div>` : ''}
         <div class="modal-title">${escapeHtml(p.title)}</div>
         ${periodFullHtml}
       </div>
@@ -197,13 +192,14 @@
     if (!grid) return;
 
     try {
-      const orderRes = await fetch('projects/order.json');
+      const fetchOpts = { cache: 'no-store' };
+      const orderRes = await fetch('projects/order.json', fetchOpts);
       if (!orderRes.ok) throw new Error('order.json');
       const order = await orderRes.json();
 
       const loaded = await Promise.all(
         order.map((id) =>
-          fetch(`projects/${id}.json`).then((r) => {
+          fetch(`projects/${id}.json`, fetchOpts).then((r) => {
             if (!r.ok) throw new Error(id);
             return r.json();
           })
