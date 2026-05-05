@@ -7,14 +7,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #2a2c24;
-    --surface: #34362c;
-    --border: #4a4d40;
+    --bg: #232e29;
+    --surface: #2c3a34;
+    --border: #3d4e47;
     --accent: #d4af61;
     --accent2: #c24a3d;
-    --text: #f4efe4;
-    --muted: #a89f8c;
-    --card-bg: #303228;
+    --text: #f0ebe2;
+    --muted: #9aa396;
+    --card-bg: #27332e;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,8 +33,8 @@
     position: fixed;
     inset: 0;
     background-image:
-      linear-gradient(rgba(212,175,97,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(212,175,97,0.06) 1px, transparent 1px);
+      linear-gradient(rgba(115, 155, 135, 0.09) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(115, 155, 135, 0.09) 1px, transparent 1px);
     background-size: 60px 60px;
     pointer-events: none;
     z-index: 0;
@@ -49,8 +49,8 @@
     width: 600px;
     height: 600px;
     background:
-      radial-gradient(circle at 12% 5%, rgba(212,175,97,0.12) 0%, transparent 55%),
-      radial-gradient(circle at 88% 95%, rgba(95,115,75,0.1) 0%, transparent 50%);
+      radial-gradient(circle at 12% 5%, rgba(90, 135, 115, 0.14) 0%, transparent 55%),
+      radial-gradient(circle at 88% 95%, rgba(65, 95, 80, 0.12) 0%, transparent 50%);
     pointer-events: none;
     z-index: 0;
   }
@@ -90,11 +90,11 @@
 
   h1 {
     font-family: 'Syne', sans-serif;
-    font-size: clamp(32px, 5vw, 52px);
+    font-size: clamp(24px, 3.6vw, 38px);
     font-weight: 800;
-    line-height: 1.05;
+    line-height: 1.08;
     letter-spacing: -0.02em;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
   }
 
   h1 span {
@@ -142,10 +142,12 @@
   }
 
   .section-header span {
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(22px, 3.2vw, 32px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-transform: none;
+    color: var(--text);
   }
 
   .section-header::after {
@@ -178,15 +180,15 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(212,175,97,0.1) 0%, transparent 58%);
+    background: linear-gradient(135deg, rgba(110, 150, 130, 0.12) 0%, transparent 58%);
     opacity: 0;
     transition: opacity 0.3s;
   }
 
   .card:hover {
-    border-color: rgba(212,175,97,0.45);
+    border-color: rgba(130, 168, 148, 0.5);
     transform: translateY(-3px);
-    box-shadow: 0 14px 36px rgba(20,18,12,0.35), 0 0 0 1px rgba(212,175,97,0.15);
+    box-shadow: 0 14px 36px rgba(12, 22, 18, 0.4), 0 0 0 1px rgba(120, 160, 140, 0.2);
   }
 
   .card:hover::before { opacity: 1; }
@@ -257,7 +259,7 @@
   .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(32,30,24,0.82);
+    background: rgba(22, 30, 26, 0.84);
     backdrop-filter: blur(8px);
     z-index: 100;
     display: flex;
@@ -518,7 +520,7 @@
   <section class="hero">
     <p class="hero-label">Data Scientist</p>
     <h1>Zehao<br><span>Henry</span> Guo</h1>
-    <p class="hero-sub">MS Data Science @ Northeastern. Building end-to-end data pipelines, ML models, and analytics systems.</p>
+    <p class="hero-sub">MS Data Science @ Northeastern. BS Applied Mathematics @ UIUC.<br>Building end-to-end data pipelines, ML models, and analytics systems.</p>
     <div class="hero-links">
       <a href="https://www.linkedin.com/in/henryguo518" target="_blank">LinkedIn</a>
       <a href="https://github.com/zehaog2" target="_blank">GitHub</a>
@@ -528,7 +530,7 @@
 
   <!-- PROJECTS -->
   <div class="section-header">
-    <span>Selected Projects</span>
+    <span>project</span>
   </div>
 
   <div class="projects-grid">
