@@ -21,5 +21,7 @@
   "tags": ["MySQL", "Aiven", "R", "SQLite", "ETL", "R Markdown"],
   "images": 2,
   "github": "https://github.com/zehaog2",
-  "backgroundImage": "db.jpg"
+  "published": false,
+  "backgroundImage": "db.jpg",
+  "popupFile": "db.html"
 }

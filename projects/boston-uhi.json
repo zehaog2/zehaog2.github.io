@@ -1,17 +1,18 @@
 {
   "id": "boston-uhi",
-  "cardTitle": "Boston Urban Heat Island",
+  "cardTitle": "Boston Urban Heat Isand",
   "cardDesc": "Urban heat island characterization and analysis for the Boston metro area.",
   "cardTags": ["Geospatial", "Climate", "WIP"],
   "label": "Urban heat",
-  "title": "Boston Urban Heat Island",
-  "period": "In development",
+  "title": "Boston Urban Heat Isand",
+  "period": "",
   "overview": "",
   "metrics": [],
   "details": [],
   "tags": [],
   "images": 0,
   "github": "https://github.com/zehaog2",
-  "published": false,
-  "backgroundImage": "boston-uhi.jpg"
+  "published": true,
+  "backgroundImage": "boston-uhi.jpg",
+  "popupFile": "boston-uhi.html"
 }

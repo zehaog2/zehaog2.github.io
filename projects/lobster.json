@@ -13,5 +13,6 @@
   "images": 0,
   "github": "https://github.com/zehaog2",
   "published": false,
-  "backgroundImage": "lobster.jpg"
+  "backgroundImage": "lobster.jpg",
+  "popupFile": "lobster.html"
 }

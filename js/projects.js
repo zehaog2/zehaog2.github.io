@@ -50,7 +50,174 @@
     return `<div class="img-grid">${cells}</div>`;
   }
 
-  function openModal(index) {
+  function safePopupFilename(name) {
+    if (!name || typeof name !== 'string') return null;
+    const base = name.replace(/^.*[/\\]/, '').trim();
+    if (!base || base === '.' || base === '..') return null;
+    if (!/\.html$/i.test(base)) return null;
+    return base;
+  }
+
+  function githubLinkHtml(url) {
+    if (!url || typeof url !== 'string' || !/^https?:\/\//i.test(url.trim())) return '';
+    const safeUrl = escapeHtml(url.trim());
+    return `<a class="github-link" href="${safeUrl}" target="_blank" rel="noopener noreferrer">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+      View on GitHub
+    </a>`;
+  }
+
+  function fallbackPopupBody(p) {
+    return `<div class="project-popup-content">
+      <div class="modal-section">
+        <p class="modal-under-construction">Under construction</p>
+        <p class="modal-overview">Case study content will appear here when this project is ready.</p>
+      </div>
+      ${githubLinkHtml(p.github)}
+    </div>`;
+  }
+
+  function initBostonUhiInteractive() {
+    const mapEl = document.getElementById('boston-uhi-map');
+    const controls = document.getElementById('boston-uhi-controls');
+    if (!mapEl || !controls || !window.L) return;
+    if (mapEl.dataset.initialized === 'true') return;
+    mapEl.dataset.initialized = 'true';
+
+    const map = L.map(mapEl, {
+      crs: L.CRS.Simple,
+      zoomControl: true,
+      attributionControl: false,
+      minZoom: -2,
+      maxZoom: 3,
+      dragging: false,
+      keyboard: false,
+      boxZoom: false,
+      touchZoom: true,
+      doubleClickZoom: true,
+      scrollWheelZoom: false,
+    });
+
+    const bounds = [[0, 0], [1000, 1000]];
+    const layerDefs = {
+      'uhi-lst': 'project_popups/assets/boston-uhi/uhi-01-heat-gradient.png',
+      'uhi-land-cover': 'project_popups/assets/boston-uhi/uhi-02-land-cover.png',
+      'uhi-ndvi': 'project_popups/assets/boston-uhi/uhi-03-ndvi.png',
+      'uhi-zone': 'project_popups/assets/boston-uhi/uhi-04-zone-class.png',
+      'uhi-tract': 'project_popups/assets/boston-uhi/uhi-05-tract-heat.png',
+    };
+    const layers = {};
+    Object.keys(layerDefs).forEach((id) => {
+      layers[id] = L.imageOverlay(layerDefs[id], bounds, { opacity: 0.78 });
+    });
+
+    map.fitBounds(bounds);
+    map.setMaxBounds(bounds);
+
+    // Keep the map frame static while zooming toward cursor position.
+    mapEl.addEventListener(
+      'wheel',
+      (e) => {
+        e.preventDefault();
+        const dir = e.deltaY < 0 ? 1 : -1;
+        const nextZoom = Math.max(map.getMinZoom(), Math.min(map.getMaxZoom(), map.getZoom() + dir));
+        map.setZoomAround(map.mouseEventToContainerPoint(e), nextZoom);
+      },
+      { passive: false }
+    );
+
+    const contextCards = Array.from(document.querySelectorAll('#boston-uhi-context .uhi-context-card'));
+    const inputs = Array.from(controls.querySelectorAll('input[type="checkbox"][data-layer]'));
+    const opacityPanel = document.getElementById('boston-uhi-opacity');
+    const sliderRows = opacityPanel
+      ? Array.from(opacityPanel.querySelectorAll('.uhi-opacity-row[data-layer-id]'))
+      : [];
+    const sliders = opacityPanel
+      ? Array.from(opacityPanel.querySelectorAll('input[type="range"][data-opacity-layer]'))
+      : [];
+    function syncContext(layerId, enabled) {
+      const card = contextCards.find((n) => n.dataset.layerId === layerId);
+      if (!card) return;
+      card.classList.toggle('active', enabled);
+    }
+
+    function updateLayerOpacities() {
+      const activeIds = inputs
+        .filter((n) => n.checked)
+        .map((n) => n.dataset.layer)
+        .filter(Boolean);
+      Object.keys(layers).forEach((id) => {
+        const slider = sliders.find((s) => s.dataset.opacityLayer === id);
+        const sliderOpacity = slider ? Number(slider.value) / 100 : 0.9;
+        layers[id].setOpacity(sliderOpacity);
+      });
+      if (activeIds.length >= 1) {
+        const topLayer = layers[activeIds[activeIds.length - 1]];
+        if (topLayer) topLayer.bringToFront();
+      }
+    }
+
+    function syncOpacityRows() {
+      const activeSet = new Set(
+        inputs.filter((n) => n.checked).map((n) => n.dataset.layer).filter(Boolean)
+      );
+      sliderRows.forEach((row) => {
+        row.classList.toggle('active', activeSet.has(row.dataset.layerId));
+      });
+      if (opacityPanel) {
+        opacityPanel.style.display = activeSet.size ? '' : 'none';
+      }
+    }
+
+    inputs.forEach((input) => {
+      const layerId = input.dataset.layer;
+      const layer = layers[layerId];
+      if (!layer) return;
+      if (input.checked) {
+        layer.addTo(map);
+      }
+      syncContext(layerId, input.checked);
+      input.addEventListener('change', () => {
+        const checkedCount = inputs.filter((n) => n.checked).length;
+        if (checkedCount > 2) {
+          input.checked = false;
+          return;
+        }
+        if (input.checked) {
+          layer.addTo(map);
+        } else {
+          map.removeLayer(layer);
+        }
+        syncContext(layerId, input.checked);
+        syncOpacityRows();
+        updateLayerOpacities();
+      });
+    });
+
+    sliders.forEach((slider) => {
+      slider.addEventListener('input', updateLayerOpacities);
+    });
+
+    syncOpacityRows();
+    updateLayerOpacities();
+    setTimeout(() => map.invalidateSize(), 0);
+  }
+
+  async function loadPopupBodyHtml(p) {
+    const popupFile = safePopupFilename(p.popupFile);
+    if (!popupFile) return fallbackPopupBody(p);
+    let path = 'project_popups/' + encodeURIComponent(popupFile);
+    if (assetVersion) path += '?v=' + encodeURIComponent(assetVersion);
+    try {
+      const res = await fetch(path, { cache: 'no-store' });
+      if (!res.ok) return fallbackPopupBody(p);
+      return await res.text();
+    } catch {
+      return fallbackPopupBody(p);
+    }
+  }
+
+  async function openModal(index) {
     const p = projectsList[index];
     if (!p) return;
 
@@ -59,32 +226,15 @@
     const isPublished = p.published !== false;
 
     if (!isPublished) {
-      const periodHtml = p.period
-        ? `<div class="modal-period">${escapeHtml(p.period)}</div>`
-        : '';
-      const gh =
-        p.github &&
-        String(p.github).trim() &&
-        /^https?:\/\//i.test(String(p.github).trim())
-          ? `<a class="github-link" href="${escapeHtml(p.github.trim())}" target="_blank" rel="noopener noreferrer">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-          View on GitHub
-        </a>`
-          : '';
-
       document.getElementById('modal-content').innerHTML = `
       <div class="modal-header">
         <button type="button" class="modal-close" onclick="closeModal()">✕</button>
         ${labelText ? `<div class="modal-label">${escapeHtml(labelText)}</div>` : ''}
         <div class="modal-title">${escapeHtml(p.title)}</div>
-        ${periodHtml}
+        ${p.period ? `<div class="modal-period">${escapeHtml(p.period)}</div>` : ''}
       </div>
       <div class="modal-body">
-        <div class="modal-section">
-          <p class="modal-under-construction">Under construction</p>
-          <p class="modal-overview">Case study content will appear here when this project is ready.</p>
-        </div>
-        ${gh}
+        ${fallbackPopupBody(p)}
       </div>
     `;
 
@@ -93,63 +243,23 @@
       return;
     }
 
-    const metricsHTML = (p.metrics || [])
-      .map(
-        (m) => `
-      <div class="metric">
-        <div class="metric-value">${escapeHtml(m.value)}</div>
-        <div class="metric-label">${escapeHtml(m.label)}</div>
-      </div>
-    `
-      )
-      .join('');
-
-    const imgsHTML = renderImagePlaceholders(p.images);
-    const detailsHTML = (p.details || [])
-      .map((d) => `<li>${escapeHtml(d)}</li>`)
-      .join('');
-    const tagsHTML = (p.tags || [])
-      .map((t) => `<span class="modal-tag">${escapeHtml(t)}</span>`)
-      .join('');
-
-    const periodFullHtml = p.period
-      ? `<div class="modal-period">${escapeHtml(p.period)}</div>`
-      : '';
+    const popupBodyHtml = await loadPopupBodyHtml(p);
 
     document.getElementById('modal-content').innerHTML = `
       <div class="modal-header">
         <button type="button" class="modal-close" onclick="closeModal()">✕</button>
         ${labelText ? `<div class="modal-label">${escapeHtml(labelText)}</div>` : ''}
         <div class="modal-title">${escapeHtml(p.title)}</div>
-        ${periodFullHtml}
+        ${p.period ? `<div class="modal-period">${escapeHtml(p.period)}</div>` : ''}
       </div>
       <div class="modal-body">
-        <div class="modal-section">
-          <div class="modal-section-label">Overview</div>
-          <p class="modal-overview">${escapeHtml(p.overview)}</p>
-        </div>
-        <div class="modal-section">
-          <div class="modal-section-label">Key Results</div>
-          <div class="metrics">${metricsHTML}</div>
-        </div>
-        <div class="modal-section">
-          <div class="modal-section-label">Visuals</div>
-          ${imgsHTML}
-        </div>
-        <div class="modal-section">
-          <div class="modal-section-label">Technical Highlights</div>
-          <ul class="detail-list">${detailsHTML}</ul>
-        </div>
-        <div class="modal-section">
-          <div class="modal-section-label">Stack</div>
-          <div class="modal-tags">${tagsHTML}</div>
-        </div>
-        <a class="github-link" href="${escapeHtml(p.github)}" target="_blank" rel="noopener noreferrer">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-          View on GitHub
-        </a>
+        ${popupBodyHtml}
       </div>
     `;
+
+    if (p.id === 'boston-uhi') {
+      initBostonUhiInteractive();
+    }
 
     overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -167,17 +277,12 @@
   function renderProjectCards(grid, list) {
     grid.innerHTML = list
       .map((p, i) => {
-        const tags = (p.cardTags || [])
-          .map((t) => `<span class="tag">${escapeHtml(t)}</span>`)
-          .join('');
         const bgStyle = cardBackgroundStyle(p);
         const cls = cardClass(p);
         return `<div class="${cls}" data-index="${i}" role="button" tabindex="0" ${
           bgStyle ? `style="${bgStyle}"` : ''
         }>
       <div class="card-title">${escapeHtml(p.cardTitle)}</div>
-      <div class="card-desc">${escapeHtml(p.cardDesc)}</div>
-      <div class="card-tags">${tags}</div>
       <div class="card-arrow">↗</div>
     </div>`;
       })
