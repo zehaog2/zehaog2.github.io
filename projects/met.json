@@ -20,5 +20,6 @@
   ],
   "tags": ["Python", "Ensemble ML", "Geospatial", "NWP", "METAR/ASOS"],
   "images": 2,
-  "github": "https://github.com/zehaog2"
+  "github": "https://github.com/zehaog2",
+  "backgroundImage": "met.jpg"
 }
