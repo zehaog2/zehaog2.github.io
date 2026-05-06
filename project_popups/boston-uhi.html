@@ -1,10 +1,12 @@
-<div class="project-popup-content">
-  <div class="uhi-popup-title">Boston Urban Heat Isand</div>
+<div class="project-popup-content boston-uhi-popup">
+  <div class="uhi-popup-title">Boston Urban Heat Island</div>
 
   <div class="modal-section">
     <div class="modal-section-label">Overview</div>
     <p class="modal-overview">
-      This project quantifies the Boston urban heat island pattern and evaluates whether land-cover composition explains variation in land surface temperature, with a secondary environmental equity lens at the census-tract level.
+      Urban Heat Island (UHI): when developed land surfaces absorb and re-emit solar radiation at a higher rate than natural surfaces, resulting in higher surface temperatures. <br>
+      Land Surface Temperature (LST): the temperature of the earth's surface as measured by a satellite sensor. <br>
+      This project quantifies the Boston UHI pattern and evaluates whether land-cover composition explains variation in land surface temperature, with a secondary environmental equity lens at the census-tract level.
     </p>
   </div>
 
@@ -15,8 +17,8 @@
 
     <div class="uhi-side">
       <div class="uhi-controls" id="boston-uhi-controls">
-        <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-lst" checked> Map 1: Land Surface Temperature</label>
-        <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-land-cover"> Map 2: Land Cover Classification</label>
+        <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-lst"> Map 1: Land Surface Temperature</label>
+        <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-land-cover" checked> Map 2: Land Cover Classification</label>
         <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-ndvi"> Map 3: NDVI Vegetation Index</label>
         <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-zone"> Map 4: Temperature Zone Classification</label>
         <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-tract"> Map 5: Mean LST by Census Tract</label>
@@ -45,11 +47,11 @@
         </div>
       </div>
       <div id="boston-uhi-context">
-        <div class="uhi-context-card active" data-layer-id="uhi-lst">
+        <div class="uhi-context-card" data-layer-id="uhi-lst">
           <div class="uhi-context-title">Map 1: Land Surface Temperature</div>
           <p class="modal-overview">Shows classified surface temperature from the July 19, 2024 Landsat scene. Hottest zones concentrate in the dense urban core, establishing the baseline UHI pattern.</p>
         </div>
-        <div class="uhi-context-card" data-layer-id="uhi-land-cover">
+        <div class="uhi-context-card active" data-layer-id="uhi-land-cover">
           <div class="uhi-context-title">Map 2: Land Cover Classification</div>
           <p class="modal-overview">Displays NLCD classes with developed areas in warm tones and vegetation/water in cooler tones. This supports interpretation that land-cover composition explains thermal variation.</p>
         </div>
@@ -71,60 +73,65 @@
 
   <div class="modal-section">
     <div class="modal-section-label">Key Methods</div>
-    <ul class="detail-list">
-      <li>Landsat thermal conversion to Celsius: (B10 x 0.00341802) + 149.0 - 273.15</li>
-      <li>Zonal Statistics for mean LST by NLCD land-cover class</li>
-      <li>NDVI derivation: (B5 - B4) / (B5 + B4)</li>
-      <li>LST reclassification into Cool (18-28C), Moderate (28-34C), and Hot (34-41C) zones</li>
-      <li>Zonal Statistics for mean LST by census tract</li>
-      <li>CRS harmonization to NAD 1983 UTM Zone 19N</li>
-    </ul>
-  </div>
-
-  <div class="modal-section">
-    <div class="modal-section-label">Key Results</div>
-    <div class="metrics">
-      <div class="metric">
-        <div class="metric-value">40.4C</div>
-        <div class="metric-label">Mean LST (Developed High Intensity)</div>
-      </div>
-      <div class="metric">
-        <div class="metric-value">26.4C</div>
-        <div class="metric-label">Mean LST (Forest Reference Classes)</div>
-      </div>
-      <div class="metric">
-        <div class="metric-value">14C</div>
-        <div class="metric-label">Developed vs Forest Temperature Gap</div>
-      </div>
-      <div class="metric">
-        <div class="metric-value">18.4C</div>
-        <div class="metric-label">Mean LST (Open Water)</div>
-      </div>
-      <div class="metric">
-        <div class="metric-value">216</div>
-        <div class="metric-label">Census Tracts in Income Dataset</div>
-      </div>
+    <div class="uhi-methods-split">
+      <ul class="detail-list uhi-methods-list">
+        <li>Landsat thermal conversion to Celsius: (B10 x 0.00341802) + 149.0 - 273.15</li>
+        <li>Zonal Statistics for mean LST by NLCD land-cover class</li>
+        <li>NDVI derivation: (B5 - B4) / (B5 + B4)</li>
+        <li>LST reclassification into Cool (18-28C), Moderate (28-34C), and Hot (34-41C) zones</li>
+        <li>Zonal Statistics for mean LST by census tract</li>
+        <li>CRS harmonization to NAD 1983 UTM Zone 19N</li>
+      </ul>
+      <aside class="uhi-lc-stats" aria-label="Mean LST by NLCD class">
+        <div class="uhi-lc-stats-title">NLCD class mean LST</div>
+        <p class="uhi-lc-stats-ref">Zonal means from the July 19, 2024 scene; land-cover pattern in <strong>Map 2: Land Cover Classification</strong>.</p>
+        <table class="uhi-lc-table">
+          <thead>
+            <tr>
+              <th scope="col">Land-cover class</th>
+              <th scope="col">Mean LST (°C)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Open water</td>
+              <td>18.4</td>
+            </tr>
+            <tr>
+              <td>Forest (reference classes)</td>
+              <td>26.4</td>
+            </tr>
+            <tr>
+              <td>Developed, high intensity</td>
+              <td>40.4</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="uhi-lc-gap">14C developed vs forest temperature gap</p>
+      </aside>
     </div>
   </div>
 
-  <div class="modal-section">
-    <div class="modal-section-label">Technical Highlights</div>
-    <ul class="detail-list">
-      <li>End-to-end ArcGIS Pro raster and vector workflow from ingestion through thematic outputs</li>
-      <li>Integrated remote sensing, land-cover, and tract-level socioeconomic datasets</li>
-      <li>Dual summarization strategy: class-level and tract-level thermal aggregation</li>
-      <li>Policy-oriented framing through spatially explicit heat-zone interpretation</li>
-      <li>Transparent treatment of methodological limits to protect claim quality</li>
-    </ul>
-  </div>
+  <div class="uhi-bottom-split">
+    <div class="modal-section">
+      <div class="modal-section-label">Technical Highlights</div>
+      <ul class="detail-list">
+        <li>End-to-end ArcGIS Pro raster and vector workflow from ingestion through thematic outputs</li>
+        <li>Integrated remote sensing, land-cover, and tract-level socioeconomic datasets</li>
+        <li>Dual summarization strategy: class-level and tract-level thermal aggregation</li>
+        <li>Policy-oriented framing through spatially explicit heat-zone interpretation</li>
+        <li>Transparent treatment of methodological limits to protect claim quality</li>
+      </ul>
+    </div>
 
-  <div class="modal-section">
-    <div class="modal-section-label">Limitations</div>
-    <ul class="detail-list">
-      <li>Single-date satellite snapshot limits temporal generalization</li>
-      <li>30 m raster resolution smooths micro-scale street heat variation</li>
-      <li>Income join issues constrain fully supported causal equity conclusions</li>
-    </ul>
+    <div class="modal-section">
+      <div class="modal-section-label">Limitations</div>
+      <ul class="detail-list">
+        <li>Single-date satellite snapshot limits temporal generalization</li>
+        <li>30 m raster resolution smooths micro-scale street heat variation</li>
+        <li>Income join issues constrain fully supported causal equity conclusions</li>
+      </ul>
+    </div>
   </div>
 
 </div>

@@ -1,10 +1,218 @@
-<div class="project-popup-content">
+<div class="project-popup-content lobster-popup">
   <div class="modal-section">
-    <p class="modal-under-construction">Under construction</p>
-    <p class="modal-overview">Case study content will appear here when this project is ready.</p>
+    <div class="modal-section-label">Overview</div>
+    <p class="modal-overview">
+      This case study models how water temperature shapes <strong>survival</strong>, <strong>growth</strong>, and <strong>developmental timing</strong> in American lobster (<em>Homarus americanus</em>) larvae from stage I through stage V, using open experimental data from the Gulf of Maine (Boothbay, 2021–2022). Rising temperatures in the Gulf motivate quantifying thermal thresholds and non-linear responses during the most vulnerable early life stages.
+    </p>
+    <p class="modal-overview lobster-credit">
+      co-authored with Palak Tanwar
+    </p>
   </div>
-  <a class="github-link" href="https://github.com/zehaog2" target="_blank" rel="noopener noreferrer">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-    View on GitHub
-  </a>
+
+  <div class="modal-section">
+    <div class="modal-section-label">Key Results</div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-value">88.6%</div>
+        <div class="metric-label">Peak survival at 18°C</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">0.899</div>
+        <div class="metric-label">Best AUC-ROC (RF)</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">74.6%</div>
+        <div class="metric-label">Gini importance: temp</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">Data</div>
+    <p class="modal-overview">
+      Source: Annis, Frederich &amp; Rasher (2025), BCO-DMO dataset 939825 — larvae reared after acclimation at 18°C, then held at treatment temperatures until molt or death; wild-caught stage IV included. Carapace length (ImageJ) and dry weight (60°C, 24h) recorded for survivors where applicable.
+    </p>
+    <p class="modal-overview">
+      <a href="https://www.bco-dmo.org/dataset/939825#data-files" target="_blank" rel="noopener noreferrer">BCO-DMO dataset 939825 (data files)</a>
+      ·
+      <a href="https://doi.org/10.26008/1912/bco-dmo.939825.1" target="_blank" rel="noopener noreferrer">doi:10.26008/1912/bco-dmo.939825.1</a>
+    </p>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">M1 — Survival classification</div>
+    <p class="modal-overview">
+      Binary prediction of molt vs. death from treatment temperature, developmental stage, diet, and rearing condition. Compared logistic regression, random forest, histogram gradient boosting, SVM (RBF), kNN, and decision trees with stratified 5-fold CV and a hold-out test set.
+    </p>
+    <p class="modal-overview lobster-note">
+      <strong>Selected model:</strong> Random Forest — highest AUC-ROC (0.899), strong precision (0.925), and stable cross-validation. Treatment temperature dominated feature importance (~74.6% Gini), with developmental stage second (~16.6%).
+    </p>
+    <div class="lobster-figure-grid">
+      <figure class="lobster-figure">
+        <img src="project_popups/assets/lobster/fig-05.png" alt="Stage by temperature survival heatmap" loading="lazy" width="1200" height="675">
+        <figcaption>Figure 1. Stage × temperature heatmap — vulnerability varies by stage.</figcaption>
+      </figure>
+      <figure class="lobster-figure">
+        <img src="project_popups/assets/lobster/fig-08.png" alt="ROC curves for classifiers" loading="lazy" width="1200" height="675">
+        <figcaption>Figure 2. ROC curves — ensemble methods outperform logistic regression.</figcaption>
+      </figure>
+      <figure class="lobster-figure">
+        <img src="project_popups/assets/lobster/fig-11.png" alt="Random Forest feature importance" loading="lazy" width="1200" height="675">
+        <figcaption>Figure 3. Random Forest feature importance (temperature dominates).</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">M2 — Time to molt (survivors)</div>
+    <p class="modal-overview">
+      Regression on <code>TIME_UNTIL_MOLT</code> for larvae that molted (N=330): linear regression, random forest, gradient boosting, and SVR (RBF). Metrics: RMSE, MAE, R².
+    </p>
+    <table class="lobster-table" aria-label="Time-to-molt regression metrics">
+      <thead>
+        <tr>
+          <th scope="col">Model</th>
+          <th scope="col">RMSE (days)</th>
+          <th scope="col">MAE (days)</th>
+          <th scope="col">R²</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Linear regression</td>
+          <td>13.96</td>
+          <td>8.18</td>
+          <td>0.454</td>
+        </tr>
+        <tr>
+          <td>Random Forest reg.</td>
+          <td>13.35</td>
+          <td>5.68</td>
+          <td>0.501</td>
+        </tr>
+        <tr>
+          <td>Gradient boosting reg.</td>
+          <td>13.30</td>
+          <td>5.67</td>
+          <td>0.504</td>
+        </tr>
+        <tr>
+          <td>SVR (RBF)</td>
+          <td>15.07</td>
+          <td>6.99</td>
+          <td>0.363</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="modal-overview lobster-note">
+      Best-performing regressor: gradient boosting (lowest MAE, highest R² ≈ 0.50). A large share of variance remains unexplained by the four predictors alone — consistent with batch, genetic, or unmeasured lab factors.
+    </p>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">M3 — Survival analysis</div>
+    <p class="modal-overview">
+      Kaplan–Meier curves by treatment temperature with successful molts treated as right-censored (not deaths). Summary rates and median durations by °C below.
+    </p>
+    <table class="lobster-table" aria-label="Survival rates by temperature">
+      <thead>
+        <tr>
+          <th scope="col">°C</th>
+          <th scope="col">N</th>
+          <th scope="col">Survived</th>
+          <th scope="col">Rate</th>
+          <th scope="col">Median duration (days)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>3</td>
+          <td>30</td>
+          <td>3</td>
+          <td>10.0%</td>
+          <td>9</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>143</td>
+          <td>63</td>
+          <td>44.1%</td>
+          <td>30</td>
+        </tr>
+        <tr>
+          <td>18</td>
+          <td>166</td>
+          <td>147</td>
+          <td>88.6%</td>
+          <td>9</td>
+        </tr>
+        <tr>
+          <td>26</td>
+          <td>168</td>
+          <td>117</td>
+          <td>69.6%</td>
+          <td>6</td>
+        </tr>
+        <tr>
+          <td>30</td>
+          <td>36</td>
+          <td>0</td>
+          <td>0.0%</td>
+          <td>1 (to death)</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="modal-overview lobster-note">
+      Dome-shaped thermal response: peak viability at <strong>18°C</strong>; <strong>30°C</strong> uniformly lethal in these trials; cold stress at <strong>3°C</strong> yields very low molting success.
+    </p>
+    <div class="lobster-figure-grid">
+      <figure class="lobster-figure">
+        <img src="project_popups/assets/lobster/fig-14.png" alt="Kaplan-Meier curves by temperature" loading="lazy" width="1200" height="675">
+        <figcaption>Figure 4. Kaplan–Meier survival by treatment temperature (molts censored).</figcaption>
+      </figure>
+      <figure class="lobster-figure">
+        <img src="project_popups/assets/lobster/fig-15.png" alt="Survival rate and duration visualizations" loading="lazy" width="1200" height="675">
+        <figcaption>Figure 5. Survival rate and duration summaries.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">M4 — Thermal thresholds and growth</div>
+    <p class="modal-overview">
+      Dose–response view of survival vs. treatment temperature shows an asymmetric inverted-U peaking near 18°C, with a sharp drop between 26°C and 30°C. Among survivors, temperature and carapace length were weakly and non-significantly associated (Pearson <em>r</em> = 0.053, <em>p</em> = 0.351); one-way ANOVA found no significant temperature effect on carapace length (<em>F</em> = 1.390, <em>p</em> = 0.246) — temperature functions more as a survival gate than a size driver in this dataset.
+    </p>
+    <div class="lobster-figure-grid">
+      <figure class="lobster-figure">
+        <img src="project_popups/assets/lobster/fig-04.png" alt="Carapace length vs dry weight" loading="lazy" width="1200" height="675">
+        <figcaption>Figure 6. Carapace length vs. dry weight (allometric relationship; <em>r</em> ≈ 0.88).</figcaption>
+      </figure>
+      <figure class="lobster-figure">
+        <img src="project_popups/assets/lobster/fig-16.png" alt="Dose-response survival vs temperature" loading="lazy" width="1200" height="675">
+        <figcaption>Figure 7. Dose–response — inverted-U with sharp high-temperature collapse.</figcaption>
+      </figure>
+      <figure class="lobster-figure">
+        <img src="project_popups/assets/lobster/fig-17.png" alt="Growth outcomes by temperature" loading="lazy" width="1200" height="675">
+        <figcaption>Figure 8. Growth outcomes — weak temperature effect on size among survivors.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">Interpretation</div>
+    <ul class="detail-list">
+      <li>Temperature is the primary survival driver.</li>
+      <li>Thermal extremes are asymmetric: acute high-temperature mortality vs. gradual cold stress.</li>
+      <li>Among survivors, carapace length did not differ significantly across temperatures (ANOVA <em>p</em> = 0.246) — temperature acts more as a viability filter than a size optimizer in this dataset.</li>
+    </ul>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">References</div>
+    <ul class="detail-list lobster-refs">
+      <li>Annis, E. R., Frederich, M., &amp; Rasher, D. B. (2025). BCO-DMO dataset. <a href="https://doi.org/10.26008/1912/bco-dmo.939825.1" target="_blank" rel="noopener noreferrer">doi:10.26008/1912/bco-dmo.939825.1</a></li>
+      <li>Annis, E. R., et al. (2025). Laboratory-reared lobster larvae yield inaccurate estimates of thermal tolerance. <em>Global Change Biology</em>. <a href="https://doi.org/10.1111/gcb.70154" target="_blank" rel="noopener noreferrer">doi:10.1111/gcb.70154</a></li>
+      <li>Pershing, A. J., et al. (2015). Gulf of Maine cod and rapid warming. <em>Science</em>. <a href="https://doi.org/10.1126/science.aac9819" target="_blank" rel="noopener noreferrer">doi:10.1126/science.aac9819</a></li>
+    </ul>
+  </div>
 </div>

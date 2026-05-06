@@ -282,6 +282,11 @@
     margin-top: auto;
   }
 
+  .card-tags--footer {
+    margin-top: auto;
+    padding-right: 40px;
+  }
+
   .tag {
     font-size: 10px;
     letter-spacing: 0.08em;
@@ -376,6 +381,22 @@
     border-bottom: 1px solid var(--border);
   }
 
+  .modal-header--minimal {
+    padding-bottom: 16px;
+    min-height: 56px;
+  }
+
+  .modal-header--lobster {
+    position: relative;
+    text-align: center;
+    padding-left: 52px;
+    padding-right: 52px;
+  }
+
+  .modal-header--lobster .modal-title {
+    margin-bottom: 0;
+  }
+
   .modal-close {
     position: absolute;
     top: 24px;
@@ -432,6 +453,251 @@
     font-family: 'Syne', sans-serif;
     font-size: clamp(18px, 2.4vw, 26px);
     margin-bottom: 18px;
+  }
+
+  .uhi-methods-split {
+    display: grid;
+    grid-template-columns: 1fr minmax(220px, 340px);
+    gap: 20px;
+    align-items: start;
+  }
+
+  .uhi-methods-list {
+    margin: 0;
+  }
+
+  .uhi-lc-stats {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    background: rgba(20, 28, 24, 0.5);
+  }
+
+  .uhi-lc-stats-title {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .uhi-lc-stats-ref {
+    font-size: 11px;
+    line-height: 1.65;
+    color: var(--muted);
+    margin: 0 0 12px;
+  }
+
+  .uhi-lc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    color: #c9c2b4;
+  }
+
+  .uhi-lc-table th,
+  .uhi-lc-table td {
+    border-bottom: 1px solid var(--border);
+    padding: 8px 6px;
+    vertical-align: top;
+  }
+
+  .uhi-lc-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .uhi-lc-table th {
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .uhi-lc-table th:last-child,
+  .uhi-lc-table td:last-child {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .uhi-lc-gap {
+    margin: 10px 0 0;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .uhi-bottom-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .boston-uhi-popup .modal-section-label {
+    font-size: 11px;
+  }
+
+  .boston-uhi-popup .modal-overview {
+    font-size: 14px;
+  }
+
+  .boston-uhi-popup .detail-list li {
+    font-size: 13px;
+  }
+
+  .boston-uhi-popup .uhi-toggle {
+    font-size: 12px;
+  }
+
+  .boston-uhi-popup .uhi-context-title {
+    font-size: 12px;
+  }
+
+  .boston-uhi-popup .uhi-opacity-title,
+  .boston-uhi-popup .uhi-opacity-row label,
+  .boston-uhi-popup .uhi-lc-stats-title,
+  .boston-uhi-popup .uhi-lc-table th {
+    font-size: 11px;
+  }
+
+  .boston-uhi-popup .uhi-lc-stats-ref,
+  .boston-uhi-popup .uhi-lc-table,
+  .boston-uhi-popup .uhi-lc-gap {
+    font-size: 13px;
+  }
+
+  .boston-uhi-popup .detail-list li::before {
+    font-size: 11px;
+  }
+
+  /* Lobster larvae case study */
+  .lobster-popup .modal-section-label {
+    font-size: 11px;
+  }
+
+  .lobster-popup .modal-overview {
+    font-size: 15px;
+  }
+
+  .lobster-popup .lobster-credit {
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .lobster-popup .lobster-note {
+    font-size: 14px;
+    margin-top: 10px;
+  }
+
+  .lobster-popup .detail-list li {
+    font-size: 14px;
+  }
+
+  .lobster-popup .detail-list li::before {
+    font-size: 11px;
+    top: 3px;
+  }
+
+  .lobster-popup .metric-value {
+    font-size: 24px;
+  }
+
+  .lobster-popup .metric-label {
+    font-size: 11px;
+  }
+
+  .lobster-popup .lobster-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 8px;
+  }
+
+  .lobster-popup .lobster-table th,
+  .lobster-popup .lobster-table td {
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    text-align: left;
+  }
+
+  .lobster-popup .lobster-table tbody tr:last-child td {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .lobster-popup .lobster-table th {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    font-size: 11px;
+    background: rgba(212, 175, 97, 0.08);
+  }
+
+  .lobster-popup .lobster-table td:not(:first-child) {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lobster-popup .lobster-figure-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .lobster-popup .lobster-figure {
+    margin: 0;
+    min-width: 0;
+  }
+
+  .lobster-popup .lobster-figure img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .lobster-popup .lobster-figure figcaption {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  .lobster-popup code {
+    font-size: 0.9em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border);
+  }
+
+  .lobster-popup .lobster-refs a {
+    color: var(--accent);
+  }
+
+  @media (max-width: 720px) {
+    .uhi-methods-split {
+      grid-template-columns: 1fr;
+    }
+
+    .uhi-bottom-split {
+      grid-template-columns: 1fr;
+    }
+
+    .lobster-popup .lobster-figure-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .lobster-popup .lobster-table {
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
   }
 
   .uhi-map-shell {
@@ -773,6 +1039,6 @@
   crossorigin=""
   defer
 ></script>
-<script src="js/projects.js?v=18" defer></script>
+<script src="js/projects.js?v=24" defer></script>
 </body>
 </html>

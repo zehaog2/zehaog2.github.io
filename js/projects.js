@@ -88,9 +88,9 @@
       crs: L.CRS.Simple,
       zoomControl: true,
       attributionControl: false,
-      minZoom: -2,
+      minZoom: -1,
       maxZoom: 3,
-      dragging: false,
+      dragging: true,
       keyboard: false,
       boxZoom: false,
       touchZoom: true,
@@ -111,7 +111,7 @@
       layers[id] = L.imageOverlay(layerDefs[id], bounds, { opacity: 0.78 });
     });
 
-    map.fitBounds(bounds);
+    map.fitBounds(bounds, { padding: [56, 56], animate: false });
     map.setMaxBounds(bounds);
 
     // Keep the map frame static while zooming toward cursor position.
@@ -224,14 +224,24 @@
     const overlay = document.getElementById('modal-overlay');
     const labelText = p.label != null && String(p.label).trim() ? String(p.label).trim() : '';
     const isPublished = p.published !== false;
-
-    if (!isPublished) {
-      document.getElementById('modal-content').innerHTML = `
-      <div class="modal-header">
-        <button type="button" class="modal-close" onclick="closeModal()">✕</button>
+    const hideModalHeading = p.id === 'boston-uhi';
+    const modalHeaderClass =
+      'modal-header' +
+      (hideModalHeading ? ' modal-header--minimal' : '') +
+      (p.id === 'lobster' ? ' modal-header--lobster' : '');
+    const modalHeadingHtml = hideModalHeading
+      ? ''
+      : `
         ${labelText ? `<div class="modal-label">${escapeHtml(labelText)}</div>` : ''}
         <div class="modal-title">${escapeHtml(p.title)}</div>
         ${p.period ? `<div class="modal-period">${escapeHtml(p.period)}</div>` : ''}
+      `;
+
+    if (!isPublished) {
+      document.getElementById('modal-content').innerHTML = `
+      <div class="${modalHeaderClass}">
+        <button type="button" class="modal-close" onclick="closeModal()">✕</button>
+        ${modalHeadingHtml}
       </div>
       <div class="modal-body">
         ${fallbackPopupBody(p)}
@@ -246,11 +256,9 @@
     const popupBodyHtml = await loadPopupBodyHtml(p);
 
     document.getElementById('modal-content').innerHTML = `
-      <div class="modal-header">
+      <div class="${modalHeaderClass}">
         <button type="button" class="modal-close" onclick="closeModal()">✕</button>
-        ${labelText ? `<div class="modal-label">${escapeHtml(labelText)}</div>` : ''}
-        <div class="modal-title">${escapeHtml(p.title)}</div>
-        ${p.period ? `<div class="modal-period">${escapeHtml(p.period)}</div>` : ''}
+        ${modalHeadingHtml}
       </div>
       <div class="modal-body">
         ${popupBodyHtml}
@@ -279,10 +287,15 @@
       .map((p, i) => {
         const bgStyle = cardBackgroundStyle(p);
         const cls = cardClass(p);
+        const footerRaw = p.cardFooterTag != null ? String(p.cardFooterTag).trim() : '';
+        const footerHtml = footerRaw
+          ? `<div class="card-tags card-tags--footer"><span class="tag">${escapeHtml(footerRaw)}</span></div>`
+          : '';
         return `<div class="${cls}" data-index="${i}" role="button" tabindex="0" ${
           bgStyle ? `style="${bgStyle}"` : ''
         }>
       <div class="card-title">${escapeHtml(p.cardTitle)}</div>
+      ${footerHtml}
       <div class="card-arrow">↗</div>
     </div>`;
       })
