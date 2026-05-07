@@ -2,7 +2,6 @@
   "id": "ml",
   "cardTitle": "ML Ensemble for Time Series Classification",
   "cardDesc": "133-feature XGBoost pipeline for 3-class financial time series classification with temporal validation.",
-  "cardTags": ["Python", "XGBoost", "Time Series"],
   "label": "Machine Learning",
   "title": "ML Ensemble for Time Series Classification",
   "period": "May 2025 – Dec 2025",

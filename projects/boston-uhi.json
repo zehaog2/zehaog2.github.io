@@ -2,7 +2,6 @@
   "id": "boston-uhi",
   "cardTitle": "Boston Urban Heat Island",
   "cardDesc": "Urban heat island characterization and analysis for the Boston metro area.",
-  "cardTags": ["Geospatial", "Climate", "WIP"],
   "cardFooterTag": "ArcGIS Pro",
   "label": "Urban heat",
   "title": "Boston Urban Heat Island",

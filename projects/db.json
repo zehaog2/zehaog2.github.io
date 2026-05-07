@@ -1,8 +1,8 @@
 {
   "id": "db",
-  "cardTitle": "Restaurant Analytics Database",
+  "cardTitle": "Restaurant Databases",
   "cardDesc": "Architecture-first data engineering project: 3NF schema, ETL quality controls, validation framework, and automated reporting pipeline.",
-  "cardTags": ["MySQL", "R", "ETL"],
+  "cardFooterTag": "SQL · R",
   "label": "",
   "title": "Database Design for Restaurant Analytics",
   "period": "",

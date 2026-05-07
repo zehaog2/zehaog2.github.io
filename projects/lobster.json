@@ -2,7 +2,6 @@
   "id": "lobster",
   "cardTitle": "Lobster Survival",
   "cardDesc": "Classification, regression, and Kaplan–Meier analysis of American lobster larval survival under Gulf of Maine thermal experiments (BCO-DMO).",
-  "cardTags": ["Python", "Ecology", "Survival analysis"],
   "cardFooterTag": "Python · scikit-learn",
   "title": "Lobster Larvae Survival",
   "period": "",

@@ -2,7 +2,6 @@
   "id": "met",
   "cardTitle": "Real-Time Meteorological Forecasting",
   "cardDesc": "Probabilistic temperature forecasting across 100+ stations using 21 NWP ensemble models.",
-  "cardTags": ["Python", "Ensemble ML", "Geospatial"],
   "label": "Forecasting",
   "title": "Real-Time Meteorological Forecasting System",
   "period": "Jan 2026 – Present",
