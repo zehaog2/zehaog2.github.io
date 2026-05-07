@@ -21,6 +21,12 @@
     --text: #f0ebe2;
     --muted: #9aa396;
     --card-bg: #27332e;
+    /* Between 110% and 125% browser zoom; scales px layout and type together */
+    --page-scale: 1.175;
+  }
+
+  html {
+    zoom: var(--page-scale);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -394,6 +400,17 @@
   }
 
   .modal-header--lobster .modal-title {
+    margin-bottom: 0;
+  }
+
+  .modal-header--db {
+    position: relative;
+    text-align: center;
+    padding-left: 52px;
+    padding-right: 52px;
+  }
+
+  .modal-header--db .modal-title {
     margin-bottom: 0;
   }
 
@@ -954,6 +971,201 @@
     top: 2px;
   }
 
+  /* Restaurant DB architecture visualization */
+  .db-popup .arch-lanes {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  .db-popup .arch-erd-grid {
+    display: grid;
+    grid-template-columns: 1.45fr 1.1fr;
+    gap: 18px;
+    align-items: start;
+  }
+
+  .db-popup .arch-step {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: rgba(20, 28, 24, 0.55);
+    padding: 10px 12px;
+    min-height: 88px;
+  }
+
+  .db-popup .arch-step-title {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  .db-popup .arch-step-desc {
+    font-size: 12px;
+    color: #c9c2b4;
+    line-height: 1.55;
+  }
+
+  .db-popup .arch-lane-col {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+  }
+
+  .db-popup .arch-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: var(--muted);
+    min-height: 20px;
+    letter-spacing: 0.04em;
+  }
+
+  .db-popup .arch-arrow {
+    font-size: 18px;
+    color: var(--muted);
+    line-height: 1;
+    text-align: center;
+  }
+
+  .db-popup .erd-figure {
+    margin: 0 auto;
+    max-width: 520px;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #f2f3ef;
+  }
+
+  .db-popup .erd-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: #f2f3ef;
+  }
+
+  .db-popup .sample-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+  }
+
+  .db-popup .sample-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: rgba(20, 28, 24, 0.55);
+    padding: 10px;
+    min-width: 0;
+  }
+
+  .db-popup .sample-title {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .db-popup .sample-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .db-popup .sample-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    color: #c9c2b4;
+  }
+
+  .db-popup .sample-table th,
+  .db-popup .sample-table td {
+    border-bottom: 1px solid var(--border);
+    padding: 6px 5px;
+    text-align: left;
+    vertical-align: top;
+    white-space: nowrap;
+  }
+
+  .db-popup .sample-table th {
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .db-popup .sample-placeholder {
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    padding: 14px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted);
+    background: rgba(0, 0, 0, 0.14);
+  }
+
+  .db-popup .figure-shell {
+    margin-top: 10px;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    min-height: 170px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.12);
+  }
+
+  .db-popup .sample-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .db-popup .sample-image--table1 {
+    min-height: 360px;
+    object-fit: contain;
+    background: #f2f3ef;
+  }
+
+  .db-popup .sample-image-stack {
+    display: grid;
+    gap: 8px;
+  }
+
+  @media (max-width: 860px) {
+    .db-popup .arch-erd-grid {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .db-popup .arch-lanes {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .db-popup .sample-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .db-popup .arch-connector {
+      min-height: 0;
+    }
+  }
+
   /* Tags in modal */
   .modal-tags {
     display: flex;
@@ -1039,6 +1251,6 @@
   crossorigin=""
   defer
 ></script>
-<script src="js/projects.js?v=24" defer></script>
+<script src="js/projects.js?v=25" defer></script>
 </body>
 </html>

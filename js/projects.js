@@ -68,11 +68,39 @@
   }
 
   function fallbackPopupBody(p) {
+    const overview =
+      p && p.overview != null && String(p.overview).trim()
+        ? `<p class="modal-overview">${escapeHtml(String(p.overview).trim())}</p>`
+        : '<p class="modal-overview">Project details are temporarily unavailable.</p>';
+    const details =
+      p && Array.isArray(p.details) && p.details.length
+        ? `<ul class="detail-list">${p.details
+            .filter((d) => d != null && String(d).trim())
+            .map((d) => `<li>${escapeHtml(String(d).trim())}</li>`)
+            .join('')}</ul>`
+        : '';
+    const tags =
+      p && Array.isArray(p.tags) && p.tags.length
+        ? `<div class="modal-tags">${p.tags
+            .filter((t) => t != null && String(t).trim())
+            .map((t) => `<span class="modal-tag">${escapeHtml(String(t).trim())}</span>`)
+            .join('')}</div>`
+        : '';
     return `<div class="project-popup-content">
       <div class="modal-section">
-        <p class="modal-under-construction">Under construction</p>
-        <p class="modal-overview">Case study content will appear here when this project is ready.</p>
+        <div class="modal-section-label">Overview</div>
+        ${overview}
       </div>
+      ${
+        details
+          ? `<div class="modal-section"><div class="modal-section-label">Highlights</div>${details}</div>`
+          : ''
+      }
+      ${
+        tags
+          ? `<div class="modal-section"><div class="modal-section-label">Stack</div>${tags}</div>`
+          : ''
+      }
       ${githubLinkHtml(p.github)}
     </div>`;
   }
@@ -228,7 +256,8 @@
     const modalHeaderClass =
       'modal-header' +
       (hideModalHeading ? ' modal-header--minimal' : '') +
-      (p.id === 'lobster' ? ' modal-header--lobster' : '');
+      (p.id === 'lobster' ? ' modal-header--lobster' : '') +
+      (p.id === 'db' ? ' modal-header--db' : '');
     const modalHeadingHtml = hideModalHeading
       ? ''
       : `
