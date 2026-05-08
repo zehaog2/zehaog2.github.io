@@ -1,5 +1,6 @@
 (function () {
   let projectsList = [];
+  let lastFocusedElement = null;
 
   /** Matches `?v=` on `projects.js` so card photos refresh when you bump the script version in index.html */
   const assetVersion = (function () {
@@ -231,6 +232,30 @@
     setTimeout(() => map.invalidateSize(), 0);
   }
 
+  function initMetPopupInteractive() {
+    const toggle = document.getElementById('met-detail-toggle');
+    const details = document.getElementById('met-tech-details');
+    if (!toggle || !details || toggle.dataset.initialized === 'true') return;
+    toggle.dataset.initialized = 'true';
+
+    toggle.addEventListener('click', () => {
+      const nextExpanded = toggle.getAttribute('aria-expanded') !== 'true';
+      toggle.setAttribute('aria-expanded', nextExpanded ? 'true' : 'false');
+      toggle.textContent = nextExpanded ? 'Hide technical detail' : 'Show technical detail';
+      details.hidden = !nextExpanded;
+    });
+  }
+
+  function getFocusableInModal() {
+    const modal = document.getElementById('modal-content');
+    if (!modal) return [];
+    return Array.from(
+      modal.querySelectorAll(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+    ).filter((el) => !el.hasAttribute('hidden') && el.getAttribute('aria-hidden') !== 'true');
+  }
+
   async function loadPopupBodyHtml(p) {
     const popupFile = safePopupFilename(p.popupFile);
     if (!popupFile) return fallbackPopupBody(p);
@@ -269,7 +294,7 @@
     if (!isPublished) {
       document.getElementById('modal-content').innerHTML = `
       <div class="${modalHeaderClass}">
-        <button type="button" class="modal-close" onclick="closeModal()">✕</button>
+        <button type="button" class="modal-close" onclick="closeModal()" aria-label="Close project details">✕</button>
         ${modalHeadingHtml}
       </div>
       <div class="modal-body">
@@ -286,7 +311,7 @@
 
     document.getElementById('modal-content').innerHTML = `
       <div class="${modalHeaderClass}">
-        <button type="button" class="modal-close" onclick="closeModal()">✕</button>
+        <button type="button" class="modal-close" onclick="closeModal()" aria-label="Close project details">✕</button>
         ${modalHeadingHtml}
       </div>
       <div class="modal-body">
@@ -297,14 +322,41 @@
     if (p.id === 'boston-uhi') {
       initBostonUhiInteractive();
     }
+    if (p.id === 'met') {
+      initMetPopupInteractive();
+    }
+
+    const modal = document.getElementById('modal-content');
+    const title = modal ? modal.querySelector('.modal-title') : null;
+    lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    if (overlay) overlay.setAttribute('aria-hidden', 'false');
+    if (modal) {
+      modal.setAttribute('role', 'dialog');
+      modal.setAttribute('aria-modal', 'true');
+      if (title && title.id !== 'modal-title') title.id = 'modal-title';
+      modal.setAttribute('aria-labelledby', 'modal-title');
+    }
 
     overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
+
+    const focusables = getFocusableInModal();
+    if (focusables.length) {
+      focusables[0].focus();
+    } else if (modal) {
+      modal.setAttribute('tabindex', '-1');
+      modal.focus();
+    }
   }
 
   function closeModal() {
-    document.getElementById('modal-overlay').classList.remove('active');
+    const overlay = document.getElementById('modal-overlay');
+    overlay.classList.remove('active');
     document.body.style.overflow = '';
+    overlay.setAttribute('aria-hidden', 'true');
+    if (lastFocusedElement && document.contains(lastFocusedElement)) {
+      lastFocusedElement.focus();
+    }
   }
 
   function handleOverlayClick(e) {
@@ -384,6 +436,21 @@
   window.handleOverlayClick = handleOverlayClick;
 
   document.addEventListener('keydown', (e) => {
+    const overlay = document.getElementById('modal-overlay');
+    if (e.key === 'Tab' && overlay && overlay.classList.contains('active')) {
+      const focusables = getFocusableInModal();
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
     if (e.key === 'Escape') closeModal();
   });
 

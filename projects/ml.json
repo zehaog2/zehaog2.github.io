@@ -1,26 +1,27 @@
 {
   "id": "ml",
   "cardTitle": "ML Ensemble for Time Series Classification",
-  "cardDesc": "133-feature XGBoost pipeline for 3-class financial time series classification with temporal validation.",
-  "label": "Machine Learning",
+  "cardDesc": "Report-backed ML case study: XGBoost reached 67.4% classification accuracy and 0.727 R2 under strict temporal validation.",
+  "cardFooterTag": "Python",
+  "label": "",
   "title": "ML Ensemble for Time Series Classification",
-  "period": "May 2025 – Dec 2025",
-  "overview": "End-to-end ML pipeline for classifying financial time series into 3 market regimes. Engineered 133 features from multi-modal data sources including technical indicators, fundamental data, and macroeconomic signals. XGBoost model achieved 67.4% accuracy with strict temporal validation to prevent data leakage.",
+  "period": "",
+  "overview": "AAPL one-day-ahead forecasting pipeline with both classification (Down/Flat/Up) and regression objectives. Built from 1,488 daily observations and 133 engineered features sourced from technical indicators, fundamentals, ETFs, and macro signals, with strict temporal validation to avoid leakage.",
   "metrics": [
-    { "value": "133", "label": "Engineered Features" },
-    { "value": "67.4%", "label": "3-Class Accuracy" },
-    { "value": "3", "label": "Data Sources" }
+    { "value": "67.4%", "label": "Best Classification Accuracy" },
+    { "value": "0.727", "label": "Best Regression R2" },
+    { "value": "0.81%", "label": "Regression RMSE" }
   ],
   "details": [
-    "Volatility-adjusted classification scheme and momentum/lag indicator engineering",
-    "Multi-modal ingestion: Yahoo Finance and Alpha Vantage APIs for technical, fundamental, macro data",
-    "Strict temporal train/test split to prevent lookahead bias in validation",
-    "Modular pipeline architecture for swappable feature sets and model backends"
+    "Compared nine models across classification and regression with identical data and preprocessing",
+    "Strict temporal split and time-aware validation to prevent future leakage and metric inflation",
+    "XGBoost was the top performer on both tasks, with strongest Up/Down discrimination in classification",
+    "Feature engineering and ensemble methods delivered stronger performance than deeper architectures at current data scale"
   ],
   "tags": ["Python", "XGBoost", "Scikit-learn", "Time Series", "Feature Engineering"],
-  "images": 2,
-  "github": "https://github.com/zehaog2",
-  "published": false,
+  "images": 4,
+  "github": "",
+  "published": true,
   "backgroundImage": "ml.jpg",
   "popupFile": "ml.html"
 }

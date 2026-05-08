@@ -1,55 +1,159 @@
-<div class="project-popup-content">
+<div class="project-popup-content met-popup">
+  <div class="met-hero">
+    <p class="met-positioning">
+      This project is a real-time urban temperature forecasting system focused on difficult, high-volatility weather
+      regimes.
+    </p>
+    <div class="met-boundary-badge">Most useful on volatile weather days</div>
+  </div>
+
   <div class="modal-section">
-    <div class="modal-section-label">Overview</div>
+    <div class="modal-section-label">Problem and Value</div>
     <p class="modal-overview">
-      A probabilistic temperature forecasting system that ingests output from 21 NWP models across 100+ ASOS/METAR stations. Uses ensemble spread analysis and IQR-based model ranking to outperform NWS and commercial baselines on edge cases like marine-layer and boundary-layer regimes.
+      On normal days, weather apps are usually good enough. But on messy, high-volatility days--when sea breeze timing,
+      inversion breakup, cloud shifts, and local terrain effects all collide--the forecast can swing much more than a
+      single number suggests. Getting those extremes right has real downstream value: better heat-risk planning for schools
+      and outdoor workers, smarter utility load preparation during peak demand, better airport and city operations during
+      rapid regime shifts, and more reliable timing for event organizers making go/no-go decisions.
     </p>
   </div>
+
   <div class="modal-section">
-    <div class="modal-section-label">Key Results</div>
-    <div class="metrics">
-      <div class="metric">
-        <div class="metric-value">21</div>
-        <div class="metric-label">NWP Models</div>
-      </div>
-      <div class="metric">
-        <div class="metric-value">100+</div>
-        <div class="metric-label">ASOS/METAR Stations</div>
-      </div>
-      <div class="metric">
-        <div class="metric-value">12</div>
-        <div class="metric-label">City Microclimate Models</div>
-      </div>
-    </div>
-  </div>
-  <div class="modal-section">
-    <div class="modal-section-label">Visuals</div>
-    <div class="img-grid">
-      <div class="img-placeholder"><span>Screenshot / Chart</span></div>
-      <div class="img-placeholder"><span>Screenshot / Chart</span></div>
-    </div>
-  </div>
-  <div class="modal-section">
-    <div class="modal-section-label">Technical Highlights</div>
+    <div class="modal-section-label">Why Volatile-Day Forecasting Is Hard</div>
     <ul class="detail-list">
-      <li>Ensemble spread analysis with IQR-based model ranking for dynamic weighting</li>
-      <li>12 city-specific microclimate models covering boundary-layer, marine-layer, solar/stability regimes</li>
-      <li>Forecast reliability validated via freshness rules, staleness discounting, and geospatial cross-referencing</li>
-      <li>Demonstrated superior edge-case accuracy over NWS and commercial baselines</li>
+      <li>Daily maximum temperature is highly sensitive to timing: sea-breeze onset, inversion erosion, cloud cover evolution, and terrain-driven flow shifts can each move outcomes by several degrees.</li>
+      <li>Urban effects and nearby water bodies add additional microclimate structure that broad models may not resolve at decision time scales.</li>
+      <li>When these processes overlap, small timing errors compound, and model spread often widens sharply.</li>
     </ul>
   </div>
+
   <div class="modal-section">
-    <div class="modal-section-label">Stack</div>
-    <div class="modal-tags">
-      <span class="modal-tag">Python</span>
-      <span class="modal-tag">Ensemble ML</span>
-      <span class="modal-tag">Geospatial</span>
-      <span class="modal-tag">NWP</span>
-      <span class="modal-tag">METAR/ASOS</span>
+    <div class="modal-section-label">System Pipeline</div>
+    <div class="met-stage-flow" role="list" aria-label="Four-stage nowcasting pipeline">
+      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="Ingests observations, NWP guidance, and upper-air or buoy context with freshness checks.">
+        <div class="met-stage-title">Data Inputs</div>
+        <p class="met-stage-text">Observations, NWP, upper-air and regional/buoy context.</p>
+      </div>
+      <div class="met-stage-arrow" aria-hidden="true">→</div>
+      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="Runs ingest, validation, and standardized feature shaping to keep downstream logic consistent.">
+        <div class="met-stage-title">Core Pipeline</div>
+        <p class="met-stage-text">Ingest, validate, and standardize for diagnostics and nowcast logic.</p>
+      </div>
+      <div class="met-stage-arrow" aria-hidden="true">→</div>
+      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="Applies city-specific physical rules so local behavior remains explicit and testable.">
+        <div class="met-stage-title">City Intelligence Layer</div>
+        <p class="met-stage-text">Local physics modules by station and city regime.</p>
+      </div>
+      <div class="met-stage-arrow" aria-hidden="true">→</div>
+      <div class="met-stage-card met-stage-card--diagnostic" role="listitem" tabindex="0" data-tip="Publishes nowcast with confidence context and explainable regime-risk flags.">
+        <div class="met-stage-title">Outputs and Diagnostics</div>
+        <p class="met-stage-text">Nowcast, confidence context, and explainable risk flags.</p>
+      </div>
     </div>
   </div>
-  <a class="github-link" href="https://github.com/zehaog2" target="_blank" rel="noopener noreferrer">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-    View on GitHub
-  </a>
+
+  <button
+    type="button"
+    class="met-detail-toggle"
+    id="met-detail-toggle"
+    aria-expanded="false"
+    aria-controls="met-tech-details"
+  >
+    Show technical detail
+  </button>
+
+  <div class="met-tech-details" id="met-tech-details" hidden>
+    <div class="modal-section">
+      <div class="modal-section-label">Evidence Block A - Model Spread / IQR</div>
+      <figure class="met-figure">
+        <img
+          class="met-chart-image"
+          src="project_popups/assets/met/IQR.png"
+          alt="Model spread and IQR chart across selected cities"
+          loading="lazy"
+          decoding="async"
+        >
+      </figure>
+      <ul class="detail-list">
+        <li>San Francisco (KSFO) shows the widest spread in this run (about 10F), reflecting strong marine-layer and sea-breeze timing effects on daily maximum temperature.</li>
+        <li>Denver (KDEN) also shows elevated uncertainty (about 6F), consistent with terrain-driven variability and rapid boundary-layer transitions.</li>
+        <li>By contrast, a typical stable sunny setup in Philadelphia (KPHL) or Boston (KBOS) often clusters below 3F.</li>
+        <li>The starred focus models are updated dynamically each run using recent 7-day skill (RMSE and MAE), bias behavior, and known model strengths or weaknesses under the city’s active regime.</li>
+      </ul>
+      <p class="met-so-what">
+        This pipeline combines real-time multi-source ingestion with city-specific physical feature engineering. Instead of
+        only producing a point estimate, it outputs interpretable uncertainty context for volatile weather regimes.
+      </p>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-label">Evidence Block B - Volatile-Day Reconstructions</div>
+      <div class="met-event-grid">
+        <article class="met-event-card">
+          <h4 class="met-event-title">KSFO - Mar 19, 2026</h4>
+          <p class="met-event-regime">Regime: Sea-breeze mixing spike with thermal lag</p>
+          <figure class="met-figure met-event-figure">
+            <img
+              class="met-chart-image"
+              src="project_popups/assets/met/event_trend_ksfo_2026-03-19.png"
+              alt="KSFO March 19 2026 actual versus baseline and HRRR around Tmax window"
+              loading="lazy"
+              decoding="async"
+            >
+          </figure>
+          <ul class="detail-list">
+            <li><strong>whatModelsMissed:</strong> Upside can persist into the wind-shift window; sea-breeze onset is not always immediate cooling.</li>
+            <li><strong>keyObservedSignals:</strong> Calm-period dip followed by wind-resumed warming, then a short spike at frontal passage before marine cooling phase.</li>
+            <li><strong>forecastImpact:</strong> Observed max occurred near 5:05 PM local.</li>
+            <li><strong>ruleUpdate:</strong> Treat transition windows explicitly and require cooling confirmation signals before declaring the daily maximum locked.</li>
+          </ul>
+        </article>
+        <article class="met-event-card">
+          <h4 class="met-event-title">KDCA - Feb 18, 2026</h4>
+          <p class="met-event-regime">Regime: Surface decoupling and consensus failure</p>
+          <figure class="met-figure met-event-figure">
+            <img
+              class="met-chart-image"
+              src="project_popups/assets/met/event_trend_kdca_2026-02-18.png"
+              alt="KDCA February 18 2026 actual versus baseline and HRRR around Tmax window"
+              loading="lazy"
+              decoding="async"
+            >
+          </figure>
+          <ul class="detail-list">
+            <li><strong>whatModelsMissed:</strong> Regional and consensus warmth can fail to realize at KDCA when local surface decoupling is active.</li>
+            <li><strong>keyObservedSignals:</strong> Inland references stayed warmer while KDCA failed to converge under decoupling conditions.</li>
+            <li><strong>forecastImpact:</strong> Observed max occurred near 7:15 PM local.</li>
+            <li><strong>ruleUpdate:</strong> Elevate local decoupling diagnostics to hard-stop risk controls, even when broader guidance clusters higher.</li>
+          </ul>
+        </article>
+      </div>
+      <p class="met-provenance">
+        If a preferred baseline model is unavailable for a date window, fallback guidance is used and logged in status
+        output to keep provenance explicit.
+      </p>
+      <p class="met-so-what">
+        Cases document how regime cues and model spread are interpreted in context, with emphasis on transparent reasoning
+        and post-event learning loops.
+      </p>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-label">Technical Credibility</div>
+      <ul class="detail-list">
+        <li>Modular architecture: Trading_runner.py, Data_fetcher.py, and city modules separate concerns for traceability and maintainability.</li>
+        <li>Transparent local rules: station or city behavior is explicit in config and physics logic, with normalized-schema planning to keep outputs consistent as coverage grows.</li>
+        <li>Ensemble spread, trend behavior, and contextual diagnostics are surfaced alongside the forecast to quantify confidence and highlight regime risk.</li>
+      </ul>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-label">Limitations and Next Steps</div>
+      <ul class="detail-list">
+        <li>Current limitation: the project does not yet use a full historical archive calibration framework across all stations and dates.</li>
+        <li>What is strong today: detailed event reconstructions, uncertainty diagnostics, and reliability controls that make reasoning auditable on difficult regimes.</li>
+        <li>Near-term next steps: continue targeted failure-regime research and convert those findings into explicit code and documentation updates.</li>
+      </ul>
+    </div>
+  </div>
 </div>

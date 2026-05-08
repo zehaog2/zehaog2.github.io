@@ -1,9 +1,10 @@
 {
   "id": "met",
-  "cardTitle": "Real-Time Meteorological Forecasting",
+  "cardTitle": "Urban Temperature Risk Nowcasting",
   "cardDesc": "Probabilistic temperature forecasting across 100+ stations using 21 NWP ensemble models.",
+  "cardFooterTag": "Python · Meteorology",
   "label": "Forecasting",
-  "title": "Real-Time Meteorological Forecasting System",
+  "title": "Urban Temperature Risk Nowcasting",
   "period": "Jan 2026 – Present",
   "overview": "A probabilistic temperature forecasting system that ingests output from 21 NWP models across 100+ ASOS/METAR stations. Uses ensemble spread analysis and IQR-based model ranking to outperform NWS and commercial baselines on edge cases like marine-layer and boundary-layer regimes.",
   "metrics": [
@@ -17,10 +18,10 @@
     "Forecast reliability validated via freshness rules, staleness discounting, and geospatial cross-referencing",
     "Demonstrated superior edge-case accuracy over NWS and commercial baselines"
   ],
-  "tags": ["Python", "Ensemble ML", "Geospatial", "NWP", "METAR/ASOS"],
+  "tags": [],
   "images": 2,
-  "github": "https://github.com/zehaog2",
-  "published": false,
+  "github": "",
+  "published": true,
   "backgroundImage": "met.jpg",
   "popupFile": "met.html"
 }
