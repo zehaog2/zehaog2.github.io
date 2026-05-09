@@ -565,6 +565,24 @@
     margin-bottom: 12px;
   }
 
+  .modal-status-tag {
+    flex-shrink: 0;
+    padding: 2px 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    background: rgba(var(--bg-rgb), 0.75);
+  }
+
+  .modal-status-tag--corner {
+    position: absolute;
+    top: 24px;
+    right: 68px;
+  }
+
   .modal-period {
     font-size: 11px;
     color: var(--muted);
@@ -867,9 +885,9 @@
     row-gap: 10px;
   }
 
-  /* Spans city + arrow + outputs columns so SVG x-positions track card centers */
+  /* Spans physics + downstream columns so SVG x-positions track card centers */
   .met-popup .met-feedback-band {
-    grid-column: 5 / 8;
+    grid-column: 3 / 8;
     grid-row: 2;
     align-self: start;
     min-width: 0;
@@ -908,7 +926,7 @@
     align-self: center;
     flex-shrink: 0;
     color: var(--muted);
-    font-size: 16px;
+    font-size: 22px;
     line-height: 1;
   }
 

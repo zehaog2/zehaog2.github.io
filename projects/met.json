@@ -1,10 +1,11 @@
 {
   "id": "met",
-  "cardTitle": "Urban Temperature Risk Nowcasting",
+  "cardTitle": "Volatile Weather Temperature Nowcasting",
   "cardDesc": "Probabilistic temperature forecasting across 100+ stations using 21 NWP ensemble models.",
   "cardFooterTag": "Python · Meteorology",
   "label": "",
-  "title": "Urban Temperature Risk Nowcasting",
+  "title": "Volatile Weather Temperature Nowcasting",
+  "statusTag": "Project Ongoing",
   "period": "",
   "overview": "A probabilistic temperature forecasting system that ingests output from 21 NWP models across 100+ ASOS/METAR stations. Uses ensemble spread analysis and IQR-based model ranking to outperform NWS and commercial baselines on edge cases like marine-layer and boundary-layer regimes.",
   "metrics": [

@@ -262,6 +262,7 @@
 
     const overlay = document.getElementById('modal-overlay');
     const labelText = p.label != null && String(p.label).trim() ? String(p.label).trim() : '';
+    const statusTagText = p.statusTag != null && String(p.statusTag).trim() ? String(p.statusTag).trim() : '';
     const isPublished = p.published !== false;
     const hideModalHeading = p.id === 'boston-uhi';
     const modalHeaderClass =
@@ -275,6 +276,7 @@
         ${labelText ? `<div class="modal-label">${escapeHtml(labelText)}</div>` : ''}
         <div class="modal-title">${escapeHtml(p.title)}</div>
         ${p.period ? `<div class="modal-period">${escapeHtml(p.period)}</div>` : ''}
+        ${statusTagText ? `<span class="modal-status-tag modal-status-tag--corner">${escapeHtml(statusTagText)}</span>` : ''}
       `;
 
     if (!isPublished) {

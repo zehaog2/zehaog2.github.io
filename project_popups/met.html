@@ -1,18 +1,17 @@
 <div class="project-popup-content met-popup">
   <div class="met-hero">
     <p class="met-positioning">
-      This project is a real-time urban temperature system focused on difficult, high-volatility weather regimes.
+      This project is a real-time urban temperature prediction system focused on difficult, high-volatility weather regimes. 
     </p>
   </div>
 
   <div class="modal-section">
     <div class="modal-section-label">Problem and Value</div>
     <p class="modal-overview">
-      On normal days, weather apps are usually good enough. But on messy, high-volatility days--when sea breeze timing,
-      inversion breakup, cloud shifts, and local terrain effects all collide--the forecast can swing much more than a
-      single number suggests. Getting those extremes right has real downstream value: better heat-risk planning for schools
-      and outdoor workers, smarter utility load preparation during peak demand, better airport and city operations during
-      rapid regime shifts, and more reliable timing for event organizers making go/no-go decisions.
+      If weather apps already show temperature, why build this at all? <br>
+      On normal days, those apps are usually good enough. But on messy, high-volatility days--when sea breeze timing, inversion breakup, cloud shifts, and local terrain effects all collide--the forecast can swing much more than a single number suggests.
+      Getting those extremes right has real downstream value: better heat-risk planning for schools and outdoor workers, smarter utility load preparation during peak demand, better airport and city operations during rapid regime shifts, and more reliable timing for event organizers making go/no-go decisions. 
+      That is the gap this project focuses on: combining real-time observations, model spread, and city-specific physics signals to produce a clearer, more interpretable read on temperature risk. And as climate patterns become less stable and extreme-day behavior becomes more frequent, systems that explicitly handle uncertainty and regime transitions will likely become increasingly important.
     </p>
   </div>
 
@@ -30,26 +29,26 @@
     <div
       class="met-stage-flow met-stage-flow--with-feedback"
       role="list"
-      aria-label="Forward path: data fetcher, risk calculator, city modules, outputs; feedback from outputs to city modules"
+      aria-label="Forward path: data fetcher, city modules, risk calculator, outputs; feedback from outputs to city modules"
     >
-      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="Pulls multi-source observations and NWP ensemble output; validation and freshness rules keep inputs trustworthy for downstream risk logic.">
+      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="AWS, Iowa Environmental Mesonet (IEM), NOAA, NWS, etc.">
         <div class="met-stage-title">Data fetcher</div>
-        <p class="met-stage-text">ASOS/METAR and 21-model NWP ensemble ingestion with validation and freshness checks.</p>
+        <p class="met-stage-text">Pulls & process multi-source weather observations and ensemble output</p>
       </div>
       <div class="met-stage-arrow" aria-hidden="true">→</div>
-      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="Spread-based ranking and probabilistic core: ensemble IQR, dynamic model weighting from recent skill and bias under the active regime.">
+      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="A global physics module runs independently. Individual city modules depend on microclimate physics or local rules, which are initiated by analyzing and sorting the most common model failure type weather regimes. Recursively updated with post-event learning and rule updates.">
+        <div class="met-stage-title">Physics Fine-Tuning</div>
+        <p class="met-stage-text">Meteorology & logic rules' analytical pipelines</p>
+      </div>
+      <div class="met-stage-arrow" aria-hidden="true">→</div>
+      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="Spread-based ranking and probabilistic analysis">
         <div class="met-stage-title">Risk calculator</div>
-        <p class="met-stage-text">Ensemble spread analysis, IQR-style ranking, and the probabilistic nowcast core.</p>
+        <p class="met-stage-text">Ensemble analysis, probabilistic nowcast</p>
       </div>
       <div class="met-stage-arrow" aria-hidden="true">→</div>
-      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="City and station modules encode microclimate physics and local rules in config—explicit, testable behavior. Diagnostics from downstream outputs close the loop: post-event learning and rule updates refine regimes over time.">
-        <div class="met-stage-title">City modules</div>
-        <p class="met-stage-text">Per-city logic and transparent local rules—updated when diagnostics and post-event reviews surface systematic misses.</p>
-      </div>
-      <div class="met-stage-arrow" aria-hidden="true">→</div>
-      <div class="met-stage-card met-stage-card--diagnostic" role="listitem" tabindex="0" data-tip="Forecast plus ensemble spread, trend behavior, and contextual diagnostics. These signals feed back to city modules for regime tuning, explicit rule updates, and auditable failure-regime learning.">
-        <div class="met-stage-title">Outputs and diagnostics</div>
-        <p class="met-stage-text">Nowcast alongside spread and regime-risk context—feeding rule refinement back into city modules.</p>
+      <div class="met-stage-card met-stage-card--diagnostic" role="listitem" tabindex="0" data-tip="Temperature forecast, ensemble spread, trend behavior, contextual diagnostics. Failed predicted results are researched & analyzed before being updated to city modules">
+        <div class="met-stage-title">Data outputs, Analysis</div>
+        <p class="met-stage-text">Nowcast alongside spread and regime-risk context</p>
       </div>
       <div class="met-feedback-band">
         <div class="met-feedback-band-inner">
@@ -60,21 +59,21 @@
               </marker>
             </defs>
             <path
-              d="M 82 2 L 82 15 L 23 15 L 23 5"
+              d="M 90 2 L 90 15 L 14 15 L 14 5"
               fill="none"
               stroke="currentColor"
               stroke-width="0.3"
               marker-end="url(#met-feedback-arrowhead)"
             />
           </svg>
-          <p class="met-feedback-caption">Feedback loop: diagnostics and post-event learning refine city module rules and regime handling.</p>
+          <p class="met-feedback-caption">Post-event learning refine city module rules and specific weather regime handling. I call this extra-overfitting, which predict outlier events extremely well.</p>
         </div>
       </div>
     </div>
   </div>
 
   <div class="modal-section">
-    <div class="modal-section-label">Evidence Block A - Model Spread / IQR</div>
+    <div class="modal-section-label">Model Spread / IQR</div>
     <figure class="met-figure met-spread-chart">
       <img
         class="met-chart-image"
@@ -85,15 +84,16 @@
       >
     </figure>
     <ul class="detail-list">
-      <li>San Francisco (KSFO) shows the widest spread in this run (about 8F), reflecting strong marine-layer and sea-breeze timing effects on daily maximum temperature.</li>
-      <li>Denver (KDEN) also shows elevated uncertainty (about 6F), consistent with mountainous terrain-driven variability and rapid boundary-layer transitions.</li>
-      <li>By contrast, a typical stable sunny setup in Philadelphia (KPHL) or Boston (KBOS) often clusters below 3F.</li>
-      <li>The starred focus models are updated dynamically each run using recent 7-day skill (RMSE and MAE), bias behavior, and known model strengths or weaknesses under the city’s active regime.</li>
+      <li>This graph depicts every major commercial temperature models' maximum temperature forecast for May 8th, 2026. </li>
+      <li>The stars, or the focus models, are selected from all models using a recent 7-day skill (mostly RMSE kept to less than 2 degrees fahrenheit), bias behavior, and known model strengths or weaknesses under the city’s active weather regime.</li>
+      <li>San Francisco (KSFO), Los Angeles (KLAX) show the widest spread. The two californian coastal cities reflect a typical strong Pacific marine-layer and sea-breeze regime, troubling most models.</li>
+      <li>Denver (KDEN) also shows elevated uncertainty, consistent with mountainous terrain-driven variability and rapid boundary-layer transitions. </li>
+      <li>By contrast, model forecasts for a typical sunny day on the United States East Coast like Philadelphia (KPHL), Boston (KBOS), or the capital (KDCA) are probably both accurate and precise.</li>
     </ul>
   </div>
 
   <div class="modal-section">
-    <div class="modal-section-label">Evidence Block B - Volatile-Day Examples</div>
+    <div class="modal-section-label">Examples</div>
     <div class="met-event-grid">
       <article class="met-event-card">
         <h4 class="met-event-title">KSFO - Mar 19, 2026</h4>
@@ -108,10 +108,9 @@
           >
         </figure>
         <ul class="detail-list">
-          <li><strong>WhatModelsMissed:</strong> Upside can persist into the wind-shift window; sea-breeze onset is not always immediate cooling.</li>
-          <li><strong>ObservedSignals:</strong> Calm-period dip followed by wind-resumed warming, then a short spike with a sudden wind speed increase at frontal passage before marine cooling phase.</li>
-          <li><strong>ForecastImpact:</strong> Observed max occurred near 5:05 PM local.</li>
-          <li><strong>RuleUpdate:</strong> Treat transition windows explicitly and require cooling confirmation signals before declaring the daily maximum locked.</li>
+          <li><strong>What Models Missed:</strong> Upside can persist into the wind-shift window; sea-breeze onset never implies cooling .</li>
+          <li><strong>Observations:</strong> As seabreeze starts around 4pm (HRRR, updated at 4pm,  forecasts straight downward trend for temperature), temperature dips from 78 to 75. Then, west wind grew stronger, and temperature quickly spike to 84 around 5pm before the marine cooling phase.</li>
+          <li><strong>Result:</strong> Examine reasons for temperature spike during seabreeze onset; Treat transition windows explicitly; Require cooling confirmation signals before declaring the daily maximum locked.</li>
         </ul>
       </article>
       <article class="met-event-card">
@@ -127,10 +126,9 @@
           >
         </figure>
         <ul class="detail-list">
-          <li><strong>WhatModelsMissed:</strong> Regional and consensus warmth can fail to realize at KDCA when local surface decoupling is active.</li>
-          <li><strong>ObservedSignals:</strong> Inland neighbors stayed warmer while KDCA failed to converge under decoupling conditions.</li>
-          <li><strong>ForecastImpact:</strong> Observed max occurred near 7:15 PM local.</li>
-          <li><strong>RuleUpdate:</strong> Elevate local decoupling diagnostics to hard-stop risk controls, even when broader guidance clusters higher.</li>
+          <li><strong>What Models Missed:</strong> Regional and consensus warmth can fail to realize at KDCA when local surface decoupling is active.</li>
+          <li><strong>Observations:</strong> Inland neighbors stayed warmer while KDCA failed to converge under unique decoupling conditions.</li>
+          <li><strong>Reslt:</strong> Elevate local decoupling diagnostics to hard-stop risk controls, even when broader guidance clusters higher.</li>
         </ul>
       </article>
     </div>
@@ -139,18 +137,19 @@
   <div class="modal-section">
     <div class="modal-section-label">Technical Credibility</div>
     <ul class="detail-list">
-      <li>Modular architecture: risk calculator, data fetcher, and city modules separate concerns for traceability and maintainability.</li>
-      <li>Transparent local rules: station or city behavior is explicit in config and physics logic, with normalized-schema planning to keep outputs consistent as coverage grows.</li>
+      <li>Modular architecture</li>
+      <li>Transparent & Scalable local rules: city behavior is explicit in configuration or physics, with normalized-schema planning to keep outputs consistent as coverage grows.</li>
       <li>Ensemble spread, trend behavior, and contextual diagnostics are surfaced alongside the forecast to quantify confidence and highlight regime risk.</li>
+      <li>If this system is used to predict temperature on a non-volatile day, inputs from models are weighted heavily. (But at that point,any weather app performs just as well)</li>
     </ul>
   </div>
 
   <div class="modal-section">
     <div class="modal-section-label">Limitations and Next Steps</div>
     <ul class="detail-list">
-      <li>Current limitation: the project does not yet use a full historical archive calibration framework.</li>
-      <li>What is strong today: detailed event analysis, uncertainty diagnostics, and reliability controls that make reasoning auditable on difficult regimes.</li>
-      <li>Near-term next steps: continue targeted failure-regime research and convert those findings into explicit code and documentation updates.</li>
+      <li>Limitation: no full historical archive calibration framework; risk analysis could be more efficient through optimizing probabilitic framework.</li>
+      <li>What is strong today: detailed event analysis, uncertainty diagnostics, and reliability controls that make reasoning auditable on the most difficult regimes.</li>
+      <li>Near-term next steps: continue targeted failure-regime research and convert those findings into explicit code and documentation updates; researching more efficient bayesian framework for risk analysis</li>
     </ul>
   </div>
 </div>
