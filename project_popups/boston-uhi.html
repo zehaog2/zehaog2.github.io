@@ -19,7 +19,7 @@
       <div class="uhi-controls" id="boston-uhi-controls">
         <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-lst"> Map 1: Land Surface Temperature</label>
         <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-land-cover" checked> Map 2: Land Cover Classification</label>
-        <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-ndvi"> Map 3: NDVI Vegetation Index</label>
+        <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-ndvi" checked> Map 3: NDVI Vegetation Index</label>
         <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-zone"> Map 4: Temperature Zone Classification</label>
         <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-tract"> Map 5: Mean LST by Census Tract</label>
       </div>
@@ -31,11 +31,11 @@
         </div>
         <div class="uhi-opacity-row" data-layer-id="uhi-land-cover">
           <label for="opacity-uhi-land-cover">Map 2</label>
-          <input id="opacity-uhi-land-cover" type="range" min="20" max="100" value="90" step="1" data-opacity-layer="uhi-land-cover">
+          <input id="opacity-uhi-land-cover" type="range" min="20" max="100" value="75" step="1" data-opacity-layer="uhi-land-cover">
         </div>
         <div class="uhi-opacity-row" data-layer-id="uhi-ndvi">
           <label for="opacity-uhi-ndvi">Map 3</label>
-          <input id="opacity-uhi-ndvi" type="range" min="20" max="100" value="90" step="1" data-opacity-layer="uhi-ndvi">
+          <input id="opacity-uhi-ndvi" type="range" min="20" max="100" value="50" step="1" data-opacity-layer="uhi-ndvi">
         </div>
         <div class="uhi-opacity-row" data-layer-id="uhi-zone">
           <label for="opacity-uhi-zone">Map 4</label>
@@ -55,7 +55,7 @@
           <div class="uhi-context-title">Map 2: Land Cover Classification</div>
           <p class="modal-overview">Displays NLCD classes with developed areas in warm tones and vegetation/water in cooler tones. This supports interpretation that land-cover composition explains thermal variation.</p>
         </div>
-        <div class="uhi-context-card" data-layer-id="uhi-ndvi">
+        <div class="uhi-context-card active" data-layer-id="uhi-ndvi">
           <div class="uhi-context-title">Map 3: NDVI Vegetation Index</div>
           <p class="modal-overview">NDVI ranges from near 0 (impervious) to near 1 (dense vegetation). Comparing with LST reveals an inverse vegetation-temperature relationship.</p>
         </div>
