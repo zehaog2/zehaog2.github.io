@@ -1,0 +1,218 @@
+<div class="project-popup-content lobster-popup">
+  <div class="modal-section">
+    <div class="modal-section-label">概览</div>
+    <p class="modal-overview">
+      本案例研究以缅因湾(Boothbay,2021–2022)的公开实验数据,刻画水温如何影响美洲龙虾(<em>Homarus americanus</em>)幼体从 stage I 到 stage V 的<strong>存活</strong>、<strong>生长</strong>与<strong>发育时序</strong>。缅因湾持续升温的背景下,量化最脆弱早期生活阶段的热阈值与非线性响应具有现实意义。
+    </p>
+    <p class="modal-overview lobster-credit">
+      与 Palak Tanwar 共同完成
+    </p>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">关键结果</div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-value">88.6%</div>
+        <div class="metric-label">18°C 下存活峰值</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">0.899</div>
+        <div class="metric-label">最佳 AUC-ROC (Random Forest)</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">74.6%</div>
+        <div class="metric-label">温度的 Gini 重要度</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">数据</div>
+    <p class="modal-overview">
+      数据来源:Annis、Frederich &amp; Rasher (2025),BCO-DMO 数据集 939825 —— 幼体在 18°C 适应后,转入处理温度直至蜕皮或死亡;包含野外捕获的 stage IV。对存活个体记录甲壳长度(ImageJ)与干重(60°C, 24 h),适用时一并记录。
+    </p>
+    <p class="modal-overview">
+      <a href="https://www.bco-dmo.org/dataset/939825#data-files" target="_blank" rel="noopener noreferrer">BCO-DMO 数据集 939825(数据文件)</a>
+      ·
+      <a href="https://doi.org/10.26008/1912/bco-dmo.939825.1" target="_blank" rel="noopener noreferrer">doi:10.26008/1912/bco-dmo.939825.1</a>
+    </p>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">M1 — 存活分类</div>
+    <p class="modal-overview">
+      以处理温度、发育阶段、饵料与培育条件为输入,对蜕皮 vs. 死亡进行二分类。对比 Logistic Regression、Random Forest、Histogram Gradient Boosting、SVM (RBF)、kNN 与决策树,采用分层 5 折交叉验证与独立测试集。
+    </p>
+    <p class="modal-overview lobster-note">
+      <strong>选择模型:</strong> Random Forest —— AUC-ROC 最高 (0.899),精确率较强 (0.925),交叉验证表现稳定。处理温度的特征重要度居首(Gini 约 74.6%),发育阶段次之(约 16.6%)。
+    </p>
+    <div class="lobster-figure-grid">
+      <figure class="lobster-figure">
+        <img src="project_popups/assets/lobster/fig-05.png" alt="按发育阶段与温度的存活热力图" loading="lazy" width="1200" height="675">
+        <figcaption>图 1. 阶段 × 温度 热力图 —— 各阶段的脆弱性差异显著。</figcaption>
+      </figure>
+      <figure class="lobster-figure">
+        <img src="project_popups/assets/lobster/fig-08.png" alt="各分类器的 ROC 曲线" loading="lazy" width="1200" height="675">
+        <figcaption>图 2. ROC 曲线 —— 集成方法优于 Logistic Regression。</figcaption>
+      </figure>
+      <figure class="lobster-figure">
+        <img src="project_popups/assets/lobster/fig-11.png" alt="Random Forest 特征重要度" loading="lazy" width="1200" height="675">
+        <figcaption>图 3. Random Forest 特征重要度(温度占主导)。</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">M2 — 蜕皮所需时间(存活个体)</div>
+    <p class="modal-overview">
+      对蜕皮个体(N = 330)的 <code>TIME_UNTIL_MOLT</code> 进行回归:Linear Regression、Random Forest、Gradient Boosting 与 SVR (RBF)。指标:RMSE、MAE、R²。
+    </p>
+    <table class="lobster-table" aria-label="蜕皮所需时间的回归指标">
+      <thead>
+        <tr>
+          <th scope="col">模型</th>
+          <th scope="col">RMSE(天)</th>
+          <th scope="col">MAE(天)</th>
+          <th scope="col">R²</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Linear Regression</td>
+          <td>13.96</td>
+          <td>8.18</td>
+          <td>0.454</td>
+        </tr>
+        <tr>
+          <td>Random Forest Reg.</td>
+          <td>13.35</td>
+          <td>5.68</td>
+          <td>0.501</td>
+        </tr>
+        <tr>
+          <td>Gradient Boosting Reg.</td>
+          <td>13.30</td>
+          <td>5.67</td>
+          <td>0.504</td>
+        </tr>
+        <tr>
+          <td>SVR (RBF)</td>
+          <td>15.07</td>
+          <td>6.99</td>
+          <td>0.363</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="modal-overview lobster-note">
+      表现最好的回归模型:Gradient Boosting(MAE 最低,R² 最高 ≈ 0.50)。仅靠这四个预测变量仍有相当一部分方差未被解释,与批次、遗传或未测量的实验室因素一致。
+    </p>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">M3 — 生存分析</div>
+    <p class="modal-overview">
+      按处理温度绘制 Kaplan–Meier 曲线,把成功蜕皮当作右删失(而非死亡)处理。下表给出按 °C 汇总的存活率与持续时间中位数。
+    </p>
+    <table class="lobster-table" aria-label="不同温度下的存活率">
+      <thead>
+        <tr>
+          <th scope="col">°C</th>
+          <th scope="col">N</th>
+          <th scope="col">存活</th>
+          <th scope="col">存活率</th>
+          <th scope="col">持续时间中位数(天)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>3</td>
+          <td>30</td>
+          <td>3</td>
+          <td>10.0%</td>
+          <td>9</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>143</td>
+          <td>63</td>
+          <td>44.1%</td>
+          <td>30</td>
+        </tr>
+        <tr>
+          <td>18</td>
+          <td>166</td>
+          <td>147</td>
+          <td>88.6%</td>
+          <td>9</td>
+        </tr>
+        <tr>
+          <td>26</td>
+          <td>168</td>
+          <td>117</td>
+          <td>69.6%</td>
+          <td>6</td>
+        </tr>
+        <tr>
+          <td>30</td>
+          <td>36</td>
+          <td>0</td>
+          <td>0.0%</td>
+          <td>1(至死亡)</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="modal-overview lobster-note">
+      呈穹顶状的热响应:在 <strong>18°C</strong> 达到峰值;<strong>30°C</strong> 在本实验中全部致死;<strong>3°C</strong> 的冷胁迫下蜕皮成功率极低。
+    </p>
+    <div class="lobster-figure-grid">
+      <figure class="lobster-figure">
+        <img src="project_popups/assets/lobster/fig-14.png" alt="按温度分组的 Kaplan-Meier 曲线" loading="lazy" width="1200" height="675">
+        <figcaption>图 4. 按处理温度的 Kaplan–Meier 生存曲线(蜕皮按删失处理)。</figcaption>
+      </figure>
+      <figure class="lobster-figure">
+        <img src="project_popups/assets/lobster/fig-15.png" alt="存活率与持续时间汇总图" loading="lazy" width="1200" height="675">
+        <figcaption>图 5. 存活率与持续时间汇总。</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">M4 — 热阈值与生长</div>
+    <p class="modal-overview">
+      存活率与处理温度的剂量–反应曲线呈不对称的倒 U 形,峰值约在 18°C,从 26°C 到 30°C 出现陡降。在存活个体中,温度与甲壳长度的相关性较弱且不显著(Pearson <em>r</em> = 0.053,<em>p</em> = 0.351);单因素 ANOVA 也未发现温度对甲壳长度的显著效应(<em>F</em> = 1.390,<em>p</em> = 0.246)—— 在该数据集中,温度更像存活的"门控",而非个体大小的驱动因子。
+    </p>
+    <div class="lobster-figure-grid">
+      <figure class="lobster-figure">
+        <img src="project_popups/assets/lobster/fig-04.png" alt="甲壳长度与干重关系" loading="lazy" width="1200" height="675">
+        <figcaption>图 6. 甲壳长度与干重(异速生长关系;<em>r</em> ≈ 0.88)。</figcaption>
+      </figure>
+      <figure class="lobster-figure">
+        <img src="project_popups/assets/lobster/fig-16.png" alt="温度的剂量-反应曲线" loading="lazy" width="1200" height="675">
+        <figcaption>图 7. 剂量–反应 —— 倒 U 形,高温端骤降明显。</figcaption>
+      </figure>
+      <figure class="lobster-figure">
+        <img src="project_popups/assets/lobster/fig-17.png" alt="不同温度下的生长结果" loading="lazy" width="1200" height="675">
+        <figcaption>图 8. 生长结果 —— 存活个体内,温度对体型的影响较弱。</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">解读</div>
+    <ul class="detail-list">
+      <li>温度是存活的主要驱动因子。</li>
+      <li>热极端的影响是不对称的:高温下出现急性死亡,低温则表现为渐进性的冷胁迫。</li>
+      <li>在存活个体中,甲壳长度在不同温度下并无显著差异(ANOVA <em>p</em> = 0.246)—— 在本数据集中,温度更像是可存活性的过滤器,而非体型的优化器。</li>
+    </ul>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">参考文献</div>
+    <ul class="detail-list lobster-refs">
+      <li>Annis, E. R., Frederich, M., &amp; Rasher, D. B. (2025). BCO-DMO dataset. <a href="https://doi.org/10.26008/1912/bco-dmo.939825.1" target="_blank" rel="noopener noreferrer">doi:10.26008/1912/bco-dmo.939825.1</a></li>
+      <li>Annis, E. R., et al. (2025). Laboratory-reared lobster larvae yield inaccurate estimates of thermal tolerance. <em>Global Change Biology</em>. <a href="https://doi.org/10.1111/gcb.70154" target="_blank" rel="noopener noreferrer">doi:10.1111/gcb.70154</a></li>
+      <li>Pershing, A. J., et al. (2015). Gulf of Maine cod and rapid warming. <em>Science</em>. <a href="https://doi.org/10.1126/science.aac9819" target="_blank" rel="noopener noreferrer">doi:10.1126/science.aac9819</a></li>
+    </ul>
+  </div>
+</div>

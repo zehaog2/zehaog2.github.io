@@ -1,0 +1,28 @@
+{
+  "id": "met",
+  "cardTitle": "极端天气温度实时预测",
+  "cardDesc": "结合 21 个 NWP 模型与 100+ 个 ASOS/METAR 站点的概率化温度预报。",
+  "cardFooterTag": "Python · 气象学",
+  "label": "",
+  "title": "极端天气温度实时预测",
+  "statusTag": "项目进行中",
+  "period": "",
+  "overview": "一套概率化温度预报系统:汇入 21 个 NWP 模型在 100+ 个 ASOS/METAR 站点的输出,通过集合离散度分析与基于 IQR 的模型排序,在海洋边界层、城市边界层等极端工况下,准确度优于 NWS 与商用基线。",
+  "metrics": [
+    { "value": "21", "label": "NWP 模型数量" },
+    { "value": "100+", "label": "ASOS/METAR 站点" },
+    { "value": "12", "label": "城市微气候模型" }
+  ],
+  "details": [
+    "集合离散度分析,使用基于 IQR 的模型排序进行动态加权",
+    "12 个城市级微气候模型,覆盖边界层、海洋边界层、太阳辐射与稳定度等机制",
+    "通过新鲜度规则、过期数据折扣以及地理空间交叉校验来确保预报可靠性",
+    "在极端工况下展示出优于 NWS 与商用基线的预测精度"
+  ],
+  "tags": [],
+  "images": 2,
+  "github": "",
+  "published": true,
+  "backgroundImage": "met.jpg",
+  "popupFile": "met.html"
+}

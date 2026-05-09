@@ -1,0 +1,120 @@
+<div class="project-popup-content db-popup">
+  <div class="modal-section">
+    <div class="modal-section-label">概览</div>
+    <p class="modal-overview">
+      端到端的餐饮分析管线,从原始到访数据一路走到经校验的业务报告。项目重点放在系统架构上:3NF 关系建模、稳健的 ETL 质量控制、以完整性优先的 MySQL 实现,以及可复现的分析报告。
+    </p>
+  </div>
+  <div class="modal-section">
+    <div class="arch-erd-grid">
+      <div>
+        <div class="modal-section-label">架构图</div>
+        <div class="arch-lanes" role="img" aria-label="餐饮分析架构示意:数据源同时分支到模式设计与数据加载,在 MySQL 汇合,再经由校验、业务逻辑、分析与报告层流出">
+          <div class="arch-lane-col">
+            <div class="arch-step">
+              <div class="arch-step-title">原始数据源</div>
+              <div class="arch-step-desc">restaurant-visits CSV + SQLite 源表</div>
+            </div>
+          </div>
+          <div class="arch-lane-col">
+            <div class="arch-step">
+              <div class="arch-step-title">模式设计</div>
+              <div class="arch-step-desc">函数依赖、3NF 分解、ERD</div>
+            </div>
+            <div class="arch-connector">↑ 数据源分支</div>
+            <div class="arch-step">
+              <div class="arch-step-title">数据加载与清洗管线</div>
+              <div class="arch-step-desc">清理哨兵值、客户去重、规范化批量插入</div>
+            </div>
+          </div>
+          <div class="arch-lane-col">
+            <div class="arch-step">
+              <div class="arch-step-title">MySQL 数据库实现</div>
+              <div class="arch-step-desc">Restaurant / Server / Customer / Visit,带 PK/FK 与约束</div>
+            </div>
+            <div class="arch-connector">← 模式与加载汇合</div>
+            <div class="arch-step">
+              <div class="arch-step-title">校验层</div>
+              <div class="arch-step-desc">行数对账 + 财务汇总核对</div>
+            </div>
+            <div class="arch-step">
+              <div class="arch-step-title">业务逻辑层</div>
+              <div class="arch-step-desc"><code>storeVisit</code> / <code>storeNewVisit</code></div>
+            </div>
+            <div class="arch-step">
+              <div class="arch-step-title">分析层</div>
+              <div class="arch-step-desc">按餐厅、年份与州进行 SQL 聚合</div>
+            </div>
+            <div class="arch-step">
+              <div class="arch-step-title">报告层</div>
+              <div class="arch-step-desc">RMarkdown PDF 表格 + 趋势图</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="modal-section-label">ERD</div>
+        <figure class="erd-figure">
+          <img
+            class="erd-image"
+            src="project_popups/assets/restaurant/restaurant-ERD.png?v=3"
+            alt="餐饮分析模式的实体关系图"
+          >
+          <figcaption style="margin-top:8px;color:var(--muted);font-size:12px;line-height:1.6;text-align:center;">
+            规范化的 3NF 模式,展示实体关系与关键约束。
+          </figcaption>
+          <div style="margin-top:6px;text-align:center;">
+            <a href="project_popups/assets/restaurant/restaurant-ERD.png?v=3" target="_blank" rel="noopener noreferrer" style="font-size:11px;color:var(--accent);letter-spacing:0.04em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid color-mix(in srgb, var(--accent) 35%, transparent);padding-bottom:2px;">
+              查看完整 ERD
+            </a>
+          </div>
+        </figure>
+      </div>
+    </div>
+  </div>
+  <div class="modal-section">
+    <div class="modal-section-label">分析输出示例</div>
+    <div class="sample-grid">
+      <div class="sample-card">
+        <img
+          class="sample-image sample-image--table1"
+          src="project_popups/assets/restaurant/table1.png"
+          alt="表 1:餐厅业绩汇总"
+        >
+      </div>
+      <div class="sample-card">
+        <div class="sample-image-stack">
+          <img
+            class="sample-image"
+            src="project_popups/assets/restaurant/table2.png"
+            alt="表 2:2025 年销售分析"
+          >
+          <img
+            class="sample-image"
+            src="project_popups/assets/restaurant/table3.png"
+            alt="表 3:2024 年销售分析"
+          >
+        </div>
+      </div>
+    </div>
+    <div class="sample-card" style="margin-top:12px;">
+      <img
+        class="sample-image"
+        src="project_popups/assets/restaurant/figure1.png"
+        alt="图 1:佛罗里达州餐厅营收趋势"
+      >
+      <p class="modal-overview" style="margin-top:10px;">
+        2017 至 2025 年间,佛罗里达州所有餐厅在食品与酒水方面的总营收。该趋势反映了营收随时间的变化。
+      </p>
+    </div>
+  </div>
+  <div class="modal-section">
+    <div class="modal-section-label">工程亮点</div>
+    <ul class="detail-list">
+      <li>MySQL DDL 在所有核心表上强制执行关系完整性、唯一性与域规则</li>
+      <li>存储过程支持业务写入,并在写入到访记录前自动创建缺失的关联实体</li>
+      <li>自动化校验对行数以及 FoodBill、AlcoholBill、TipAmount 与总营收等汇总指标进行核对</li>
+      <li>基于脚本的可复现工作流可端到端执行建表、加载、测试、业务逻辑与报告</li>
+    </ul>
+  </div>
+</div>

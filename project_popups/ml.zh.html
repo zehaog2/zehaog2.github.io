@@ -1,0 +1,77 @@
+<div class="project-popup-content ml-popup">
+  <div class="modal-section">
+    <div class="modal-section-label">概览</div>
+    <p class="modal-overview">
+      本项目研究 AAPL 的次日预测,采用双任务设置:三分类方向预测
+      (Down / Flat / Up)与收益率回归。最终数据集包含 2019-2024 年间的
+      1,488 条日频观测,以及 133 个跨技术、基本面、ETF 与宏观信号的工程化特征。
+    </p>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">结果一览</div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-value">67.4%</div>
+        <div class="metric-label">最佳分类准确率</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">0.727</div>
+        <div class="metric-label">最佳回归 R²</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">0.81%</div>
+        <div class="metric-label">回归 RMSE</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">133</div>
+        <div class="metric-label">工程化特征数</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">建模设置</div>
+    <ul class="detail-list">
+      <li>分类模型:Logistic Regression、SVM-RBF、MLP、Random Forest、XGBoost。</li>
+      <li>回归模型:Linear Regression、MLP Regressor、Random Forest Regressor、XGBoost Regressor。</li>
+      <li>时序切分:前 85% 训练(1,265 行),后 15% 测试(223 行),避免前视泄露。</li>
+      <li>验证策略以时间感知为主,而非随机 k-fold 交叉验证。</li>
+    </ul>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">关键发现</div>
+    <div class="ml-findings-grid">
+      <div class="ml-finding-card">
+        <h4>当前数据规模下集成方法领先</h4>
+        <p>
+          XGBoost 与 Random Forest 优于线性基线;在该数据集下,XGBoost 在分类与回归两类任务中均最强。
+        </p>
+      </div>
+      <div class="ml-finding-card">
+        <h4>时间感知验证不可或缺</h4>
+        <p>
+          随机 k-fold 验证会高估置信度;TimeSeriesSplit 与严格的时序留出能给出更贴近金融场景的真实评估。
+        </p>
+      </div>
+      <div class="ml-finding-card">
+        <h4>特征工程驱动提升</h4>
+        <p>
+          动量比率、滞后收益率/方向以及波动性特征,与宏观背景结合,贡献了大部分预测信号。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">特征信号摘要</div>
+    <ul class="detail-list">
+      <li>Top 10 特征贡献了 53.8% 的模型整体重要度。</li>
+      <li>动量类指标(price-to-EMA、RSI、MACD)构成最强的信号簇。</li>
+      <li>滞后方向与滞后收益率特征是表现稳定的高排名时序预测因子。</li>
+      <li>波动性与宏观背景同样关键:Bollinger %B、ATR、VIX 进入了顶部输入特征。</li>
+    </ul>
+  </div>
+
+</div>

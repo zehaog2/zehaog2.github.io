@@ -1,0 +1,21 @@
+{
+  "id": "db",
+  "cardTitle": "餐饮数据库",
+  "cardDesc": "以架构为核心的数据工程项目:3NF 模式、ETL 质量管控、校验框架与自动化报告管线。",
+  "cardFooterTag": "SQL · R",
+  "label": "",
+  "title": "面向餐饮分析的数据库设计",
+  "period": "",
+  "overview": "端到端的餐饮分析数据库管线,强调设计与可靠性:3NF 建模、MySQL 完整性约束、ETL 清洗与去重、源端与库内一致性校验、存储过程,以及 RMarkdown 报告输出。包含历史数据运行的快照指标。",
+  "details": [
+    "3NF 模式设计,使用 PK/FK 与完整性约束",
+    "ETL 管线:清理哨兵值、规范化实体并对客户进行去重",
+    "校验框架:对行数与财务汇总进行核对",
+    "存储过程支撑业务写入,并自动处理缺失关联实体",
+    "由 SQL 驱动的自动化 RMarkdown 报告"
+  ],
+  "images": 2,
+  "published": true,
+  "backgroundImage": "db.jpg",
+  "popupFile": "db.html"
+}

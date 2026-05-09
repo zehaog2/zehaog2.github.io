@@ -1,0 +1,17 @@
+{
+  "id": "lobster",
+  "cardTitle": "龙虾幼体存活分析",
+  "cardDesc": "基于缅因湾热实验数据(BCO-DMO),对美洲龙虾幼体存活进行分类、回归与 Kaplan–Meier 生存分析。",
+  "cardFooterTag": "Python · scikit-learn",
+  "title": "美洲龙虾幼体存活分析",
+  "period": "",
+  "overview": "",
+  "metrics": [],
+  "details": [],
+  "tags": [],
+  "images": 0,
+  "github": "https://github.com/zehaog2",
+  "published": true,
+  "backgroundImage": "lobster.jpg",
+  "popupFile": "lobster.html"
+}

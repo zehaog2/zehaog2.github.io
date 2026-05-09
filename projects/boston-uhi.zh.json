@@ -1,0 +1,18 @@
+{
+  "id": "boston-uhi",
+  "cardTitle": "波士顿城市热岛",
+  "cardDesc": "针对波士顿都会区的城市热岛特征刻画与分析。",
+  "cardFooterTag": "ArcGIS Pro",
+  "label": "城市热岛",
+  "title": "波士顿城市热岛",
+  "period": "",
+  "overview": "",
+  "metrics": [],
+  "details": [],
+  "tags": [],
+  "images": 0,
+  "github": "https://github.com/zehaog2",
+  "published": true,
+  "backgroundImage": "boston-uhi.jpg",
+  "popupFile": "boston-uhi.html"
+}

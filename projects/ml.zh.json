@@ -1,0 +1,27 @@
+{
+  "id": "ml",
+  "cardTitle": "时间序列分类的 ML 集成模型",
+  "cardDesc": "基于报告的 ML 案例研究:在严格时序验证下,XGBoost 取得 67.4% 分类准确率与 0.727 R²。",
+  "cardFooterTag": "Python",
+  "label": "",
+  "title": "时间序列分类的 ML 集成模型",
+  "period": "",
+  "overview": "AAPL 次日预测管线,同时支持分类(Down/Flat/Up)与回归两类目标。基于 1,488 条日频观测与 133 个工程化特征(技术指标、基本面、ETF 与宏观信号),并采用严格的时序验证以避免数据泄露。",
+  "metrics": [
+    { "value": "67.4%", "label": "最佳分类准确率" },
+    { "value": "0.727", "label": "最佳回归 R²" },
+    { "value": "0.81%", "label": "回归 RMSE" }
+  ],
+  "details": [
+    "在统一数据与预处理下,对九种模型同时进行分类与回归对比",
+    "采用严格时序切分与时间感知验证,避免未来信息泄露与指标虚高",
+    "XGBoost 在两类任务中均表现最佳,分类任务在 Up/Down 区分上最为稳健",
+    "在当前数据规模下,特征工程与集成方法的提升超过更深层的网络结构"
+  ],
+  "tags": ["Python", "XGBoost", "Scikit-learn", "Time Series", "Feature Engineering"],
+  "images": 4,
+  "github": "",
+  "published": true,
+  "backgroundImage": "ml.jpg",
+  "popupFile": "ml.html"
+}

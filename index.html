@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Henry Guo</title>
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('lang');
+      var lang = saved && (saved === 'en' || saved === 'zh')
+        ? saved
+        : ((navigator.language || '').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en');
+      document.documentElement.setAttribute('lang', lang === 'zh' ? 'zh-Hans' : 'en');
+    } catch (e) {}
+  })();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link
   rel="stylesheet"
@@ -30,8 +41,8 @@
     --shadow-rgb: 15, 23, 42;
 
     --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-      'Helvetica Neue', Arial, sans-serif;
-    --font-display: 'Syne', sans-serif;
+      'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    --font-display: 'Syne', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
 
     /* Between 110% and 125% browser zoom; scales px layout and type together */
     --page-scale: 1.175;
@@ -101,48 +112,62 @@
     border: 0;
   }
 
-  /* ── PAGE SHELL: primary (hero + projects) left, experience rail right ── */
+  /* ── PAGE SHELL: primary (hero + projects) left, hobbies rail right ── */
   .page-shell {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
-    gap: 0;
+    gap: 48px;
     align-items: start;
   }
 
+  .page-main {
+    min-width: 0;
+  }
+
+  .page-sidebar {
+    min-width: 0;
+  }
+
+  @media (min-width: 961px) {
+    .page-shell {
+      grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+      column-gap: 48px;
+      row-gap: 0;
+    }
+
+    .page-sidebar {
+      position: sticky;
+      top: 28px;
+    }
+  }
+
   .hero {
-    grid-column: 1;
-    grid-row: 1;
     min-width: 0;
   }
 
   .page-projects {
-    grid-column: 1;
-    grid-row: 2;
     min-width: 0;
     margin-top: 0;
   }
 
   @media (min-width: 961px) {
-    .page-shell {
-      grid-template-columns: minmax(0, 1fr);
-      grid-template-rows: auto auto;
-      column-gap: 0;
-    }
-
-    .hero {
-      grid-column: 1;
-      grid-row: 1;
-    }
-
     .page-projects {
-      grid-column: 1;
-      grid-row: 2;
       margin-top: 72px;
     }
   }
 
   @media (max-width: 960px) {
+  }
+
+  .hobbies-panel .section-header {
+    margin-bottom: 20px;
+  }
+
+  .hobbies-text {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    letter-spacing: 0.01em;
   }
 
   /* ── HERO ── */
@@ -205,17 +230,6 @@
     font-weight: 500;
     color: var(--accent2);
     opacity: 0.9;
-  }
-
-  .hero-name-zh {
-    display: block;
-    margin-top: 0.45em;
-    font-family: ui-sans-serif, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-    font-size: inherit;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-    line-height: 1.3;
   }
 
   .hero-sub {
@@ -1680,47 +1694,132 @@
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* ── LANGUAGE SWITCHER ── */
+  .lang-switcher {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 50;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    background: rgba(var(--bg-rgb), 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    box-shadow: 0 4px 14px rgba(var(--shadow-rgb), 0.18);
+    font-family: var(--font-body);
+  }
+
+  .lang-switcher button {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    padding: 6px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    min-width: 36px;
+    text-align: center;
+  }
+
+  .lang-switcher button:hover {
+    color: var(--text);
+  }
+
+  .lang-switcher button.active {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(var(--shadow-rgb), 0.18);
+  }
+
+  .lang-switcher button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 520px) {
+    .lang-switcher {
+      top: 12px;
+      right: 12px;
+    }
+
+    .lang-switcher button {
+      padding: 5px 10px;
+      min-width: 32px;
+      font-size: 11px;
+    }
+  }
+
+  html[lang^="zh"] body {
+    font-feature-settings: normal;
+  }
 </style>
 </head>
 <body>
 
+<div class="lang-switcher" role="group" data-i18n-attr="aria-label:aria.langGroup" aria-label="Language">
+  <button type="button" data-lang="en" class="active" aria-pressed="true" data-i18n-attr="aria-label:aria.langEn" aria-label="Switch to English">EN</button>
+  <button type="button" data-lang="zh" aria-pressed="false" lang="zh-Hans" data-i18n-attr="aria-label:aria.langZh" aria-label="切换到简体中文">中</button>
+</div>
+
 <main>
   <div class="page-shell">
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-intro-row">
-        <div class="hero-intro-copy">
-          <div class="hero-title-row">
-            <div class="hero-title-stack">
-              <h1 class="hero-title">Zehao <span class="hero-name-mid">(Henry)</span> Guo<span class="hero-name-zh" lang="zh-Hans">郭泽灏</span></h1>
+    <div class="page-main">
+      <!-- HERO -->
+      <section class="hero">
+        <div class="hero-intro-row">
+          <div class="hero-intro-copy">
+            <div class="hero-title-row">
+              <div class="hero-title-stack">
+                <h1 class="hero-title" data-i18n-html="hero.title.html">Zehao <span class="hero-name-mid">(Henry)</span> Guo</h1>
+              </div>
+            </div>
+            <p class="hero-sub"><span data-i18n="hero.sub.line1">BS Applied Mathematics @ UIUC (Aug 2020 – 2024)</span><br><span data-i18n="hero.sub.line2">MS Data Science @ Northeastern (Jan 2025 – present)</span><br><em class="hero-sub-tagline" data-i18n="hero.sub.tagline">I build data pipelines and analytics systems. I generally use the tools that work best for the task at hand. I aim to support environmental understanding and improve quality of life.</em></p>
+            <div class="hero-links">
+              <a href="https://www.linkedin.com/in/henryguo518" target="_blank" data-i18n="hero.links.linkedin">LinkedIn</a>
+              <a href="https://github.com/zehaog2" target="_blank" data-i18n="hero.links.github">GitHub</a>
+              <a href="mailto:guo.zeh@northeastern.edu" data-i18n="hero.links.email">Email</a>
             </div>
           </div>
-          <p class="hero-sub">BS Applied Mathematics @ UIUC (Aug 2020 – 2024)<br>MS Data Science @ Northeastern (Jan 2025 – present)<br><em class="hero-sub-tagline">I build data pipelines and analytics systems. I generally use the tools that work best for the task at hand. I aim to support environmental understanding and improve quality of life.</em></p>
-          <div class="hero-links">
-            <a href="https://www.linkedin.com/in/henryguo518" target="_blank">LinkedIn</a>
-            <a href="https://github.com/zehaog2" target="_blank">GitHub</a>
-            <a href="mailto:guo.zeh@northeastern.edu">Email</a>
-          </div>
+          <img
+            class="hero-photo"
+            src="images/Sheep.jpg"
+            alt=""
+            width="240"
+            height="240"
+            loading="eager"
+            decoding="async"
+            onerror="this.style.display='none'"
+          >
         </div>
-        <img
-          class="hero-photo"
-          src="images/Sheep.jpg"
-          alt=""
-          width="240"
-          height="240"
-          loading="eager"
-          decoding="async"
-          onerror="this.style.display='none'"
-        >
-      </div>
-    </section>
+      </section>
 
-    <div class="page-projects">
-      <div class="section-header">
-        <span class="section-heading">Projects</span>
+      <div class="page-projects">
+        <div class="section-header">
+          <span class="section-heading" data-i18n="section.projects">Projects</span>
+        </div>
+        <div class="projects-grid"></div>
       </div>
-      <div class="projects-grid"></div>
     </div>
+
+    <aside class="page-sidebar" data-i18n-attr="aria-label:aria.hobbies" aria-label="Hobbies">
+      <section class="hobbies-panel">
+        <div class="section-header">
+          <span class="section-heading" data-i18n="section.hobbies">Hobbies</span>
+        </div>
+        <p class="hobbies-text" data-i18n="hobbies.text">I love playing tennis (NTRP rating ≈ 3.5); I enjoy playing GO (Weiqi, Baduk); and my favorite author is George R.R. Martin</p>
+      </section>
+    </aside>
   </div>
 </main>
 
@@ -1737,6 +1836,7 @@
   crossorigin=""
   defer
 ></script>
-<script src="js/projects.js?v=33" defer></script>
+<script src="js/i18n.js?v=1" defer></script>
+<script src="js/projects.js?v=34" defer></script>
 </body>
 </html>

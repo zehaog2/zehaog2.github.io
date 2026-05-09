@@ -1,0 +1,155 @@
+<div class="project-popup-content met-popup">
+  <div class="met-hero">
+    <p class="met-positioning">
+      本项目是一套面向高波动天气工况的城市气温实时预测系统。
+    </p>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">问题与价值</div>
+    <p class="modal-overview">
+      天气应用早就显示气温,为什么还要做这件事?<br>
+      在普通的日子里,这些应用大多够用。但在复杂、高波动的日子里——海风时机、逆温破裂、云况变化与局地地形效应叠加在一起——预报的实际偏差会比一个数字所暗示的大得多。
+      把这些极端日子预测准,意义并不抽象:学校与户外作业者能更早做好热风险准备,公用事业能在高峰负荷前更聪明地调度,机场与城市运营能在天气快速切换时更顺畅,赛事与活动方也能更可靠地做出 go/no-go 决定。
+      本项目正是面向这一缺口:把实时观测、模型离散度与城市级物理信号结合起来,给出一个更清晰、更可解释的气温风险判断。气候系统正变得不再稳定、极端日子的频率上升,显式处理不确定性与机制切换的系统,价值会越来越突出。
+    </p>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">高波动日预测为什么难</div>
+    <ul class="detail-list">
+      <li>日最高气温对时机极为敏感:海风起时、逆温崩塌、云量演化与地形驱动的流动切换,任何一项偏差都可能让结果偏离若干度。</li>
+      <li>城市效应与邻近水体带来额外的微气候结构,大尺度模型未必能在决策时间尺度上分辨清楚。</li>
+      <li>这些过程一旦叠加,微小的时机误差会被放大,模型离散度往往迅速扩大。</li>
+    </ul>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">系统管线</div>
+    <div
+      class="met-stage-flow met-stage-flow--with-feedback"
+      role="list"
+      aria-label="正向流程:数据获取、城市模块、风险计算、输出;输出向城市模块提供反馈"
+    >
+      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="AWS、Iowa Environmental Mesonet (IEM)、NOAA、NWS 等数据源。">
+        <div class="met-stage-title">数据获取</div>
+        <p class="met-stage-text">拉取并处理多源气象观测与集合预报输出</p>
+      </div>
+      <div class="met-stage-arrow" aria-hidden="true">→</div>
+      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="全局物理模块独立运行;各城市模块依赖局地微气候物理或规则,这些规则源自对最常见模型失败的天气工况进行分析与归类,并通过事后学习与规则迭代不断更新。">
+        <div class="met-stage-title">物理微调</div>
+        <p class="met-stage-text">气象学与逻辑规则驱动的分析管线</p>
+      </div>
+      <div class="met-stage-arrow" aria-hidden="true">→</div>
+      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="基于离散度的排名与概率分析。">
+        <div class="met-stage-title">风险计算</div>
+        <p class="met-stage-text">集合分析与概率化实时预测</p>
+      </div>
+      <div class="met-stage-arrow" aria-hidden="true">→</div>
+      <div class="met-stage-card met-stage-card--diagnostic" role="listitem" tabindex="0" data-tip="温度预测、集合离散度、趋势行为与上下文诊断。失败案例会被复盘分析,然后回写到城市模块。">
+        <div class="met-stage-title">数据输出与分析</div>
+        <p class="met-stage-text">在预报旁同时给出离散度与机制风险背景</p>
+      </div>
+      <div class="met-feedback-band">
+        <div class="met-feedback-band-inner">
+          <svg class="met-feedback-svg" viewBox="0 0 100 22" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <defs>
+              <marker id="met-feedback-arrowhead" markerWidth="2.5" markerHeight="2.5" refX="1.9" refY="1.25" orient="auto">
+                <polygon points="0 0, 2.5 1.25, 0 2.5" fill="currentColor"/>
+              </marker>
+            </defs>
+            <path
+              d="M 90 2 L 90 15 L 14 15 L 14 5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="0.3"
+              marker-end="url(#met-feedback-arrowhead)"
+            />
+          </svg>
+          <p class="met-feedback-caption">事后学习用于打磨城市模块规则与特定天气工况的处理方式。我把这种做法称为"额外过拟合"——它能把异常事件预测得格外准。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">模型离散度 / IQR</div>
+    <figure class="met-figure met-spread-chart">
+      <img
+        class="met-chart-image"
+        src="project_popups/assets/met/IQR.png"
+        alt="选定城市的模型离散度与 IQR 图"
+        loading="lazy"
+        decoding="async"
+      >
+    </figure>
+    <ul class="detail-list">
+      <li>该图展示了主要商用气温模型对 2026 年 5 月 8 日各城市最高气温的预报。</li>
+      <li>图中的星标为重点模型,挑选依据包括近 7 日表现(RMSE 多控制在 2°F 以内)、偏差行为,以及在该城市当前天气工况下已知的模型优劣。</li>
+      <li>San Francisco (KSFO)、Los Angeles (KLAX) 离散度最大。这两座加州沿海城市处于典型的太平洋海洋边界层与海风工况,几乎挑战所有模型。</li>
+      <li>Denver (KDEN) 不确定性同样较高,与多山地形带来的变率以及边界层快速切换一致。</li>
+      <li>相对地,美国东海岸典型晴天的预报,比如 Philadelphia (KPHL)、Boston (KBOS)、首都 (KDCA),通常既准确又集中。</li>
+    </ul>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">案例</div>
+    <div class="met-event-grid">
+      <article class="met-event-card">
+        <h4 class="met-event-title">KSFO - 2026 年 3 月 19 日</h4>
+        <p class="met-event-regime">工况:海风混合峰值与温度滞后</p>
+        <figure class="met-figure met-event-figure">
+          <img
+            class="met-chart-image"
+            src="project_popups/assets/met/event_trend_ksfo_2026-03-19.png"
+            alt="KSFO 2026 年 3 月 19 日最高气温窗口内实测与基线、HRRR 对比"
+            loading="lazy"
+            decoding="async"
+          >
+        </figure>
+        <ul class="detail-list">
+          <li><strong>模型遗漏:</strong> 在风向切换窗口内,温度仍可能继续上行;海风起并不必然意味着降温。</li>
+          <li><strong>观测:</strong> 海风约在下午 4 点起(HRRR 在 4 点更新,直接预测气温向下),气温由 78°F 回落至 75°F。随后西风加强,5 点前气温迅速跃升至 84°F,之后才进入海洋降温阶段。</li>
+          <li><strong>结论:</strong> 复盘海风起后的气温尖峰原因;明确处理过渡窗口;在确认日最高气温锁定之前,要求出现降温验证信号。</li>
+        </ul>
+      </article>
+      <article class="met-event-card">
+        <h4 class="met-event-title">KDCA - 2026 年 2 月 18 日</h4>
+        <p class="met-event-regime">工况:近地解耦与共识失效</p>
+        <figure class="met-figure met-event-figure">
+          <img
+            class="met-chart-image"
+            src="project_popups/assets/met/event_trend_kdca_2026-02-18.png"
+            alt="KDCA 2026 年 2 月 18 日最高气温窗口内实测与基线、HRRR 对比"
+            loading="lazy"
+            decoding="async"
+          >
+        </figure>
+        <ul class="detail-list">
+          <li><strong>模型遗漏:</strong> 当 KDCA 出现局地近地解耦时,区域整体与共识的偏暖结果可能无法兑现。</li>
+          <li><strong>观测:</strong> 内陆邻站保持偏暖,而 KDCA 在独特的解耦条件下未能与之收敛。</li>
+          <li><strong>结论:</strong> 即便整体指引偏高,也要把局地解耦诊断提升为硬性风险控制。</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">技术可信度</div>
+    <ul class="detail-list">
+      <li>模块化架构。</li>
+      <li>透明且可扩展的局地规则:城市行为以配置或物理形式显式表达,并通过规范化的 schema 规划保证覆盖增加时输出仍然一致。</li>
+      <li>预报旁同时呈现集合离散度、趋势行为与上下文诊断,用于量化置信度并突出工况风险。</li>
+      <li>若把该系统用于普通(非高波动)日的气温预测,模型输入会被赋予较高权重。(但在那种日子,任何天气应用其实都够用了。)</li>
+    </ul>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">局限与下一步</div>
+    <ul class="detail-list">
+      <li>局限:尚未建立完整的历史档案校准框架;通过优化概率框架,风险分析的效率仍有提升空间。</li>
+      <li>当前优势:在最难的工况上提供了可审计的事件复盘、不确定性诊断与可靠性控制。</li>
+      <li>近期下一步:继续针对失败工况开展定向研究,并把研究成果转化为显式的代码与文档更新;探索更高效的贝叶斯风险分析框架。</li>
+    </ul>
+  </div>
+</div>

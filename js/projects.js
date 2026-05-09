@@ -1,6 +1,21 @@
 (function () {
   let projectsList = [];
   let lastFocusedElement = null;
+  let lastOpenIndex = null;
+  let projectOrder = [];
+
+  function currentLang() {
+    if (typeof window !== 'undefined' && typeof window.__lang === 'string') return window.__lang;
+    return 'en';
+  }
+
+  function tr(key, fallback) {
+    if (window.__i18n && typeof window.__i18n.t === 'function') {
+      const v = window.__i18n.t(key);
+      if (v) return v;
+    }
+    return fallback;
+  }
 
   /** Matches `?v=` on `projects.js` so card photos refresh when you bump the script version in index.html */
   const assetVersion = (function () {
@@ -62,9 +77,10 @@
   function githubLinkHtml(url) {
     if (!url || typeof url !== 'string' || !/^https?:\/\//i.test(url.trim())) return '';
     const safeUrl = escapeHtml(url.trim());
+    const label = escapeHtml(tr('modal.viewGithub', 'View on GitHub'));
     return `<a class="github-link" href="${safeUrl}" target="_blank" rel="noopener noreferrer">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-      View on GitHub
+      ${label}
     </a>`;
   }
 
@@ -72,7 +88,7 @@
     const overview =
       p && p.overview != null && String(p.overview).trim()
         ? `<p class="modal-overview">${escapeHtml(String(p.overview).trim())}</p>`
-        : '<p class="modal-overview">Project details are temporarily unavailable.</p>';
+        : `<p class="modal-overview">${escapeHtml(tr('modal.unavailable', 'Project details are temporarily unavailable.'))}</p>`;
     const details =
       p && Array.isArray(p.details) && p.details.length
         ? `<ul class="detail-list">${p.details
@@ -89,17 +105,17 @@
         : '';
     return `<div class="project-popup-content">
       <div class="modal-section">
-        <div class="modal-section-label">Overview</div>
+        <div class="modal-section-label">${escapeHtml(tr('modal.overview', 'Overview'))}</div>
         ${overview}
       </div>
       ${
         details
-          ? `<div class="modal-section"><div class="modal-section-label">Highlights</div>${details}</div>`
+          ? `<div class="modal-section"><div class="modal-section-label">${escapeHtml(tr('modal.highlights', 'Highlights'))}</div>${details}</div>`
           : ''
       }
       ${
         tags
-          ? `<div class="modal-section"><div class="modal-section-label">Stack</div>${tags}</div>`
+          ? `<div class="modal-section"><div class="modal-section-label">${escapeHtml(tr('modal.stack', 'Stack'))}</div>${tags}</div>`
           : ''
       }
       ${githubLinkHtml(p.github)}
@@ -242,18 +258,55 @@
     ).filter((el) => !el.hasAttribute('hidden') && el.getAttribute('aria-hidden') !== 'true');
   }
 
+  function buildLocalizedPopupCandidates(popupFile) {
+    const candidates = [];
+    const lang = currentLang();
+    if (lang === 'zh') {
+      const dot = popupFile.lastIndexOf('.');
+      if (dot > 0) {
+        candidates.push(popupFile.slice(0, dot) + '.zh' + popupFile.slice(dot));
+      }
+    }
+    candidates.push(popupFile);
+    return candidates;
+  }
+
+  async function fetchPopupOnce(popupFile) {
+    let path = 'project_popups/' + encodeURIComponent(popupFile);
+    if (assetVersion) path += '?v=' + encodeURIComponent(assetVersion);
+    const res = await fetch(path, { cache: 'no-store' });
+    if (!res.ok) throw new Error('not ok');
+    return await res.text();
+  }
+
   async function loadPopupBodyHtml(p) {
     const popupFile = safePopupFilename(p.popupFile);
     if (!popupFile) return fallbackPopupBody(p);
-    let path = 'project_popups/' + encodeURIComponent(popupFile);
-    if (assetVersion) path += '?v=' + encodeURIComponent(assetVersion);
-    try {
-      const res = await fetch(path, { cache: 'no-store' });
-      if (!res.ok) return fallbackPopupBody(p);
-      return await res.text();
-    } catch {
-      return fallbackPopupBody(p);
+    const candidates = buildLocalizedPopupCandidates(popupFile);
+    for (const file of candidates) {
+      try {
+        return await fetchPopupOnce(file);
+      } catch {
+        // try next candidate
+      }
     }
+    return fallbackPopupBody(p);
+  }
+
+  async function fetchProjectJson(id) {
+    const lang = currentLang();
+    const candidates = [];
+    if (lang === 'zh') candidates.push(`projects/${id}.zh.json`);
+    candidates.push(`projects/${id}.json`);
+    for (const path of candidates) {
+      try {
+        const r = await fetch(path, { cache: 'no-store' });
+        if (r.ok) return await r.json();
+      } catch {
+        // try next
+      }
+    }
+    throw new Error(`project ${id} unavailable`);
   }
 
   async function openModal(index) {
@@ -279,10 +332,12 @@
         ${statusTagText ? `<span class="modal-status-tag modal-status-tag--corner">${escapeHtml(statusTagText)}</span>` : ''}
       `;
 
+    const closeLabel = escapeHtml(tr('modal.close', 'Close project details'));
+
     if (!isPublished) {
       document.getElementById('modal-content').innerHTML = `
       <div class="${modalHeaderClass}">
-        <button type="button" class="modal-close" onclick="closeModal()" aria-label="Close project details">✕</button>
+        <button type="button" class="modal-close" onclick="closeModal()" aria-label="${closeLabel}">✕</button>
         ${modalHeadingHtml}
       </div>
       <div class="modal-body">
@@ -290,6 +345,7 @@
       </div>
     `;
 
+      lastOpenIndex = index;
       overlay.classList.add('active');
       document.body.style.overflow = 'hidden';
       return;
@@ -299,13 +355,14 @@
 
     document.getElementById('modal-content').innerHTML = `
       <div class="${modalHeaderClass}">
-        <button type="button" class="modal-close" onclick="closeModal()" aria-label="Close project details">✕</button>
+        <button type="button" class="modal-close" onclick="closeModal()" aria-label="${closeLabel}">✕</button>
         ${modalHeadingHtml}
       </div>
       <div class="modal-body">
         ${popupBodyHtml}
       </div>
     `;
+    lastOpenIndex = index;
 
     if (p.id === 'boston-uhi') {
       initBostonUhiInteractive();
@@ -338,6 +395,7 @@
     overlay.classList.remove('active');
     document.body.style.overflow = '';
     overlay.setAttribute('aria-hidden', 'true');
+    lastOpenIndex = null;
     if (lastFocusedElement && document.contains(lastFocusedElement)) {
       lastFocusedElement.focus();
     }
@@ -346,6 +404,8 @@
   function handleOverlayClick(e) {
     if (e.target === document.getElementById('modal-overlay')) closeModal();
   }
+
+  let cardListenersBound = false;
 
   function renderProjectCards(grid, list) {
     grid.innerHTML = list
@@ -366,6 +426,9 @@
       })
       .join('');
 
+    if (cardListenersBound) return;
+    cardListenersBound = true;
+
     grid.addEventListener('click', function onGridClick(e) {
       const card = e.target.closest('.card');
       if (!card) return;
@@ -381,43 +444,69 @@
     });
   }
 
+  function showProjectsError(grid) {
+    const fileHelp =
+      location.protocol === 'file:'
+        ? tr(
+            'projects.error.fileHelp',
+            ' Opening this file directly (file://) blocks loading project data in most browsers. From the site folder run a local server, e.g. python3 -m http.server 8000, then open http://localhost:8000'
+          )
+        : '';
+    const msg = tr('projects.error', 'Projects could not be loaded. Try refreshing the page.') + fileHelp;
+    grid.innerHTML =
+      '<p class="projects-error" style="color:var(--muted);font-size:13px;line-height:1.65;grid-column:1/-1;max-width:42em;">' +
+      escapeHtml(msg) +
+      '</p>';
+  }
+
+  async function loadAllProjects(order) {
+    return Promise.all(order.map((id) => fetchProjectJson(id)));
+  }
+
   async function initProjects() {
     const grid = document.querySelector('.projects-grid');
     if (!grid) return;
 
     try {
-      const fetchOpts = { cache: 'no-store' };
-      const orderRes = await fetch('projects/order.json', fetchOpts);
-      if (!orderRes.ok) throw new Error('order.json');
-      const order = await orderRes.json();
-
-      const loaded = await Promise.all(
-        order.map((id) =>
-          fetch(`projects/${id}.json`, fetchOpts).then((r) => {
-            if (!r.ok) throw new Error(id);
-            return r.json();
-          })
-        )
-      );
-
-      projectsList = loaded;
+      if (!projectOrder.length) {
+        const orderRes = await fetch('projects/order.json', { cache: 'no-store' });
+        if (!orderRes.ok) throw new Error('order.json');
+        projectOrder = await orderRes.json();
+      }
+      projectsList = await loadAllProjects(projectOrder);
       renderProjectCards(grid, projectsList);
     } catch {
-      const fileHelp =
-        location.protocol === 'file:'
-          ? ' Opening this file directly (file://) blocks loading project data in most browsers. From the site folder run a local server, e.g. python3 -m http.server 8000, then open http://localhost:8000'
-          : '';
-      const msg = 'Projects could not be loaded. Try refreshing the page.' + fileHelp;
-      grid.innerHTML =
-        '<p class="projects-error" style="color:var(--muted);font-size:13px;line-height:1.65;grid-column:1/-1;max-width:42em;">' +
-        escapeHtml(msg) +
-        '</p>';
+      showProjectsError(grid);
+    }
+  }
+
+  async function rerenderProjects() {
+    const grid = document.querySelector('.projects-grid');
+    if (!grid) return;
+    try {
+      if (!projectOrder.length) {
+        const orderRes = await fetch('projects/order.json', { cache: 'no-store' });
+        if (!orderRes.ok) throw new Error('order.json');
+        projectOrder = await orderRes.json();
+      }
+      projectsList = await loadAllProjects(projectOrder);
+      renderProjectCards(grid, projectsList);
+    } catch {
+      showProjectsError(grid);
+      return;
+    }
+
+    const overlay = document.getElementById('modal-overlay');
+    if (overlay && overlay.classList.contains('active') && lastOpenIndex != null) {
+      const idx = lastOpenIndex;
+      await openModal(idx);
     }
   }
 
   window.openModal = openModal;
   window.closeModal = closeModal;
   window.handleOverlayClick = handleOverlayClick;
+  window.rerenderProjects = rerenderProjects;
 
   document.addEventListener('keydown', (e) => {
     const overlay = document.getElementById('modal-overlay');
