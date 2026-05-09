@@ -1,10 +1,8 @@
 <div class="project-popup-content met-popup">
   <div class="met-hero">
     <p class="met-positioning">
-      This project is a real-time urban temperature forecasting system focused on difficult, high-volatility weather
-      regimes.
+      This project is a real-time urban temperature system focused on difficult, high-volatility weather regimes.
     </p>
-    <div class="met-boundary-badge">Most useful on volatile weather days</div>
   </div>
 
   <div class="modal-section">
@@ -29,131 +27,130 @@
 
   <div class="modal-section">
     <div class="modal-section-label">System Pipeline</div>
-    <div class="met-stage-flow" role="list" aria-label="Four-stage nowcasting pipeline">
-      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="Ingests observations, NWP guidance, and upper-air or buoy context with freshness checks.">
-        <div class="met-stage-title">Data Inputs</div>
-        <p class="met-stage-text">Observations, NWP, upper-air and regional/buoy context.</p>
+    <div
+      class="met-stage-flow met-stage-flow--with-feedback"
+      role="list"
+      aria-label="Forward path: data fetcher, risk calculator, city modules, outputs; feedback from outputs to city modules"
+    >
+      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="Pulls multi-source observations and NWP ensemble output; validation and freshness rules keep inputs trustworthy for downstream risk logic.">
+        <div class="met-stage-title">Data fetcher</div>
+        <p class="met-stage-text">ASOS/METAR and 21-model NWP ensemble ingestion with validation and freshness checks.</p>
       </div>
       <div class="met-stage-arrow" aria-hidden="true">→</div>
-      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="Runs ingest, validation, and standardized feature shaping to keep downstream logic consistent.">
-        <div class="met-stage-title">Core Pipeline</div>
-        <p class="met-stage-text">Ingest, validate, and standardize for diagnostics and nowcast logic.</p>
+      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="Spread-based ranking and probabilistic core: ensemble IQR, dynamic model weighting from recent skill and bias under the active regime.">
+        <div class="met-stage-title">Risk calculator</div>
+        <p class="met-stage-text">Ensemble spread analysis, IQR-style ranking, and the probabilistic nowcast core.</p>
       </div>
       <div class="met-stage-arrow" aria-hidden="true">→</div>
-      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="Applies city-specific physical rules so local behavior remains explicit and testable.">
-        <div class="met-stage-title">City Intelligence Layer</div>
-        <p class="met-stage-text">Local physics modules by station and city regime.</p>
+      <div class="met-stage-card" role="listitem" tabindex="0" data-tip="City and station modules encode microclimate physics and local rules in config—explicit, testable behavior. Diagnostics from downstream outputs close the loop: post-event learning and rule updates refine regimes over time.">
+        <div class="met-stage-title">City modules</div>
+        <p class="met-stage-text">Per-city logic and transparent local rules—updated when diagnostics and post-event reviews surface systematic misses.</p>
       </div>
       <div class="met-stage-arrow" aria-hidden="true">→</div>
-      <div class="met-stage-card met-stage-card--diagnostic" role="listitem" tabindex="0" data-tip="Publishes nowcast with confidence context and explainable regime-risk flags.">
-        <div class="met-stage-title">Outputs and Diagnostics</div>
-        <p class="met-stage-text">Nowcast, confidence context, and explainable risk flags.</p>
+      <div class="met-stage-card met-stage-card--diagnostic" role="listitem" tabindex="0" data-tip="Forecast plus ensemble spread, trend behavior, and contextual diagnostics. These signals feed back to city modules for regime tuning, explicit rule updates, and auditable failure-regime learning.">
+        <div class="met-stage-title">Outputs and diagnostics</div>
+        <p class="met-stage-text">Nowcast alongside spread and regime-risk context—feeding rule refinement back into city modules.</p>
+      </div>
+      <div class="met-feedback-band">
+        <div class="met-feedback-band-inner">
+          <svg class="met-feedback-svg" viewBox="0 0 100 22" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <defs>
+              <marker id="met-feedback-arrowhead" markerWidth="2.5" markerHeight="2.5" refX="1.9" refY="1.25" orient="auto">
+                <polygon points="0 0, 2.5 1.25, 0 2.5" fill="currentColor"/>
+              </marker>
+            </defs>
+            <path
+              d="M 82 2 L 82 15 L 23 15 L 23 5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="0.3"
+              marker-end="url(#met-feedback-arrowhead)"
+            />
+          </svg>
+          <p class="met-feedback-caption">Feedback loop: diagnostics and post-event learning refine city module rules and regime handling.</p>
+        </div>
       </div>
     </div>
   </div>
 
-  <button
-    type="button"
-    class="met-detail-toggle"
-    id="met-detail-toggle"
-    aria-expanded="false"
-    aria-controls="met-tech-details"
-  >
-    Show technical detail
-  </button>
+  <div class="modal-section">
+    <div class="modal-section-label">Evidence Block A - Model Spread / IQR</div>
+    <figure class="met-figure met-spread-chart">
+      <img
+        class="met-chart-image"
+        src="project_popups/assets/met/IQR.png"
+        alt="Model spread and IQR chart across selected cities"
+        loading="lazy"
+        decoding="async"
+      >
+    </figure>
+    <ul class="detail-list">
+      <li>San Francisco (KSFO) shows the widest spread in this run (about 8F), reflecting strong marine-layer and sea-breeze timing effects on daily maximum temperature.</li>
+      <li>Denver (KDEN) also shows elevated uncertainty (about 6F), consistent with mountainous terrain-driven variability and rapid boundary-layer transitions.</li>
+      <li>By contrast, a typical stable sunny setup in Philadelphia (KPHL) or Boston (KBOS) often clusters below 3F.</li>
+      <li>The starred focus models are updated dynamically each run using recent 7-day skill (RMSE and MAE), bias behavior, and known model strengths or weaknesses under the city’s active regime.</li>
+    </ul>
+  </div>
 
-  <div class="met-tech-details" id="met-tech-details" hidden>
-    <div class="modal-section">
-      <div class="modal-section-label">Evidence Block A - Model Spread / IQR</div>
-      <figure class="met-figure">
-        <img
-          class="met-chart-image"
-          src="project_popups/assets/met/IQR.png"
-          alt="Model spread and IQR chart across selected cities"
-          loading="lazy"
-          decoding="async"
-        >
-      </figure>
-      <ul class="detail-list">
-        <li>San Francisco (KSFO) shows the widest spread in this run (about 10F), reflecting strong marine-layer and sea-breeze timing effects on daily maximum temperature.</li>
-        <li>Denver (KDEN) also shows elevated uncertainty (about 6F), consistent with terrain-driven variability and rapid boundary-layer transitions.</li>
-        <li>By contrast, a typical stable sunny setup in Philadelphia (KPHL) or Boston (KBOS) often clusters below 3F.</li>
-        <li>The starred focus models are updated dynamically each run using recent 7-day skill (RMSE and MAE), bias behavior, and known model strengths or weaknesses under the city’s active regime.</li>
-      </ul>
-      <p class="met-so-what">
-        This pipeline combines real-time multi-source ingestion with city-specific physical feature engineering. Instead of
-        only producing a point estimate, it outputs interpretable uncertainty context for volatile weather regimes.
-      </p>
+  <div class="modal-section">
+    <div class="modal-section-label">Evidence Block B - Volatile-Day Examples</div>
+    <div class="met-event-grid">
+      <article class="met-event-card">
+        <h4 class="met-event-title">KSFO - Mar 19, 2026</h4>
+        <p class="met-event-regime">Regime: Sea-breeze mixing spike with thermal lag</p>
+        <figure class="met-figure met-event-figure">
+          <img
+            class="met-chart-image"
+            src="project_popups/assets/met/event_trend_ksfo_2026-03-19.png"
+            alt="KSFO March 19 2026 actual versus baseline and HRRR around Tmax window"
+            loading="lazy"
+            decoding="async"
+          >
+        </figure>
+        <ul class="detail-list">
+          <li><strong>WhatModelsMissed:</strong> Upside can persist into the wind-shift window; sea-breeze onset is not always immediate cooling.</li>
+          <li><strong>ObservedSignals:</strong> Calm-period dip followed by wind-resumed warming, then a short spike with a sudden wind speed increase at frontal passage before marine cooling phase.</li>
+          <li><strong>ForecastImpact:</strong> Observed max occurred near 5:05 PM local.</li>
+          <li><strong>RuleUpdate:</strong> Treat transition windows explicitly and require cooling confirmation signals before declaring the daily maximum locked.</li>
+        </ul>
+      </article>
+      <article class="met-event-card">
+        <h4 class="met-event-title">KDCA - Feb 18, 2026</h4>
+        <p class="met-event-regime">Regime: Surface decoupling and consensus failure</p>
+        <figure class="met-figure met-event-figure">
+          <img
+            class="met-chart-image"
+            src="project_popups/assets/met/event_trend_kdca_2026-02-18.png"
+            alt="KDCA February 18 2026 actual versus baseline and HRRR around Tmax window"
+            loading="lazy"
+            decoding="async"
+          >
+        </figure>
+        <ul class="detail-list">
+          <li><strong>WhatModelsMissed:</strong> Regional and consensus warmth can fail to realize at KDCA when local surface decoupling is active.</li>
+          <li><strong>ObservedSignals:</strong> Inland neighbors stayed warmer while KDCA failed to converge under decoupling conditions.</li>
+          <li><strong>ForecastImpact:</strong> Observed max occurred near 7:15 PM local.</li>
+          <li><strong>RuleUpdate:</strong> Elevate local decoupling diagnostics to hard-stop risk controls, even when broader guidance clusters higher.</li>
+        </ul>
+      </article>
     </div>
+  </div>
 
-    <div class="modal-section">
-      <div class="modal-section-label">Evidence Block B - Volatile-Day Reconstructions</div>
-      <div class="met-event-grid">
-        <article class="met-event-card">
-          <h4 class="met-event-title">KSFO - Mar 19, 2026</h4>
-          <p class="met-event-regime">Regime: Sea-breeze mixing spike with thermal lag</p>
-          <figure class="met-figure met-event-figure">
-            <img
-              class="met-chart-image"
-              src="project_popups/assets/met/event_trend_ksfo_2026-03-19.png"
-              alt="KSFO March 19 2026 actual versus baseline and HRRR around Tmax window"
-              loading="lazy"
-              decoding="async"
-            >
-          </figure>
-          <ul class="detail-list">
-            <li><strong>whatModelsMissed:</strong> Upside can persist into the wind-shift window; sea-breeze onset is not always immediate cooling.</li>
-            <li><strong>keyObservedSignals:</strong> Calm-period dip followed by wind-resumed warming, then a short spike at frontal passage before marine cooling phase.</li>
-            <li><strong>forecastImpact:</strong> Observed max occurred near 5:05 PM local.</li>
-            <li><strong>ruleUpdate:</strong> Treat transition windows explicitly and require cooling confirmation signals before declaring the daily maximum locked.</li>
-          </ul>
-        </article>
-        <article class="met-event-card">
-          <h4 class="met-event-title">KDCA - Feb 18, 2026</h4>
-          <p class="met-event-regime">Regime: Surface decoupling and consensus failure</p>
-          <figure class="met-figure met-event-figure">
-            <img
-              class="met-chart-image"
-              src="project_popups/assets/met/event_trend_kdca_2026-02-18.png"
-              alt="KDCA February 18 2026 actual versus baseline and HRRR around Tmax window"
-              loading="lazy"
-              decoding="async"
-            >
-          </figure>
-          <ul class="detail-list">
-            <li><strong>whatModelsMissed:</strong> Regional and consensus warmth can fail to realize at KDCA when local surface decoupling is active.</li>
-            <li><strong>keyObservedSignals:</strong> Inland references stayed warmer while KDCA failed to converge under decoupling conditions.</li>
-            <li><strong>forecastImpact:</strong> Observed max occurred near 7:15 PM local.</li>
-            <li><strong>ruleUpdate:</strong> Elevate local decoupling diagnostics to hard-stop risk controls, even when broader guidance clusters higher.</li>
-          </ul>
-        </article>
-      </div>
-      <p class="met-provenance">
-        If a preferred baseline model is unavailable for a date window, fallback guidance is used and logged in status
-        output to keep provenance explicit.
-      </p>
-      <p class="met-so-what">
-        Cases document how regime cues and model spread are interpreted in context, with emphasis on transparent reasoning
-        and post-event learning loops.
-      </p>
-    </div>
+  <div class="modal-section">
+    <div class="modal-section-label">Technical Credibility</div>
+    <ul class="detail-list">
+      <li>Modular architecture: risk calculator, data fetcher, and city modules separate concerns for traceability and maintainability.</li>
+      <li>Transparent local rules: station or city behavior is explicit in config and physics logic, with normalized-schema planning to keep outputs consistent as coverage grows.</li>
+      <li>Ensemble spread, trend behavior, and contextual diagnostics are surfaced alongside the forecast to quantify confidence and highlight regime risk.</li>
+    </ul>
+  </div>
 
-    <div class="modal-section">
-      <div class="modal-section-label">Technical Credibility</div>
-      <ul class="detail-list">
-        <li>Modular architecture: Trading_runner.py, Data_fetcher.py, and city modules separate concerns for traceability and maintainability.</li>
-        <li>Transparent local rules: station or city behavior is explicit in config and physics logic, with normalized-schema planning to keep outputs consistent as coverage grows.</li>
-        <li>Ensemble spread, trend behavior, and contextual diagnostics are surfaced alongside the forecast to quantify confidence and highlight regime risk.</li>
-      </ul>
-    </div>
-
-    <div class="modal-section">
-      <div class="modal-section-label">Limitations and Next Steps</div>
-      <ul class="detail-list">
-        <li>Current limitation: the project does not yet use a full historical archive calibration framework across all stations and dates.</li>
-        <li>What is strong today: detailed event reconstructions, uncertainty diagnostics, and reliability controls that make reasoning auditable on difficult regimes.</li>
-        <li>Near-term next steps: continue targeted failure-regime research and convert those findings into explicit code and documentation updates.</li>
-      </ul>
-    </div>
+  <div class="modal-section">
+    <div class="modal-section-label">Limitations and Next Steps</div>
+    <ul class="detail-list">
+      <li>Current limitation: the project does not yet use a full historical archive calibration framework.</li>
+      <li>What is strong today: detailed event analysis, uncertainty diagnostics, and reliability controls that make reasoning auditable on difficult regimes.</li>
+      <li>Near-term next steps: continue targeted failure-regime research and convert those findings into explicit code and documentation updates.</li>
+    </ul>
   </div>
 </div>

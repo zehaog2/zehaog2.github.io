@@ -232,20 +232,6 @@
     setTimeout(() => map.invalidateSize(), 0);
   }
 
-  function initMetPopupInteractive() {
-    const toggle = document.getElementById('met-detail-toggle');
-    const details = document.getElementById('met-tech-details');
-    if (!toggle || !details || toggle.dataset.initialized === 'true') return;
-    toggle.dataset.initialized = 'true';
-
-    toggle.addEventListener('click', () => {
-      const nextExpanded = toggle.getAttribute('aria-expanded') !== 'true';
-      toggle.setAttribute('aria-expanded', nextExpanded ? 'true' : 'false');
-      toggle.textContent = nextExpanded ? 'Hide technical detail' : 'Show technical detail';
-      details.hidden = !nextExpanded;
-    });
-  }
-
   function getFocusableInModal() {
     const modal = document.getElementById('modal-content');
     if (!modal) return [];
@@ -322,10 +308,6 @@
     if (p.id === 'boston-uhi') {
       initBostonUhiInteractive();
     }
-    if (p.id === 'met') {
-      initMetPopupInteractive();
-    }
-
     const modal = document.getElementById('modal-content');
     const title = modal ? modal.querySelector('.modal-title') : null;
     lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
