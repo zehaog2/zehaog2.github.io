@@ -1,0 +1,26 @@
+{
+  "id": "coffee",
+  "cardTitle": "什么样的咖啡更好喝？",
+  "cardDesc": "基于 8,387 条 CoffeeReview 评论的文本挖掘与情感分析：词与二元词、LDA（k=3/5/7）、TF–IDF 与评分、Bing/AFINN/NRC 情感——甜感、巧克力与水果词汇即“品质用语”。",
+  "cardFooterTag": "R",
+  "label": "",
+  "title": "什么样的咖啡更好喝？",
+  "period": "",
+  "overview": "对 8,387 条咖啡评论做文本挖掘与情感分析，探讨哪些特征会显著提升专业评审的打分；数据来自 CoffeeReview.com（1997–2025）的 Blind Assessment、Notes、Who Should Drink It 与 Bottom Line 四类文字。",
+  "metrics": [
+    { "value": "8,387", "label": "咖啡评论文本" },
+    { "value": "4", "label": "每条测评的评论栏目数" },
+    { "value": "3", "label": "情感词典（Bing、AFINN、NRC）" }
+  ],
+  "details": [
+    "各类目 Top 词与二元词（分面柱状图）：甜感、巧克力与水果在四个栏目中均为最突出词簇之一",
+    "LDA（k=3/5/7）：甜感、巧克力与水果在各主题数与各栏目中持续为最高 beta 词",
+    "平均 TF–IDF 与评分在四类文字中均为负相关；三种词典的净情感与评分正相关，并在 2008–2009 与 2020–2021 出现明显下探"
+  ],
+  "tags": ["R"],
+  "images": 4,
+  "github": "",
+  "published": true,
+  "backgroundImage": "coffee.jpg",
+  "popupFile": "coffee.html"
+}

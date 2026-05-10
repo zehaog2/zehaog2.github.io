@@ -1,0 +1,26 @@
+{
+  "id": "coffee",
+  "cardTitle": "What Makes a Good Coffee?",
+  "cardDesc": "Text mining and sentiment analysis on 8,387 CoffeeReview comments: unigrams, bigrams, LDA at k = 3/5/7, TF–IDF vs rating, and Bing/AFINN/NRC sentiment — sweet, chocolate, and fruit as the vocabulary of quality.",
+  "cardFooterTag": "R",
+  "label": "",
+  "title": "What Makes a Good Coffee?",
+  "period": "",
+  "overview": "Using text mining and sentiment analysis on 8,387 coffee review comments, we investigate what coffee features significantly boost the rating score of a professional reviewer — across Blind Assessment, Notes, Who Should Drink It, and Bottom Line text from CoffeeReview.com (1997–2025).",
+  "metrics": [
+    { "value": "8,387", "label": "Coffee review comments" },
+    { "value": "4", "label": "Comment categories per review" },
+    { "value": "3", "label": "Sentiment lexicons (Bing, AFINN, NRC)" }
+  ],
+  "details": [
+    "Top unigrams and bigrams per category (faceted bar charts): sweet, chocolate, and fruit rank among the most prominent terms across all four comment fields",
+    "LDA at k = 3, 5, and 7: sweet, chocolate, and fruit stay the highest-beta words across topic counts and categories",
+    "Average TF-IDF vs rating is negatively correlated in every category; net sentiment from three lexicons positively tracks rating, with clear drops in 2008–2009 and 2020–2021"
+  ],
+  "tags": ["R"],
+  "images": 4,
+  "github": "",
+  "published": true,
+  "backgroundImage": "coffee.jpg",
+  "popupFile": "coffee.html"
+}

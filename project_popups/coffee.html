@@ -1,0 +1,110 @@
+<div class="project-popup-content coffee-popup">
+  <div class="modal-section">
+    <p class="modal-overview">
+      Using text mining and sentiment analysis on <strong>8,387 coffee review comments</strong>, we investigate a more specific question: what coffee features significantly boost the rating score of a professional reviewer?
+    </p>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">The Data</div>
+    <p class="modal-overview">Reviews from CoffeeReview.com span 1997–2025. Each review contains four comment categories:</p>
+    <ul class="detail-list">
+      <li><strong>Blind Assessment</strong> — sensory evaluation without knowing origin or brand</li>
+      <li><strong>Notes</strong> — background on origin, variety, and processing</li>
+      <li><strong>Who Should Drink It</strong> — recommended audience</li>
+      <li><strong>Bottom Line</strong> — concise summary of overall impression</li>
+    </ul>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">What Words Do Reviewers Reach For?</div>
+    <p class="modal-overview">Top unigrams ranked by frequency, one panel per comment category. Sweet, chocolate, and fruit are the most prominent terms across all four.</p>
+    <div class="coffee-figure-grid">
+      <figure class="coffee-figure">
+        <img
+          src="project_popups/assets/coffee/Vis1.png"
+          alt=""
+          loading="lazy"
+          width="640"
+          height="392"
+        >
+      </figure>
+    </div>
+    <p class="modal-overview">Same structure with two-word phrases.</p>
+    <div class="coffee-figure-grid">
+      <figure class="coffee-figure">
+        <img
+          src="project_popups/assets/coffee/Vis2.png"
+          alt=""
+          loading="lazy"
+          width="640"
+          height="393"
+        >
+      </figure>
+    </div>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">Latent Topics: What Are Reviewers Really Talking About?</div>
+    <p class="modal-overview">
+      Latent Dirichlet Allocation (LDA) is a probabilistic topic model that treats each document as a mixture of latent topics, and each topic as a distribution over words. The <strong>beta value</strong> is the probability of a word given a topic — higher beta means the word is more characteristic of that topic.
+    </p>
+    <p class="modal-overview">
+      Running LDA at k = 3, 5, and 7 topics, sweet, chocolate, and fruit are consistently the highest-beta words across all topic counts and all comment categories. The signal is stable regardless of model complexity.
+    </p>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">Does Distinctive Language Hurt Ratings?</div>
+    <p class="modal-overview">
+      TF-IDF (Term Frequency–Inverse Document Frequency) measures how distinctive a word is to a specific review relative to all other reviews. A higher average TF-IDF indicates the reviewer is using more unique or uncommon language — departing from the shared vocabulary of the corpus.
+    </p>
+    <p class="modal-overview">
+      All four comment categories show a <strong>negative correlation</strong> with rating. Reviewers tend to assign lower scores when their language is more distinctive.
+    </p>
+    <div class="coffee-figure-grid">
+      <figure class="coffee-figure">
+        <img
+          src="project_popups/assets/coffee/Vis3.png"
+          alt=""
+          loading="lazy"
+          width="640"
+          height="401"
+        >
+      </figure>
+    </div>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">Sentiment Tracks Quality — and History</div>
+    <p class="modal-overview">
+      Using Bing, AFINN, and NRC lexicons, net sentiment (positive minus negative word counts) shows a consistent <strong>positive correlation with rating</strong> across all three lexicons. More positively-worded reviews reliably accompany higher scores.
+    </p>
+    <p class="modal-overview">A single time series of annual average sentiment across all reviews. Two sharp drops are clearly visible:</p>
+    <ul class="detail-list">
+      <li><strong>2008–2009</strong> — the financial crisis</li>
+      <li><strong>2020–2021</strong> — COVID-19</li>
+    </ul>
+    <p class="modal-overview">
+      Reviewer sentiment fell in lockstep with broader societal stress. The practical implication: soliciting expert reviews during periods of economic or social disruption produces systematically lower scores — a confound worth controlling for in any longitudinal quality analysis.
+    </p>
+    <div class="coffee-figure-grid">
+      <figure class="coffee-figure">
+        <img
+          src="project_popups/assets/coffee/Vis4.png"
+          alt=""
+          loading="lazy"
+          width="640"
+          height="391"
+        >
+      </figure>
+    </div>
+  </div>
+
+  <div class="modal-section">
+    <div class="modal-section-label">Takeaway</div>
+    <p class="modal-overview">
+      Sweet, chocolate, and fruit are the vocabulary of quality. They appear in top word frequencies, dominant bigrams, stable LDA topics, and positive sentiment scores alike. If a coffee earns those descriptors, the rating follows. If a reviewer reaches for unusual language instead, the score likely won't.
+    </p>
+  </div>
+</div>
