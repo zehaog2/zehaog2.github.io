@@ -1,12 +1,12 @@
 {
   "id": "coffee",
   "cardTitle": "什么样的咖啡更好喝？",
-  "cardDesc": "基于 8,387 条 CoffeeReview 评论的文本挖掘与情感分析：词与二元词、LDA（k=3/5/7）、TF–IDF 与评分、Bing/AFINN/NRC 情感——甜感、巧克力与水果词汇即“品质用语”。",
+  "cardDesc": "基于 CoffeeReview 上 8,387 条评论的文本挖掘与情感分析：词频与二元词、LDA（k=3/5/7）、TF–IDF 与评分的关系，以及 Bing / AFINN / NRC 情感——甜感、巧克力与水果构成贯穿始终的“品质用语”。",
   "cardFooterTag": "R",
   "label": "",
   "title": "什么样的咖啡更好喝？",
   "period": "",
-  "overview": "对 8,387 条咖啡评论做文本挖掘与情感分析，探讨哪些特征会显著提升专业评审的打分；数据来自 CoffeeReview.com（1997–2025）的 Blind Assessment、Notes、Who Should Drink It 与 Bottom Line 四类文字。",
+  "overview": "对 8,387 条咖啡评论做文本挖掘与情感分析，聚焦哪些特征会显著提升专业评审的打分；数据来自 CoffeeReview.com（1997–2025）的 Blind Assessment、Notes、Who Should Drink It 与 Bottom Line 四类文字栏目。",
   "metrics": [
     { "value": "8,387", "label": "咖啡评论文本" },
     { "value": "4", "label": "每条测评的评论栏目数" },
@@ -21,6 +21,6 @@
   "images": 4,
   "github": "",
   "published": true,
-  "backgroundImage": "coffee.jpg",
+  "backgroundImage": "coffee.png",
   "popupFile": "coffee.html"
 }

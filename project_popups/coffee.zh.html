@@ -1,24 +1,24 @@
 <div class="project-popup-content coffee-popup">
   <div class="modal-section">
     <p class="modal-overview">
-      Using text mining and sentiment analysis on <strong>8,387 coffee review comments</strong>, we investigate a more specific question: what coffee features significantly boost the rating score of a professional reviewer?
+      我们基于 <strong>8,387</strong> 条咖啡评论文本开展文本挖掘与情感分析，想更具体地回答：哪些特征会显著提升<strong>专业评审给出的分数</strong>？
     </p>
   </div>
 
   <div class="modal-section">
-    <div class="modal-section-label">The Data</div>
-    <p class="modal-overview">Reviews from CoffeeReview.com span 1997–2025. Each review contains four comment categories:</p>
+    <div class="modal-section-label">数据</div>
+    <p class="modal-overview">数据来自 CoffeeReview.com，时间跨度为 1997–2025。每条测评包含四类文字栏目：</p>
     <ul class="detail-list">
-      <li><strong>Blind Assessment</strong> — sensory evaluation without knowing origin or brand</li>
-      <li><strong>Notes</strong> — background on origin, variety, and processing</li>
-      <li><strong>Who Should Drink It</strong> — recommended audience</li>
-      <li><strong>Bottom Line</strong> — concise summary of overall impression</li>
+      <li><strong>Blind Assessment</strong> — 在不知道产地与品牌时的感官评价</li>
+      <li><strong>Notes</strong> — 产地、豆种与处理法等背景信息</li>
+      <li><strong>Who Should Drink It</strong> — 面向哪类饮用者的推荐</li>
+      <li><strong>Bottom Line</strong> — 对整体印象的简短总结</li>
     </ul>
   </div>
 
   <div class="modal-section">
-    <div class="modal-section-label">What Words Do Reviewers Reach For?</div>
-    <p class="modal-overview">Top unigrams ranked by frequency, one panel per comment category. Sweet, chocolate, and fruit are the most prominent terms across all four.</p>
+    <div class="modal-section-label">评审常用哪些词？</div>
+    <p class="modal-overview">按词频排序的单字词（unigram），每个栏目单独成图。甜感、巧克力与水果相关词汇在四个栏目中都非常突出。</p>
     <div class="coffee-figure-grid">
       <figure class="coffee-figure">
         <img
@@ -30,7 +30,7 @@
         >
       </figure>
     </div>
-    <p class="modal-overview">Same structure with two-word phrases.</p>
+    <p class="modal-overview">二元词（bigram）采用同样的分面结构展示。</p>
     <div class="coffee-figure-grid">
       <figure class="coffee-figure">
         <img
@@ -45,22 +45,22 @@
   </div>
 
   <div class="modal-section">
-    <div class="modal-section-label">Latent Topics: What Are Reviewers Really Talking About?</div>
+    <div class="modal-section-label">潜在主题：评审究竟在谈什么？</div>
     <p class="modal-overview">
-      Latent Dirichlet Allocation (LDA) is a probabilistic topic model that treats each document as a mixture of latent topics, and each topic as a distribution over words. The <strong>beta value</strong> is the probability of a word given a topic — higher beta means the word is more characteristic of that topic.
+      隐狄利克雷分配（LDA）是一种概率主题模型：把每篇文档看作若干潜在主题的混合，每个主题又是词上的概率分布。<strong>beta 值</strong>表示在给定主题下出现某词的概率——beta 越高，该词越能代表这一主题。
     </p>
     <p class="modal-overview">
-      Running LDA at k = 3, 5, and 7 topics, sweet, chocolate, and fruit are consistently the highest-beta words across all topic counts and all comment categories. The signal is stable regardless of model complexity.
+      在主题数分别取 k = 3、5、7 时，甜感、巧克力与水果相关词在所有主题数与四类栏目中始终处于最高 beta 之列；结论对模型复杂度不敏感。
     </p>
   </div>
 
   <div class="modal-section">
-    <div class="modal-section-label">Does Distinctive Language Hurt Ratings?</div>
+    <div class="modal-section-label">用词越“特别”，分数越低吗？</div>
     <p class="modal-overview">
-      TF-IDF (Term Frequency–Inverse Document Frequency) measures how distinctive a word is to a specific review relative to all other reviews. A higher average TF-IDF indicates the reviewer is using more unique or uncommon language — departing from the shared vocabulary of the corpus.
+      TF–IDF（词频–逆文档频率）衡量某词对<strong>单条评论</strong>相对<strong>全语料</strong>的独特程度。平均 TF–IDF 越高，说明评审用语越偏离大家共用的词汇，越“少见”。
     </p>
     <p class="modal-overview">
-      All four comment categories show a <strong>negative correlation</strong> with rating. Reviewers tend to assign lower scores when their language is more distinctive.
+      四个栏目与评分均呈<strong>负相关</strong>：用语越独特，打分往往越低。
     </p>
     <div class="coffee-figure-grid">
       <figure class="coffee-figure">
@@ -76,17 +76,17 @@
   </div>
 
   <div class="modal-section">
-    <div class="modal-section-label">Sentiment Tracks Quality — and History</div>
+    <div class="modal-section-label">情感既刻画品质，也折射时代</div>
     <p class="modal-overview">
-      Using Bing, AFINN, and NRC lexicons, net sentiment (positive minus negative word counts) shows a consistent <strong>positive correlation with rating</strong> across all three lexicons. More positively-worded reviews reliably accompany higher scores.
+      使用 Bing、AFINN、NRC 三套情感词典，以净情感（正面词减负面词计数）衡量：在三种词典下，净情感与评分均呈稳定的<strong>正相关</strong>——措辞越积极，分数越高。
     </p>
-    <p class="modal-overview">A single time series of annual average sentiment across all reviews. Two sharp drops are clearly visible:</p>
+    <p class="modal-overview">下图给出 1997–2025 年全样本的年度平均净情感时间序列，可以清晰看到两次急跌：</p>
     <ul class="detail-list">
-      <li><strong>2008–2009</strong> — the financial crisis</li>
-      <li><strong>2020–2021</strong> — COVID-19</li>
+      <li><strong>2008–2009</strong> — 金融危机</li>
+      <li><strong>2020–2021</strong> — 新冠疫情（COVID-19）</li>
     </ul>
     <p class="modal-overview">
-      Reviewer sentiment fell in lockstep with broader societal stress. The practical implication: soliciting expert reviews during periods of economic or social disruption produces systematically lower scores — a confound worth controlling for in any longitudinal quality analysis.
+      评审情感与社会层面的压力大致同步回落。实务含义是：在经济或社会动荡期集中征集专家测评，可能系统性地压低分数——在做纵向质量对比时，值得作为混杂因素加以控制。
     </p>
     <div class="coffee-figure-grid">
       <figure class="coffee-figure">
@@ -102,9 +102,9 @@
   </div>
 
   <div class="modal-section">
-    <div class="modal-section-label">Takeaway</div>
+    <div class="modal-section-label">结论</div>
     <p class="modal-overview">
-      Sweet, chocolate, and fruit are the vocabulary of quality. They appear in top word frequencies, dominant bigrams, stable LDA topics, and positive sentiment scores alike. If a coffee earns those descriptors, the rating follows. If a reviewer reaches for unusual language instead, the score likely won't.
+      甜感、巧克力与水果，是贯穿高频词、主导二元词、稳定 LDA 主题与正向情感分数的“品质用语”。当一杯咖啡能被这样描述时，分数往往随之走高；若评审不得不动用生僻、独特的措辞，分数多半难以乐观。
     </p>
   </div>
 </div>
