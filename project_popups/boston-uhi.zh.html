@@ -4,9 +4,7 @@
   <div class="modal-section">
     <div class="modal-section-label">概览</div>
     <p class="modal-overview">
-      城市热岛(UHI):指建成区下垫面对太阳辐射的吸收与再发射能力高于自然下垫面,从而出现地表温度偏高的现象。<br>
-      地表温度(LST):由卫星传感器观测得到的地球表面温度。<br>
-      本项目刻画波士顿都会区的 UHI 空间格局,评估土地覆盖构成是否能解释 LST 的空间变化,并以人口普查 tract 为粒度做了次级的环境公平性观察。
+      本项目以交互方式呈现<strong>波士顿城市热岛(UHI)</strong>：将<strong>植被(NDVI)</strong>或<strong>土地覆盖</strong>与<strong>卫星地表温度(LST)</strong>或<strong>热/凉温度区划分</strong>对应起来。可用<strong>图层 3</strong>或<strong>图层 2</strong>作为底图，并与<strong>图层 1</strong>或<strong>图层 4</strong>叠加以对比解读。在城区大部分区域，<strong>植被越少往往对应温度越高</strong>。（UHI：建成区相对自然地表更热；LST：卫星所“看到”的地表温度。）
     </p>
   </div>
 
@@ -17,8 +15,8 @@
 
     <div class="uhi-side">
       <div class="uhi-controls" id="boston-uhi-controls">
-        <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-lst"> 图层 1:地表温度 (LST)</label>
-        <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-land-cover" checked> 图层 2:土地覆盖分类</label>
+        <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-lst" checked> 图层 1:地表温度 (LST)</label>
+        <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-land-cover"> 图层 2:土地覆盖分类</label>
         <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-ndvi" checked> 图层 3:NDVI 植被指数</label>
         <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-zone"> 图层 4:温度区划分类</label>
         <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-tract"> 图层 5:按 tract 平均的 LST</label>
@@ -27,7 +25,7 @@
         <div class="uhi-opacity-title">图层透明度</div>
         <div class="uhi-opacity-row" data-layer-id="uhi-lst">
           <label for="opacity-uhi-lst">图层 1</label>
-          <input id="opacity-uhi-lst" type="range" min="20" max="100" value="90" step="1" data-opacity-layer="uhi-lst">
+          <input id="opacity-uhi-lst" type="range" min="20" max="100" value="100" step="1" data-opacity-layer="uhi-lst">
         </div>
         <div class="uhi-opacity-row" data-layer-id="uhi-land-cover">
           <label for="opacity-uhi-land-cover">图层 2</label>
@@ -35,7 +33,7 @@
         </div>
         <div class="uhi-opacity-row" data-layer-id="uhi-ndvi">
           <label for="opacity-uhi-ndvi">图层 3</label>
-          <input id="opacity-uhi-ndvi" type="range" min="20" max="100" value="50" step="1" data-opacity-layer="uhi-ndvi">
+          <input id="opacity-uhi-ndvi" type="range" min="20" max="100" value="45" step="1" data-opacity-layer="uhi-ndvi">
         </div>
         <div class="uhi-opacity-row" data-layer-id="uhi-zone">
           <label for="opacity-uhi-zone">图层 4</label>
@@ -47,11 +45,11 @@
         </div>
       </div>
       <div id="boston-uhi-context">
-        <div class="uhi-context-card" data-layer-id="uhi-lst">
+        <div class="uhi-context-card active" data-layer-id="uhi-lst">
           <div class="uhi-context-title">图层 1:地表温度 (LST)</div>
           <p class="modal-overview">展示 2024 年 7 月 19 日 Landsat 影像分级后的地表温度。最热区域集中在密集的市中心,确立了 UHI 的基线格局。</p>
         </div>
-        <div class="uhi-context-card active" data-layer-id="uhi-land-cover">
+        <div class="uhi-context-card" data-layer-id="uhi-land-cover">
           <div class="uhi-context-title">图层 2:土地覆盖分类</div>
           <p class="modal-overview">展示 NLCD 各类下垫面,建成区以暖色调表示,植被与水体以冷色调表示,可支持"土地覆盖构成解释热分布"的解读。</p>
         </div>
@@ -114,22 +112,12 @@
 
   <div class="uhi-bottom-split">
     <div class="modal-section">
-      <div class="modal-section-label">技术亮点</div>
+      <div class="modal-section-label">亮点</div>
       <ul class="detail-list">
         <li>基于 ArcGIS Pro 的栅格与矢量端到端工作流,从数据接入到专题输出</li>
         <li>整合遥感、土地覆盖与 tract 级社会经济数据集</li>
         <li>双重汇总策略:类别级与 tract 级的热聚合</li>
         <li>以政策为导向,通过空间显式的热区解读支撑决策</li>
-        <li>透明披露方法学边界,以保障结论质量</li>
-      </ul>
-    </div>
-
-    <div class="modal-section">
-      <div class="modal-section-label">局限</div>
-      <ul class="detail-list">
-        <li>单时相卫星快照,时间外推能力有限</li>
-        <li>30 m 栅格分辨率会平滑掉微观街区尺度的热差异</li>
-        <li>收入数据接入存在问题,限制了完整支撑因果性公平结论的能力</li>
       </ul>
     </div>
   </div>

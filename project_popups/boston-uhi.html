@@ -4,9 +4,7 @@
   <div class="modal-section">
     <div class="modal-section-label">Overview</div>
     <p class="modal-overview">
-      Urban Heat Island (UHI): when developed land surfaces absorb and re-emit solar radiation at a higher rate than natural surfaces, resulting in higher surface temperatures. <br>
-      Land Surface Temperature (LST): the temperature of the earth's surface as measured by a satellite sensor. <br>
-      This project quantifies the Boston UHI pattern and evaluates whether land-cover composition explains variation in land surface temperature, with a secondary environmental equity lens at the census-tract level.
+      This project visualizes Boston’s urban heat island: it relates <strong>vegetation (NDVI)</strong> or <strong>land cover</strong> to <strong>satellite land surface temperature (LST)</strong> or <strong>classified hot/cool zones</strong>. Use <strong>Map 3</strong> or <strong>Map 2</strong> as your base picture, together with <strong>Map 1</strong> or <strong>Map 4</strong>. <strong>Lower vegetation lines up with higher temperatures</strong> in most parts of the city. (UHI = warmer built surfaces vs. natural land; LST = the temperature the satellite “sees” at the surface.)
     </p>
   </div>
 
@@ -17,8 +15,8 @@
 
     <div class="uhi-side">
       <div class="uhi-controls" id="boston-uhi-controls">
-        <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-lst"> Map 1: Land Surface Temperature</label>
-        <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-land-cover" checked> Map 2: Land Cover Classification</label>
+        <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-lst" checked> Map 1: Land Surface Temperature</label>
+        <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-land-cover"> Map 2: Land Cover Classification</label>
         <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-ndvi" checked> Map 3: NDVI Vegetation Index</label>
         <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-zone"> Map 4: Temperature Zone Classification</label>
         <label class="uhi-toggle"><input type="checkbox" data-layer="uhi-tract"> Map 5: Mean LST by Census Tract</label>
@@ -27,7 +25,7 @@
         <div class="uhi-opacity-title">Layer Transparency</div>
         <div class="uhi-opacity-row" data-layer-id="uhi-lst">
           <label for="opacity-uhi-lst">Map 1</label>
-          <input id="opacity-uhi-lst" type="range" min="20" max="100" value="90" step="1" data-opacity-layer="uhi-lst">
+          <input id="opacity-uhi-lst" type="range" min="20" max="100" value="100" step="1" data-opacity-layer="uhi-lst">
         </div>
         <div class="uhi-opacity-row" data-layer-id="uhi-land-cover">
           <label for="opacity-uhi-land-cover">Map 2</label>
@@ -35,7 +33,7 @@
         </div>
         <div class="uhi-opacity-row" data-layer-id="uhi-ndvi">
           <label for="opacity-uhi-ndvi">Map 3</label>
-          <input id="opacity-uhi-ndvi" type="range" min="20" max="100" value="50" step="1" data-opacity-layer="uhi-ndvi">
+          <input id="opacity-uhi-ndvi" type="range" min="20" max="100" value="45" step="1" data-opacity-layer="uhi-ndvi">
         </div>
         <div class="uhi-opacity-row" data-layer-id="uhi-zone">
           <label for="opacity-uhi-zone">Map 4</label>
@@ -47,11 +45,11 @@
         </div>
       </div>
       <div id="boston-uhi-context">
-        <div class="uhi-context-card" data-layer-id="uhi-lst">
+        <div class="uhi-context-card active" data-layer-id="uhi-lst">
           <div class="uhi-context-title">Map 1: Land Surface Temperature</div>
           <p class="modal-overview">Shows classified surface temperature from the July 19, 2024 Landsat scene. Hottest zones concentrate in the dense urban core, establishing the baseline UHI pattern.</p>
         </div>
-        <div class="uhi-context-card active" data-layer-id="uhi-land-cover">
+        <div class="uhi-context-card" data-layer-id="uhi-land-cover">
           <div class="uhi-context-title">Map 2: Land Cover Classification</div>
           <p class="modal-overview">Displays NLCD classes with developed areas in warm tones and vegetation/water in cooler tones. This supports interpretation that land-cover composition explains thermal variation.</p>
         </div>
@@ -114,22 +112,12 @@
 
   <div class="uhi-bottom-split">
     <div class="modal-section">
-      <div class="modal-section-label">Technical Highlights</div>
+      <div class="modal-section-label">Highlights</div>
       <ul class="detail-list">
         <li>End-to-end ArcGIS Pro raster and vector workflow from ingestion through thematic outputs</li>
         <li>Integrated remote sensing, land-cover, and tract-level socioeconomic datasets</li>
         <li>Dual summarization strategy: class-level and tract-level thermal aggregation</li>
         <li>Policy-oriented framing through spatially explicit heat-zone interpretation</li>
-        <li>Transparent treatment of methodological limits to protect claim quality</li>
-      </ul>
-    </div>
-
-    <div class="modal-section">
-      <div class="modal-section-label">Limitations</div>
-      <ul class="detail-list">
-        <li>Single-date satellite snapshot limits temporal generalization</li>
-        <li>30 m raster resolution smooths micro-scale street heat variation</li>
-        <li>Income join issues constrain fully supported causal equity conclusions</li>
       </ul>
     </div>
   </div>

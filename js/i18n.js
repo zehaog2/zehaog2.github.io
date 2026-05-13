@@ -12,8 +12,8 @@
       'nav.langEn': 'EN',
       'nav.langZh': '中',
       'hero.title.html': 'Zehao <span class="hero-name-mid">(Henry)</span> Guo',
-      'hero.sub.line1': 'BS Applied Mathematics @ UIUC (Aug 2020 – 2024)',
-      'hero.sub.line2': 'MS Data Science @ Northeastern (Jan 2025 – present)',
+      'hero.sub.line1': 'BS Applied Mathematics @ UIUC (Aug 2020 – Dec 2024)',
+      'hero.sub.line2': 'MS Data Science @ Northeastern (Jan 2025 – Present)',
       'hero.sub.tagline':
         'I build data pipelines and analytics systems. I generally use the tools that work best for the task at hand. I aim to support environmental understanding and improve quality of life.',
       'hero.links.linkedin': 'LinkedIn',
@@ -43,7 +43,7 @@
       'nav.langEn': 'EN',
       'nav.langZh': '中',
       'hero.title.html': '郭泽灏 <span class="hero-name-mid">(Henry)</span>',
-      'hero.sub.line1': '应用数学学士 @ UIUC（2020 年 8 月 – 2024 年）',
+      'hero.sub.line1': '应用数学学士 @ UIUC（2020 年 8 月 – 2024 年 12 月）',
       'hero.sub.line2': '数据科学硕士 @ Northeastern（2025 年 1 月 – 至今）',
       'hero.sub.tagline':
         '我搭建数据管道与分析系统，通常按任务选择最合适的工具。希望我的工作能够帮助理解大自然、改善生活质量。',
