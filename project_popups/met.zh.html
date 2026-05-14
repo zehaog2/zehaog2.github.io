@@ -1,12 +1,6 @@
 <div class="project-popup-content met-popup">
-  <div class="met-hero">
-    <p class="met-positioning">
-      本项目是一套面向高波动天气工况的城市气温实时预测系统。
-    </p>
-  </div>
-
   <div class="modal-section">
-    <div class="modal-section-label">问题与价值</div>
+    <div class="modal-section-label">概述</div>
     <p class="modal-overview">
       天气应用早就显示气温,为什么还要做这件事?<br>
       在普通的日子里,这些应用大多够用。但在复杂、高波动的日子里——海风时机、逆温破裂、云况变化与局地地形效应叠加在一起——预报的实际偏差会比一个数字所暗示的大得多。
@@ -84,7 +78,7 @@
       >
     </figure>
     <ul class="detail-list">
-      <li>该图展示了主要商用气温模型对 2026 年 5 月 8 日各城市最高气温的预报。</li>
+      <li>该图展示了各家主要商用气温模型对 2026 年 5 月 8 日最高气温的预报。</li>
       <li>图中的星标为重点模型,挑选依据包括近 7 日表现(RMSE 多控制在 2°F 以内)、偏差行为,以及在该城市当前天气工况下已知的模型优劣。</li>
       <li>San Francisco (KSFO)、Los Angeles (KLAX) 离散度最大。这两座加州沿海城市处于典型的太平洋海洋边界层与海风工况,几乎挑战所有模型。</li>
       <li>Denver (KDEN) 不确定性同样较高,与多山地形带来的变率以及边界层快速切换一致。</li>
@@ -109,8 +103,8 @@
         </figure>
         <ul class="detail-list">
           <li><strong>模型遗漏:</strong> 在风向切换窗口内,温度仍可能继续上行;海风起并不必然意味着降温。</li>
-          <li><strong>观测:</strong> 海风约在下午 4 点起(HRRR 在 4 点更新,直接预测气温向下),气温由 78°F 回落至 75°F。随后西风加强,5 点前气温迅速跃升至 84°F,之后才进入海洋降温阶段。</li>
-          <li><strong>结论:</strong> 复盘海风起后的气温尖峰原因;明确处理过渡窗口;在确认日最高气温锁定之前,要求出现降温验证信号。</li>
+          <li><strong>观测:</strong> 海风约在下午 4 点起(HRRR 在 4 点更新,预报气温一路下行),气温由 78°F 回落至 75°F。随后西风加强,约下午 5 点气温迅速冲至 84°F,之后才进入海洋降温阶段。</li>
+          <li><strong>结果:</strong> 复盘海风起后的气温尖峰原因;明确处理过渡窗口;在确认日最高气温锁定之前,要求出现降温验证信号。</li>
         </ul>
       </article>
       <article class="met-event-card">
@@ -128,7 +122,7 @@
         <ul class="detail-list">
           <li><strong>模型遗漏:</strong> 当 KDCA 出现局地近地解耦时,区域整体与共识的偏暖结果可能无法兑现。</li>
           <li><strong>观测:</strong> 内陆邻站保持偏暖,而 KDCA 在独特的解耦条件下未能与之收敛。</li>
-          <li><strong>结论:</strong> 即便整体指引偏高,也要把局地解耦诊断提升为硬性风险控制。</li>
+          <li><strong>结果:</strong> 即便整体指引偏高,也要把局地解耦诊断提升为硬性风险控制。</li>
         </ul>
       </article>
     </div>
@@ -147,9 +141,9 @@
   <div class="modal-section">
     <div class="modal-section-label">局限与下一步</div>
     <ul class="detail-list">
-      <li>局限:尚未建立完整的历史档案校准框架;通过优化概率框架,风险分析的效率仍有提升空间。</li>
+      <li>局限:尚未建立完整的历史档案校准框架;通过优化概率化建模,风险分析的效率仍有提升空间。</li>
       <li>当前优势:在最难的工况上提供了可审计的事件复盘、不确定性诊断与可靠性控制。</li>
-      <li>近期下一步:继续针对失败工况开展定向研究,并把研究成果转化为显式的代码与文档更新;探索更高效的贝叶斯风险分析框架。</li>
+      <li>近期下一步:继续针对失败工况开展定向研究,并把研究成果转化为显式的代码与文档更新;研究更高效的贝叶斯框架以改进风险分析。</li>
     </ul>
   </div>
 </div>

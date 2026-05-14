@@ -1,16 +1,10 @@
 <div class="project-popup-content met-popup">
-  <div class="met-hero">
-    <p class="met-positioning">
-      This project is a real-time urban temperature prediction system focused on difficult, high-volatility weather regimes. 
-    </p>
-  </div>
-
   <div class="modal-section">
-    <div class="modal-section-label">Problem and Value</div>
+    <div class="modal-section-label">Overview</div>
     <p class="modal-overview">
-      If weather apps already show temperature, why build this at all? <br>
-      On normal days, those apps are usually good enough. But on messy, high-volatility days--when sea breeze timing, inversion breakup, cloud shifts, and local terrain effects all collide--the forecast can swing much more than a single number suggests.
-      Getting those extremes right has real downstream value: better heat-risk planning for schools and outdoor workers, smarter utility load preparation during peak demand, better airport and city operations during rapid regime shifts, and more reliable timing for event organizers making go/no-go decisions. 
+      If weather apps already show temperature, why build another temperature prediction system? <br>
+      On normal days, those apps are usually good enough. But on messy, high-volatility days—when sea-breeze timing, inversion breakup, cloud shifts, and local terrain effects all collide—the forecast can swing much more than a single number suggests.
+      Getting those extremes right has real downstream value: better heat-risk planning for schools and outdoor workers, smarter utility load preparation during peak demand, better airport and city operations during rapid regime shifts, and more reliable timing for event organizers making go/no-go decisions.
       That is the gap this project focuses on: combining real-time observations, model spread, and city-specific physics signals to produce a clearer, more interpretable read on temperature risk. And as climate patterns become less stable and extreme-day behavior becomes more frequent, systems that explicitly handle uncertainty and regime transitions will likely become increasingly important.
     </p>
   </div>
@@ -33,7 +27,7 @@
     >
       <div class="met-stage-card" role="listitem" tabindex="0" data-tip="AWS, Iowa Environmental Mesonet (IEM), NOAA, NWS, etc.">
         <div class="met-stage-title">Data fetcher</div>
-        <p class="met-stage-text">Pulls & process multi-source weather observations and ensemble output</p>
+        <p class="met-stage-text">Pulls and processes multi-source weather observations and ensemble output</p>
       </div>
       <div class="met-stage-arrow" aria-hidden="true">→</div>
       <div class="met-stage-card" role="listitem" tabindex="0" data-tip="A global physics module runs independently. Individual city modules depend on microclimate physics or local rules, which are initiated by analyzing and sorting the most common model failure type weather regimes. Recursively updated with post-event learning and rule updates.">
@@ -66,7 +60,7 @@
               marker-end="url(#met-feedback-arrowhead)"
             />
           </svg>
-          <p class="met-feedback-caption">Post-event learning refine city module rules and specific weather regime handling. I call this extra-overfitting, which predict outlier events extremely well.</p>
+          <p class="met-feedback-caption">Post-event learning refines city module rules and specific weather regime handling. I call this extra-overfitting, which predicts outlier events extremely well.</p>
         </div>
       </div>
     </div>
@@ -84,9 +78,9 @@
       >
     </figure>
     <ul class="detail-list">
-      <li>This graph depicts every major commercial temperature models' maximum temperature forecast for May 8th, 2026. </li>
+      <li>This graph depicts each major commercial temperature model's maximum temperature forecast for May 8th, 2026.</li>
       <li>The stars, or the focus models, are selected from all models using a recent 7-day skill (mostly RMSE kept to less than 2 degrees fahrenheit), bias behavior, and known model strengths or weaknesses under the city’s active weather regime.</li>
-      <li>San Francisco (KSFO), Los Angeles (KLAX) show the widest spread. The two californian coastal cities reflect a typical strong Pacific marine-layer and sea-breeze regime, troubling most models.</li>
+      <li>San Francisco (KSFO), Los Angeles (KLAX) show the widest spread. The two Californian coastal cities reflect a typical strong Pacific marine-layer and sea-breeze regime, troubling most models.</li>
       <li>Denver (KDEN) also shows elevated uncertainty, consistent with mountainous terrain-driven variability and rapid boundary-layer transitions. </li>
       <li>By contrast, model forecasts for a typical sunny day on the United States East Coast like Philadelphia (KPHL), Boston (KBOS), or the capital (KDCA) are probably both accurate and precise.</li>
     </ul>
@@ -108,9 +102,9 @@
           >
         </figure>
         <ul class="detail-list">
-          <li><strong>What Models Missed:</strong> Upside can persist into the wind-shift window; sea-breeze onset never implies cooling .</li>
-          <li><strong>Observations:</strong> As seabreeze starts around 4pm (HRRR, updated at 4pm,  forecasts straight downward trend for temperature), temperature dips from 78 to 75. Then, west wind grew stronger, and temperature quickly spike to 84 around 5pm before the marine cooling phase.</li>
-          <li><strong>Result:</strong> Examine reasons for temperature spike during seabreeze onset; Treat transition windows explicitly; Require cooling confirmation signals before declaring the daily maximum locked.</li>
+          <li><strong>What Models Missed:</strong> Upside can persist into the wind-shift window; sea-breeze onset never implies cooling.</li>
+          <li><strong>Observations:</strong> As the sea breeze starts around 4pm (HRRR, updated at 4pm, forecasts a straight downward trend for temperature), temperature dips from 78 to 75. Then the west wind grew stronger, and temperature quickly spiked to 84 around 5pm before the marine cooling phase.</li>
+          <li><strong>Result:</strong> Examine reasons for temperature spike during sea-breeze onset; treat transition windows explicitly; require cooling confirmation signals before declaring the daily maximum locked.</li>
         </ul>
       </article>
       <article class="met-event-card">
@@ -128,7 +122,7 @@
         <ul class="detail-list">
           <li><strong>What Models Missed:</strong> Regional and consensus warmth can fail to realize at KDCA when local surface decoupling is active.</li>
           <li><strong>Observations:</strong> Inland neighbors stayed warmer while KDCA failed to converge under unique decoupling conditions.</li>
-          <li><strong>Reslt:</strong> Elevate local decoupling diagnostics to hard-stop risk controls, even when broader guidance clusters higher.</li>
+          <li><strong>Result:</strong> Elevate local decoupling diagnostics to hard-stop risk controls, even when broader guidance clusters higher.</li>
         </ul>
       </article>
     </div>
@@ -140,16 +134,16 @@
       <li>Modular architecture</li>
       <li>Transparent & Scalable local rules: city behavior is explicit in configuration or physics, with normalized-schema planning to keep outputs consistent as coverage grows.</li>
       <li>Ensemble spread, trend behavior, and contextual diagnostics are surfaced alongside the forecast to quantify confidence and highlight regime risk.</li>
-      <li>If this system is used to predict temperature on a non-volatile day, inputs from models are weighted heavily. (But at that point,any weather app performs just as well)</li>
+      <li>If this system is used to predict temperature on a non-volatile day, inputs from models are weighted heavily. (But at that point, any weather app performs just as well.)</li>
     </ul>
   </div>
 
   <div class="modal-section">
     <div class="modal-section-label">Limitations and Next Steps</div>
     <ul class="detail-list">
-      <li>Limitation: no full historical archive calibration framework; risk analysis could be more efficient through optimizing probabilitic framework.</li>
+      <li>Limitation: no full historical archive calibration framework; risk analysis could be more efficient by optimizing the probabilistic framework.</li>
       <li>What is strong today: detailed event analysis, uncertainty diagnostics, and reliability controls that make reasoning auditable on the most difficult regimes.</li>
-      <li>Near-term next steps: continue targeted failure-regime research and convert those findings into explicit code and documentation updates; researching more efficient bayesian framework for risk analysis</li>
+      <li>Near-term next steps: continue targeted failure-regime research and convert those findings into explicit code and documentation updates; research a more efficient Bayesian framework for risk analysis.</li>
     </ul>
   </div>
 </div>
