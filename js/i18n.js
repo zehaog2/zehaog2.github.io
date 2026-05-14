@@ -29,6 +29,7 @@
       'modal.stack': 'Stack',
       'modal.viewGithub': 'View on GitHub',
       'modal.unavailable': 'Project details are temporarily unavailable.',
+      'modal.unpublishedImageAlt': 'Project not yet published',
       'projects.error':
         'Projects could not be loaded. Try refreshing the page.',
       'projects.error.fileHelp':
@@ -60,6 +61,7 @@
       'modal.stack': '技术栈',
       'modal.viewGithub': '在 GitHub 上查看',
       'modal.unavailable': '项目详情暂时无法加载。',
+      'modal.unpublishedImageAlt': '项目尚未发布',
       'projects.error': '项目无法加载，请尝试刷新页面。',
       'projects.error.fileHelp':
         ' 直接以 file:// 方式打开本文件会被多数浏览器阻止加载项目数据。请在站点目录下启动本地服务器（例如 python3 -m http.server 8000），然后访问 http://localhost:8000',

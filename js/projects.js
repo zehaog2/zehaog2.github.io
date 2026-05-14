@@ -74,6 +74,19 @@
     return base;
   }
 
+  /**
+   * Only explicit “live” values count as published. `published: false` in JSON is boolean,
+   * but if the field is ever a string (`"false"`) or 0, `!== false` would wrongly load popup HTML.
+   */
+  function isProjectPublished(p) {
+    if (!p) return true;
+    const v = p.published;
+    if (v === false) return false;
+    if (v === 0) return false;
+    if (typeof v === 'string' && v.trim().toLowerCase() === 'false') return false;
+    return true;
+  }
+
   function githubLinkHtml(url) {
     if (!url || typeof url !== 'string' || !/^https?:\/\//i.test(url.trim())) return '';
     const safeUrl = escapeHtml(url.trim());
@@ -120,6 +133,24 @@
       }
       ${githubLinkHtml(p.github)}
     </div>`;
+  }
+
+  /** Shown when `published: false` — single shared image only (no popup HTML). */
+  function unpublishedPopupBody() {
+    let src = 'unpublished.jpg';
+    try {
+      const u = new URL('unpublished.jpg', window.location.href);
+      if (assetVersion) u.searchParams.set('v', assetVersion);
+      src = u.pathname + u.search;
+    } catch {
+      src = 'unpublished.jpg' + (assetVersion ? '?v=' + encodeURIComponent(assetVersion) : '');
+    }
+    const alt = escapeHtml(tr('modal.unpublishedImageAlt', 'Project not yet published'));
+    return (
+      '<div class="project-popup-content project-popup-content--unpublished">' +
+      `<img class="project-popup-unpublished-img" src="${src}" alt="${alt}" decoding="async" />` +
+      '</div>'
+    );
   }
 
   function initBostonUhiInteractive() {
@@ -316,8 +347,8 @@
     const overlay = document.getElementById('modal-overlay');
     const labelText = p.label != null && String(p.label).trim() ? String(p.label).trim() : '';
     const statusTagText = p.statusTag != null && String(p.statusTag).trim() ? String(p.statusTag).trim() : '';
-    const isPublished = p.published !== false;
-    const hideModalHeading = p.id === 'boston-uhi';
+    const isPublished = isProjectPublished(p);
+    const hideModalHeading = p.id === 'boston-uhi' || !isPublished;
     const modalHeaderClass =
       'modal-header' +
       (hideModalHeading ? ' modal-header--minimal' : '') +
@@ -334,40 +365,25 @@
 
     const closeLabel = escapeHtml(tr('modal.close', 'Close project details'));
 
-    if (!isPublished) {
-      document.getElementById('modal-content').innerHTML = `
+    const popupBodyHtml = !isPublished ? unpublishedPopupBody() : await loadPopupBodyHtml(p);
+
+    const modalRoot = document.getElementById('modal-content');
+    modalRoot.innerHTML = `
       <div class="${modalHeaderClass}">
         <button type="button" class="modal-close" onclick="closeModal()" aria-label="${closeLabel}">✕</button>
         ${modalHeadingHtml}
       </div>
-      <div class="modal-body">
-        ${fallbackPopupBody(p)}
-      </div>
-    `;
-
-      lastOpenIndex = index;
-      overlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      return;
-    }
-
-    const popupBodyHtml = await loadPopupBodyHtml(p);
-
-    document.getElementById('modal-content').innerHTML = `
-      <div class="${modalHeaderClass}">
-        <button type="button" class="modal-close" onclick="closeModal()" aria-label="${closeLabel}">✕</button>
-        ${modalHeadingHtml}
-      </div>
-      <div class="modal-body">
+      <div class="modal-body${!isPublished ? ' modal-body--unpublished' : ''}">
         ${popupBodyHtml}
       </div>
     `;
+    modalRoot.classList.toggle('modal--unpublished', !isPublished);
     lastOpenIndex = index;
 
-    if (p.id === 'boston-uhi') {
+    if (isPublished && p.id === 'boston-uhi') {
       initBostonUhiInteractive();
     }
-    const modal = document.getElementById('modal-content');
+    const modal = modalRoot;
     const title = modal ? modal.querySelector('.modal-title') : null;
     lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     if (overlay) overlay.setAttribute('aria-hidden', 'false');
