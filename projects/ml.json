@@ -21,7 +21,7 @@
   "tags": ["Python", "XGBoost", "Scikit-learn", "Time Series", "Feature Engineering"],
   "images": 4,
   "github": "",
-  "published": true,
+  "published": false,
   "backgroundImage": "ml.jpg",
   "popupFile": "ml.html"
 }
