@@ -1,0 +1,371 @@
+[
+  {
+    "id": "got_tyrion",
+    "label": "Tyrion Lannister",
+    "universe": "GoT",
+    "faction": "Lannister",
+    "archetype": "The Clever Outsider",
+    "text": "Brilliant political mind operating from a position of social disadvantage. Uses wit, negotiation, and manipulation to survive in hostile environments. Morally grey advisor who questions power structures from within while being complicit in them.",
+    "interest": 5
+  },
+  {
+    "id": "got_cersei",
+    "label": "Cersei Lannister",
+    "universe": "GoT",
+    "faction": "Lannister",
+    "archetype": "The Ruthless Ruler",
+    "text": "Cunning queen who wields power through fear, manipulation, and dynastic ambition. Driven by love for her children and contempt for rivals. Gradually consumed by paranoia, willing to burn everything to maintain control.",
+    "interest": 4
+  },
+  {
+    "id": "got_jaime",
+    "label": "Jaime Lannister",
+    "universe": "GoT",
+    "faction": "Lannister",
+    "archetype": "The Fallen Knight",
+    "text": "Legendary warrior defined by a single act of necessary betrayal. Struggles to reconcile a reputation for dishonor with genuine moral instincts. Undergoes a long arc of humiliation and redemption, ultimately failing to fully escape his past.",
+    "interest": 4
+  },
+  {
+    "id": "got_jon",
+    "label": "Jon Snow",
+    "universe": "GoT",
+    "faction": "Night's Watch / Stark",
+    "archetype": "The Reluctant Hero",
+    "text": "Duty-bound leader who repeatedly accepts burdens he does not seek. Bridges divided factions through personal sacrifice. Born of hidden noble lineage but defined by his values rather than his bloodline. Dies and is resurrected to fulfill a larger purpose.",
+    "interest": 5
+  },
+  {
+    "id": "got_daenerys",
+    "label": "Daenerys Targaryen",
+    "universe": "GoT",
+    "faction": "Targaryen",
+    "archetype": "The Idealist Turned Tyrant",
+    "text": "Visionary liberator whose righteous mission gradually corrupts into authoritarian brutality. Commands mythical fire-breathing creatures as instruments of power. Believes herself a chosen ruler destined to break existing hierarchies, but imposes her own.",
+    "interest": 5
+  },
+  {
+    "id": "got_sansa",
+    "label": "Sansa Stark",
+    "universe": "GoT",
+    "faction": "Stark",
+    "archetype": "The Survivor",
+    "text": "Young woman who endures years of captivity, abuse, and manipulation to emerge as a shrewd political operator. Learns the game of power by suffering its worst consequences. Ultimately transforms from naive hostage to independent ruler.",
+    "interest": 4
+  },
+  {
+    "id": "got_arya",
+    "label": "Arya Stark",
+    "universe": "GoT",
+    "faction": "Stark",
+    "archetype": "The Avenger",
+    "text": "Young warrior who abandons conventional identity to pursue vengeance against those who destroyed her family. Trained as a faceless assassin, becomes a weapon of retribution. Driven by a personal kill list and fierce independence.",
+    "interest": 5
+  },
+  {
+    "id": "got_ned",
+    "label": "Ned Stark",
+    "universe": "GoT",
+    "faction": "Stark",
+    "archetype": "The Honorable Martyr",
+    "text": "Deeply principled lord whose rigid code of honor makes him fatally unsuited to political intrigue. Prioritizes truth and duty over self-preservation. His execution for honor exposes the world's moral corruption and sets the central tragedy in motion.",
+    "interest": 4
+  },
+  {
+    "id": "got_littlefinger",
+    "label": "Petyr Baelish",
+    "universe": "GoT",
+    "faction": "None",
+    "archetype": "The Schemer",
+    "text": "Master manipulator who engineered chaos across the realm from a position of low birth. Motivated by unrequited love turned into a lust for power. Sees all human relationships as levers to pull; has no genuine loyalties.",
+    "interest": 5
+  },
+  {
+    "id": "got_varys",
+    "label": "Varys",
+    "universe": "GoT",
+    "faction": "Small Council",
+    "archetype": "The Shadow Advisor",
+    "text": "Eunuch spymaster who claims to serve the realm above any individual ruler. Operates through networks of informants and whispered secrets. Morally ambiguous figure who justifies constant betrayal through a stated commitment to the common good.",
+    "interest": 4
+  },
+  {
+    "id": "got_stannis",
+    "label": "Stannis Baratheon",
+    "universe": "GoT",
+    "faction": "Baratheon",
+    "archetype": "The Rigid Claimant",
+    "text": "Uncompromising lord obsessed with legal right and duty. Devoid of charm or political instinct, he commands through fear and conviction. Sacrifices everything—including his own daughter—to pursue a crown he believes is rightfully his.",
+    "interest": 3
+  },
+  {
+    "id": "got_sandor",
+    "label": "Sandor Clegane",
+    "universe": "GoT",
+    "faction": "None",
+    "archetype": "The Brutal Protector",
+    "text": "Scarred warrior hiding genuine compassion beneath violent cynicism. Disdains nobility and knightly ideals while embodying a rough personal code. Forms unexpected protective bonds with the weak despite professing to care for no one.",
+    "interest": 4
+  },
+  {
+    "id": "got_bran",
+    "label": "Bran Stark",
+    "universe": "GoT",
+    "faction": "Stark",
+    "archetype": "The Seer",
+    "text": "Physically crippled child who develops supernatural ability to perceive the past and present across vast distances. Becomes the memory and conscience of the world. Transcends human emotion to embody something closer to an omniscient archivist.",
+    "interest": 3
+  },
+  {
+    "id": "got_melisandre",
+    "label": "Melisandre",
+    "universe": "GoT",
+    "faction": "R'hllor",
+    "archetype": "The Zealot",
+    "text": "Flame-wielding priestess who manipulates rulers in service of a prophesied savior. Her absolute religious conviction leads to terrible acts she justifies as divine necessity. Ancient and weary beneath her youthful facade.",
+    "interest": 3
+  },
+  {
+    "id": "got_oberyn",
+    "label": "Oberyn Martell",
+    "universe": "GoT",
+    "faction": "Martell",
+    "archetype": "The Passionate Duelist",
+    "text": "Brilliant, hedonistic prince motivated entirely by the desire to avenge his murdered sister. His overwhelming need for confession in the moment of victory turns triumph into fatal defeat. Lived and died on his own terms.",
+    "interest": 4
+  },
+  {
+    "id": "got_theon",
+    "label": "Theon Greyjoy",
+    "universe": "GoT",
+    "faction": "Greyjoy",
+    "archetype": "The Broken Redeemer",
+    "text": "Hostage-turned-traitor who destroyed the only family that accepted him, then spent years as a shattered prisoner. His redemption arc is one of the most brutal and complete: from hollow betrayal to self-sacrificing heroism.",
+    "interest": 4
+  },
+  {
+    "id": "got_tywin",
+    "label": "Tywin Lannister",
+    "universe": "GoT",
+    "faction": "Lannister",
+    "archetype": "The Iron Patriarch",
+    "text": "Domineering patriarch who built Lannister supremacy through ruthless calculation and the willingness to massacre civilians. Views family as an instrument of legacy rather than love. His contempt for his children ultimately destroys him.",
+    "interest": 4
+  },
+  {
+    "id": "got_joffrey",
+    "label": "Joffrey Baratheon",
+    "universe": "GoT",
+    "faction": "Lannister",
+    "archetype": "The Cruel Pretender",
+    "text": "Sadistic boy-king who inherited power without the capacity to wield it. Combines cowardice with cruelty and demands absolute deference. His reign embodies what happens when unchecked power is handed to someone with no empathy or wisdom.",
+    "interest": 3
+  },
+  {
+    "id": "got_margaery",
+    "label": "Margaery Tyrell",
+    "universe": "GoT",
+    "faction": "Tyrell",
+    "archetype": "The Political Seductress",
+    "text": "Charming and calculating noblewoman who cultivates popular love as a political resource. Understands that genuine warmth toward commoners builds a power base no army can fully destroy. Outmaneuvers more obviously aggressive rivals.",
+    "interest": 3
+  },
+  {
+    "id": "got_drogon",
+    "label": "The Night King",
+    "universe": "GoT",
+    "faction": "White Walkers",
+    "archetype": "The Existential Threat",
+    "text": "Ancient, silent antagonist who represents death, entropy, and the erasure of memory. Commands an undead army. Barely communicates but embodies the idea that all human conflict is trivial against existential annihilation.",
+    "interest": 3
+  },
+  {
+    "id": "lotr_frodo",
+    "label": "Frodo Baggins",
+    "universe": "LotR",
+    "faction": "Fellowship",
+    "archetype": "The Reluctant Hero",
+    "text": "Ordinary creature chosen to bear an impossible burden precisely because of his smallness and humility. The weight of the Ring gradually corrupts even his gentle nature. His heroism lies not in strength but in perseverance and the willingness to carry what no one else can.",
+    "interest": 5
+  },
+  {
+    "id": "lotr_gandalf",
+    "label": "Gandalf",
+    "universe": "LotR",
+    "faction": "Istari",
+    "archetype": "The Wise Mentor",
+    "text": "Ancient wizard who guides heroes without directly imposing his will. Bearer of hidden knowledge, orchestrates events across centuries from the background. Dies confronting darkness and returns transformed, more powerful and purposed.",
+    "interest": 5
+  },
+  {
+    "id": "lotr_aragorn",
+    "label": "Aragorn",
+    "universe": "LotR",
+    "faction": "Fellowship",
+    "archetype": "The Hidden King",
+    "text": "Rightful heir who has spent decades in self-imposed exile, doubting his worthiness to rule. His arc is one of accepting destiny not through ambition but through duty and love. Unites men, elves, and the dead under a single cause.",
+    "interest": 5
+  },
+  {
+    "id": "lotr_legolas",
+    "label": "Legolas",
+    "universe": "LotR",
+    "faction": "Fellowship",
+    "archetype": "The Elegant Warrior",
+    "text": "Elven prince of supernatural grace and precision. Fights with effortless beauty, sees across vast distances, and forms a profound cross-cultural bond with a dwarf. Represents the fading elegance of an elder race giving way to the age of men.",
+    "interest": 3
+  },
+  {
+    "id": "lotr_gimli",
+    "label": "Gimli",
+    "universe": "LotR",
+    "faction": "Fellowship",
+    "archetype": "The Loyal Companion",
+    "text": "Stout-hearted dwarf warrior whose bluster hides deep loyalty and surprising capacity for wonder. Begins with racial prejudice toward elves, ends in deep friendship. His relationship with Legolas embodies reconciliation of ancient enmity.",
+    "interest": 3
+  },
+  {
+    "id": "lotr_boromir",
+    "label": "Boromir",
+    "universe": "LotR",
+    "faction": "Fellowship",
+    "archetype": "The Fallen Knight",
+    "text": "Valiant captain who succumbs briefly to the Ring's temptation before dying in heroic redemption. His tragedy is the noblest of intentions warped by desperate love for his people. Redeems himself fully through his final sacrifice.",
+    "interest": 4
+  },
+  {
+    "id": "lotr_sam",
+    "label": "Samwise Gamgee",
+    "universe": "LotR",
+    "faction": "Fellowship",
+    "archetype": "The Steadfast Companion",
+    "text": "Gardener and devoted friend whose love and loyalty are the true force that carries the quest to completion. Has no ambitions for power or glory. When Frodo can no longer walk, Sam carries him. The unsung moral center of the entire story.",
+    "interest": 5
+  },
+  {
+    "id": "lotr_sauron",
+    "label": "Sauron",
+    "universe": "LotR",
+    "faction": "Mordor",
+    "archetype": "The Existential Threat",
+    "text": "Ancient dark lord who has dissolved his own will into an object of power. Represents pure domination: the desire to make all other wills subservient. His greatest weakness is his inability to imagine anyone choosing to destroy power rather than use it.",
+    "interest": 4
+  },
+  {
+    "id": "lotr_saruman",
+    "label": "Saruman",
+    "universe": "LotR",
+    "faction": "Istari",
+    "archetype": "The Corrupted Sage",
+    "text": "Once the greatest of wizards, seduced by the logic of industrial power and the illusion that darkness can be controlled or outmaneuvered. His fall from wisdom to servitude mirrors how intellect alone cannot resist the temptation of domination.",
+    "interest": 4
+  },
+  {
+    "id": "lotr_gollum",
+    "label": "Gollum",
+    "universe": "LotR",
+    "faction": "None",
+    "archetype": "The Broken Soul",
+    "text": "Creature split between his original self and a centuries-long addiction to the Ring. Simultaneously pitiable and dangerous. His dual nature is the story's most complex portrait of how absolute corruption happens gradually. Accidentally saves the world through his obsession.",
+    "interest": 5
+  },
+  {
+    "id": "lotr_arwen",
+    "label": "Arwen",
+    "universe": "LotR",
+    "faction": "Rivendell",
+    "archetype": "The Sacrificial Beloved",
+    "text": "Elven princess who freely chooses mortality and suffering for love. Represents the sacrifice of immortal beauty for transient human experience. Her choice anchors Aragorn's return to kingship and symbolizes the twilight of the elder world.",
+    "interest": 3
+  },
+  {
+    "id": "lotr_eowyn",
+    "label": "Éowyn",
+    "universe": "LotR",
+    "faction": "Rohan",
+    "archetype": "The Hidden Warrior",
+    "text": "Shield-maiden who disguises herself to fight in a war she has been barred from. Defeats the Witch-king by fulfilling the prophecy in its most literal and subversive sense. Her heroism is an act of defiance against both fate and gender constraints.",
+    "interest": 5
+  },
+  {
+    "id": "lotr_faramir",
+    "label": "Faramir",
+    "universe": "LotR",
+    "faction": "Gondor",
+    "archetype": "The Wise Second Son",
+    "text": "Scholarly captain who lives in the shadow of a celebrated brother. Unlike Boromir, resists the Ring's temptation out of wisdom rather than weakness. Embodies the idea that true nobility is shown in restraint, not conquest.",
+    "interest": 4
+  },
+  {
+    "id": "lotr_theoden",
+    "label": "Théoden",
+    "universe": "LotR",
+    "faction": "Rohan",
+    "archetype": "The Restored King",
+    "text": "Aged king enchanted into passive despair by a corrupting advisor. When freed, he reclaims his dignity and leads his people with inspired courage. Dies in glorious battle, redeemed and at peace, leaving a worthy legacy.",
+    "interest": 4
+  },
+  {
+    "id": "lotr_grima",
+    "label": "Gríma Wormtongue",
+    "universe": "LotR",
+    "faction": "Saruman",
+    "archetype": "The Shadow Advisor",
+    "text": "Treacherous counselor who whispered despair into a king's ear at an enemy's behest. Motivated by obsessive desire and resentment. Serves power cynically while believing himself indispensable, unaware he is disposable.",
+    "interest": 3
+  },
+  {
+    "id": "lotr_treebeard",
+    "label": "Treebeard",
+    "universe": "LotR",
+    "faction": "Ents",
+    "archetype": "The Ancient Guardian",
+    "text": "Oldest living being in Middle-earth, slow to anger but devastating once roused. Represents nature's memory and its capacity for wrath when pushed past endurance. His march on Isengard is one of the story's most cathartic moments.",
+    "interest": 3
+  },
+  {
+    "id": "lotr_pippin",
+    "label": "Pippin Took",
+    "universe": "LotR",
+    "faction": "Fellowship",
+    "archetype": "The Naive Catalyst",
+    "text": "Cheerful hobbit whose curiosity and impulsiveness repeatedly create crises that move the plot. Matures through consequences into a genuine soldier. His accidental glance into the palantír sets off a chain of events that ultimately serves the quest.",
+    "interest": 3
+  },
+  {
+    "id": "lotr_merry",
+    "label": "Merry Brandybuck",
+    "universe": "LotR",
+    "faction": "Fellowship",
+    "archetype": "The Loyal Companion",
+    "text": "Thoughtful, resourceful hobbit who chooses to fight alongside humans and helps slay the Witch-king. More quietly heroic than his cousin. His loyalty is not naïve but chosen with open eyes.",
+    "interest": 3
+  },
+  {
+    "id": "lotr_elrond",
+    "label": "Elrond",
+    "universe": "LotR",
+    "faction": "Rivendell",
+    "archetype": "The Reluctant Sage",
+    "text": "Half-elven lord who has witnessed millennia of tragedy and bears deep grief from past failures. Convenes the council that sets the quest in motion, yet harbors little hope. His wisdom is inseparable from exhaustion and loss.",
+    "interest": 4
+  },
+  {
+    "id": "lotr_galadriel",
+    "label": "Galadriel",
+    "universe": "LotR",
+    "faction": "Lothlórien",
+    "archetype": "The Tempted Guardian",
+    "text": "Ancient elven queen of terrifying power and unmatched wisdom who has carried the Ring's temptation for millennia. When finally offered it, she refuses and chooses to diminish rather than fall to domination. Her restraint is the story's most profound act of wisdom.",
+    "interest": 5
+  },
+  {
+    "id": "lotr_legolas2",
+    "label": "Tom Bombadil",
+    "universe": "LotR",
+    "faction": "None",
+    "archetype": "The Joyful Mystery",
+    "text": "Ancient, enigmatic being completely immune to the Ring's power through sheer contentment and rootedness in the present. Neither good nor evil in any grand sense. Represents the idea that the most powerful resistance to corruption is joy and indifference to power.",
+    "interest": 4
+  }
+]

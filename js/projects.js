@@ -74,6 +74,21 @@
     return base;
   }
 
+  /** Relative site paths only; blocks parent segments and dangerous schemes */
+  function safeCardLink(url) {
+    if (!url || typeof url !== 'string') return null;
+    const trimmed = url.trim();
+    if (!trimmed || trimmed.includes('..')) return null;
+    if (/^(javascript|data|vbscript):/i.test(trimmed)) return null;
+    if (/^https?:\/\//i.test(trimmed)) return null;
+    if (trimmed.startsWith('//')) return null;
+    return trimmed;
+  }
+
+  function projectCardLink(p) {
+    return safeCardLink(p && p.cardLink);
+  }
+
   /**
    * Only explicit “live” values count as published. `published: false` in JSON is boolean,
    * but if the field is ever a string (`"false"`) or 0, `!== false` would wrongly load popup HTML.
@@ -423,38 +438,42 @@
 
   let cardListenersBound = false;
 
+  function renderProjectCardMarkup(p, i) {
+    const bgStyle = cardBackgroundStyle(p);
+    const cls = cardClass(p);
+    const footerRaw = p.cardFooterTag != null ? String(p.cardFooterTag).trim() : '';
+    const footerHtml = footerRaw
+      ? `<div class="card-tags card-tags--footer"><span class="tag">${escapeHtml(footerRaw)}</span></div>`
+      : '';
+    const inner =
+      `<div class="card-title">${escapeHtml(p.cardTitle)}</div>` +
+      footerHtml +
+      '<div class="card-arrow">↗</div>';
+    const styleAttr = bgStyle ? ` style="${bgStyle}"` : '';
+    const href = projectCardLink(p);
+    if (href) {
+      const safeHref = escapeHtml(href);
+      return `<a class="${cls} card-link" href="${safeHref}" target="_blank" rel="noopener noreferrer" data-index="${i}"${styleAttr}>${inner}</a>`;
+    }
+    return `<div class="${cls}" data-index="${i}" role="button" tabindex="0"${styleAttr}>${inner}</div>`;
+  }
+
   function renderProjectCards(grid, list) {
-    grid.innerHTML = list
-      .map((p, i) => {
-        const bgStyle = cardBackgroundStyle(p);
-        const cls = cardClass(p);
-        const footerRaw = p.cardFooterTag != null ? String(p.cardFooterTag).trim() : '';
-        const footerHtml = footerRaw
-          ? `<div class="card-tags card-tags--footer"><span class="tag">${escapeHtml(footerRaw)}</span></div>`
-          : '';
-        return `<div class="${cls}" data-index="${i}" role="button" tabindex="0" ${
-          bgStyle ? `style="${bgStyle}"` : ''
-        }>
-      <div class="card-title">${escapeHtml(p.cardTitle)}</div>
-      ${footerHtml}
-      <div class="card-arrow">↗</div>
-    </div>`;
-      })
-      .join('');
+    grid.innerHTML = list.map((p, i) => renderProjectCardMarkup(p, i)).join('');
 
     if (cardListenersBound) return;
     cardListenersBound = true;
 
     grid.addEventListener('click', function onGridClick(e) {
       const card = e.target.closest('.card');
-      if (!card) return;
+      if (!card || card.tagName === 'A') return;
       openModal(Number(card.dataset.index));
     });
 
     grid.addEventListener('keydown', function onGridKey(e) {
       if (e.key !== 'Enter' && e.key !== ' ') return;
       const card = e.target.closest('.card');
-      if (!card) return;
+      if (!card || card.tagName === 'A') return;
       e.preventDefault();
       openModal(Number(card.dataset.index));
     });

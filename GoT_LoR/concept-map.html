@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoT & LotR — Character Concept Map</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+  :root {
+    --got: #C0392B;
+    --got-light: #fadbd8;
+    --lotr: #1A5276;
+    --lotr-light: #d6eaf8;
+    --bg: #0d0f14;
+    --surface: #161920;
+    --surface2: #1e2330;
+    --border: rgba(255,255,255,0.08);
+    --text: #e8eaf0;
+    --text-muted: #8892a4;
+    --line-ally: #4a9e6a;
+    --line-rival: #c0392b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Georgia', serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  header {
+    padding: 14px 24px 0;
+    flex-shrink: 0;
+  }
+  h1 {
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  h1 span { color: var(--text-muted); font-size: 13px; margin-left: 10px; font-family: 'Georgia', serif; }
+  .tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+  }
+  .tab {
+    padding: 8px 20px;
+    font-size: 13px;
+    font-family: 'Georgia', serif;
+    cursor: pointer;
+    color: var(--text-muted);
+    border: 1px solid transparent;
+    border-bottom: none;
+    background: transparent;
+    border-radius: 6px 6px 0 0;
+    transition: all 0.15s;
+    letter-spacing: 0.03em;
+  }
+  .tab:hover { color: var(--text); background: var(--surface2); }
+  .tab.active {
+    color: var(--text);
+    background: var(--surface);
+    border-color: var(--border);
+    border-bottom: 1px solid var(--surface);
+    margin-bottom: -1px;
+  }
+  .panel {
+    display: none;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+  .panel.active { display: flex; }
+
+  /* ── CONCEPT MAP ── */
+  #map-panel { flex-direction: row; }
+  #map-svg { flex: 1; cursor: grab; }
+  #map-svg:active { cursor: grabbing; }
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .sidebar h3 {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    cursor: pointer;
+  }
+  .filter-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .filter-label { font-size: 13px; color: var(--text); }
+  .filter-row input { display: none; }
+  .filter-row.dim .filter-label { color: var(--text-muted); }
+  .filter-row.dim .filter-dot { opacity: 0.3; }
+  .tooltip-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .tooltip-card.visible { display: flex; }
+  .tooltip-name { font-size: 14px; font-weight: 400; color: var(--text); }
+  .tooltip-universe { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .tooltip-archetype { font-size: 12px; color: #a89060; font-style: italic; }
+  .tooltip-text { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+  .node circle { cursor: pointer; transition: r 0.15s; }
+  .node text {
+    font-size: 10px;
+    font-family: 'Georgia', serif;
+    fill: var(--text);
+    pointer-events: none;
+    dominant-baseline: middle;
+  }
+  .base-line { stroke-width: 1; stroke: rgba(255,255,255,0.14); }
+  .base-line.cross { stroke: rgba(240,192,64,0.35); }
+  .neighbor-line { stroke-dasharray: 4,3; stroke-width: 1.5; opacity: 0; transition: opacity 0.2s; }
+  .neighbor-line.visible { opacity: 0.85; }
+
+  /* ── RELATIONSHIP GRAPH ── */
+  #rel-panel { flex-direction: column; }
+  #rel-svg { flex: 1; cursor: grab; }
+  #rel-svg:active { cursor: grabbing; }
+  .rel-legend {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 8px 20px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-muted);
+    background: var(--surface);
+  }
+  .legend-line {
+    display: inline-block;
+    width: 24px;
+    height: 2px;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  .rel-tooltip {
+    position: absolute;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    pointer-events: none;
+    display: none;
+    max-width: 220px;
+    line-height: 1.5;
+  }
+  .rel-node circle { cursor: pointer; }
+  .rel-node text {
+    font-size: 9px;
+    font-family: 'Georgia', serif;
+    fill: var(--text);
+    pointer-events: none;
+    dominant-baseline: middle;
+    text-anchor: middle;
+  }
+  .rel-link { stroke-opacity: 0.5; }
+  .rel-link.ally { stroke: var(--line-ally); }
+  .rel-link.rival { stroke: var(--line-rival); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>GoT & LotR — Character Universe <span>archetype concept map + relationship graph</span></h1>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('map')">Archetype Concept Map</button>
+    <button class="tab" onclick="switchTab('rel')">Relationship Graph</button>
+  </div>
+</header>
+
+<!-- CONCEPT MAP PANEL -->
+<div id="map-panel" class="panel active">
+  <svg id="map-svg"></svg>
+  <div class="sidebar">
+    <div>
+      <h3>Universe</h3>
+      <label class="filter-row" id="filter-got">
+        <span class="filter-dot" style="background:var(--got)"></span>
+        <span class="filter-label">Game of Thrones</span>
+      </label>
+      <label class="filter-row" id="filter-lotr">
+        <span class="filter-dot" style="background:var(--lotr)"></span>
+        <span class="filter-label">Lord of the Rings</span>
+      </label>
+    </div>
+    <div>
+      <h3>Click any character</h3>
+      <p style="font-size:12px;color:var(--text-muted);line-height:1.6">All characters are linked into one network. Click a node to highlight their 3 nearest archetype neighbors.</p>
+    </div>
+    <div class="tooltip-card" id="tooltip-card">
+      <div class="tooltip-name" id="tt-name"></div>
+      <div class="tooltip-universe" id="tt-universe"></div>
+      <div class="tooltip-archetype" id="tt-archetype"></div>
+      <div class="tooltip-text" id="tt-text"></div>
+    </div>
+  </div>
+</div>
+
+<!-- RELATIONSHIP GRAPH PANEL -->
+<div id="rel-panel" class="panel">
+  <svg id="rel-svg"></svg>
+  <div class="rel-tooltip" id="rel-tooltip"></div>
+  <div class="rel-legend">
+    <span><span class="legend-line" style="background:var(--got);border-radius:50%;width:10px;height:10px;display:inline-block;margin-right:6px;vertical-align:middle"></span>Game of Thrones</span>
+    <span><span class="legend-line" style="background:var(--lotr);border-radius:50%;width:10px;height:10px;display:inline-block;margin-right:6px;vertical-align:middle"></span>Lord of the Rings</span>
+    <span><span class="legend-line" style="background:var(--line-ally)"></span>Ally</span>
+    <span><span class="legend-line" style="background:var(--line-rival);"></span>Rival / Antagonist</span>
+    <span style="margin-left:auto;font-size:11px">drag nodes · scroll to zoom</span>
+  </div>
+</div>
+
+<script>
+const ITEMS_URL = 'data_embedded.json';
+const RELS_URL  = 'relationships.json';
+
+let activeUniverse = { GoT: true, LotR: true };
+let selectedNode = null;
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  if (tab === 'map') {
+    document.querySelector('.tab:nth-child(1)').classList.add('active');
+    document.getElementById('map-panel').classList.add('active');
+  } else {
+    document.querySelector('.tab:nth-child(2)').classList.add('active');
+    document.getElementById('rel-panel').classList.add('active');
+    if (!relBuilt) buildRelGraph();
+  }
+}
+
+// ─────────────────────────────────────────
+// CONCEPT MAP
+// ─────────────────────────────────────────
+async function loadMapData() {
+  try {
+    const res = await fetch(ITEMS_URL);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.length && data[0].x != null && data[0].y != null) return data;
+    }
+  } catch (e) { /* try items.json */ }
+  try {
+    const res = await fetch('items.json');
+    if (res.ok) return positionItems(await res.json());
+  } catch (e) { /* synthetic fallback */ }
+  return generateSyntheticPositions();
+}
+
+async function buildConceptMap() {
+  const data = await loadMapData();
+
+  const svg = d3.select('#map-svg');
+  const container = document.getElementById('map-panel');
+  let W = container.clientWidth - 220;
+  let H = container.clientHeight;
+
+  svg.attr('width', W).attr('height', H);
+
+  // scales
+  const xExt = d3.extent(data, d => d.x);
+  const yExt = d3.extent(data, d => d.y);
+  const pad = 60;
+  const xScale = d3.scaleLinear().domain(xExt).range([pad, W - pad]);
+  const yScale = d3.scaleLinear().domain(yExt).range([pad, H - pad]);
+  const rScale = d3.scaleLinear().domain([1,5]).range([5,13]);
+
+  const g = svg.append('g').attr('class', 'map-root');
+
+  // zoom
+  svg.call(d3.zoom()
+    .scaleExtent([0.4, 4])
+    .on('zoom', e => g.attr('transform', e.transform))
+  );
+
+  // connectivity lines (MST — every node reachable)
+  const linesG = g.append('g').attr('class', 'lines-group');
+  const mstEdges = buildMSTEdges(data);
+  linesG.selectAll('.base-line')
+    .data(mstEdges)
+    .join('line')
+    .attr('class', d => `base-line${d.source.universe !== d.target.universe ? ' cross' : ''}`)
+    .attr('x1', d => xScale(d.source.x)).attr('y1', d => yScale(d.source.y))
+    .attr('x2', d => xScale(d.target.x)).attr('y2', d => yScale(d.target.y));
+
+  // nodes
+  const nodeG = g.selectAll('.node')
+    .data(data)
+    .join('g')
+    .attr('class', 'node')
+    .attr('transform', d => `translate(${xScale(d.x)},${yScale(d.y)})`)
+    .on('click', (event, d) => onNodeClick(d, data, xScale, yScale, linesG));
+
+  nodeG.append('circle')
+    .attr('r', d => rScale(d.interest || 3))
+    .attr('fill', d => d.universe === 'GoT' ? 'var(--got)' : 'var(--lotr)')
+    .attr('fill-opacity', 0.85)
+    .attr('stroke', d => d.universe === 'GoT' ? '#e74c3c' : '#2e86c1')
+    .attr('stroke-width', 1);
+
+  nodeG.append('text')
+    .attr('x', d => rScale(d.interest || 3) + 4)
+    .attr('y', 0)
+    .text(d => d.label)
+    .attr('fill', 'var(--text)')
+    .attr('font-size', '10px');
+
+  // filter clicks
+  document.getElementById('filter-got').addEventListener('click', () => {
+    activeUniverse.GoT = !activeUniverse.GoT;
+    document.getElementById('filter-got').classList.toggle('dim', !activeUniverse.GoT);
+    g.selectAll('.node').style('opacity', d =>
+      (d.universe === 'GoT' && !activeUniverse.GoT) || (d.universe === 'LotR' && !activeUniverse.LotR) ? 0.1 : 1
+    );
+  });
+  document.getElementById('filter-lotr').addEventListener('click', () => {
+    activeUniverse.LotR = !activeUniverse.LotR;
+    document.getElementById('filter-lotr').classList.toggle('dim', !activeUniverse.LotR);
+    g.selectAll('.node').style('opacity', d =>
+      (d.universe === 'GoT' && !activeUniverse.GoT) || (d.universe === 'LotR' && !activeUniverse.LotR) ? 0.1 : 1
+    );
+  });
+}
+
+function buildMSTEdges(data) {
+  const n = data.length;
+  const dist = (i, j) => Math.hypot(data[i].x - data[j].x, data[i].y - data[j].y);
+  const edges = [];
+  for (let i = 0; i < n; i++)
+    for (let j = i + 1; j < n; j++)
+      edges.push({ i, j, w: dist(i, j) });
+  edges.sort((a, b) => a.w - b.w);
+
+  const parent = Array.from({ length: n }, (_, i) => i);
+  const find = a => (parent[a] === a ? a : (parent[a] = find(parent[a])));
+  const union = (a, b) => {
+    a = find(a); b = find(b);
+    if (a === b) return false;
+    parent[a] = b;
+    return true;
+  };
+
+  const mst = [];
+  for (const e of edges) {
+    if (union(e.i, e.j))
+      mst.push({ source: data[e.i], target: data[e.j] });
+    if (mst.length === n - 1) break;
+  }
+  return mst;
+}
+
+function onNodeClick(d, data, xScale, yScale, linesG) {
+  // update tooltip
+  document.getElementById('tt-name').textContent = d.label;
+  document.getElementById('tt-universe').textContent = d.universe === 'GoT' ? 'Game of Thrones' : 'Lord of the Rings';
+  document.getElementById('tt-universe').style.color = d.universe === 'GoT' ? 'var(--got)' : 'var(--lotr)';
+  document.getElementById('tt-archetype').textContent = d.archetype;
+  document.getElementById('tt-text').textContent = d.text;
+  document.getElementById('tooltip-card').classList.add('visible');
+
+  // compute 3 nearest by euclidean distance
+  const dist = (a, b) => Math.sqrt((a.x - b.x)**2 + (a.y - b.y)**2);
+  const others = data.filter(n => n.id !== d.id);
+  others.sort((a, b) => dist(a, d) - dist(b, d));
+  const nearest = others.slice(0, 3);
+
+  // draw lines
+  linesG.selectAll('.neighbor-line').remove();
+  nearest.forEach(n => {
+    linesG.append('line')
+      .attr('class', 'neighbor-line visible')
+      .attr('x1', xScale(d.x)).attr('y1', yScale(d.y))
+      .attr('x2', xScale(n.x)).attr('y2', yScale(n.y))
+      .attr('stroke', n.universe !== d.universe ? '#f0c040' : 'rgba(255,255,255,0.3)');
+  });
+}
+
+function positionItems(items) {
+  const archetypeSeeds = archetypePositionSeeds();
+  return items.map(item => {
+    const seed = archetypeSeeds[item.archetype] || [5, 5];
+    let h = 0;
+    for (let i = 0; i < (item.id || '').length; i++) h = (h * 31 + item.id.charCodeAt(i)) >>> 0;
+    const jx = (h % 1000) / 1000 - 0.5;
+    const jy = ((h >> 10) % 1000) / 1000 - 0.5;
+    return { ...item, x: seed[0] + jx * 0.8, y: seed[1] + jy * 0.8 };
+  });
+}
+
+function archetypePositionSeeds() {
+  return {
+    'The Reluctant Hero': [3, 7],
+    'The Wise Mentor': [2, 5],
+    'The Schemer': [8, 3],
+    'The Shadow Advisor': [7.5, 2.5],
+    'The Fallen Knight': [5, 2],
+    'The Ruthless Ruler': [9, 6],
+    'The Iron Patriarch': [8.5, 5],
+    'The Honorable Martyr': [2, 2],
+    'The Avenger': [1.5, 8],
+    'The Survivor': [3.5, 8.5],
+    'The Broken Soul': [6.5, 9],
+    'The Broken Redeemer': [5.5, 8.5],
+    'The Existential Threat': [9, 9],
+    'The Zealot': [7, 7.5],
+    'The Steadfast Companion': [2.5, 6],
+    'The Loyal Companion': [3, 5.5],
+    'The Seer': [1, 5],
+    'The Hidden King': [4, 3],
+    'The Clever Outsider': [6, 4],
+    'The Tempted Guardian': [1.5, 3.5],
+    'The Elegant Warrior': [5.5, 1.5],
+    'The Passionate Duelist': [4.5, 9],
+    'The Hidden Warrior': [2, 9],
+    'The Cruel Pretender': [9.5, 7],
+    'The Rigid Claimant': [8, 1.5],
+    'The Political Seductress': [7, 5.5],
+    'The Wise Second Son': [3.5, 3],
+    'The Restored King': [5, 5],
+    'The Brutal Protector': [1, 7],
+    'The Sacrificial Beloved': [3, 1.5],
+    'The Naive Catalyst': [6, 7],
+    'The Ancient Guardian': [1, 1.5],
+    'The Corrupted Sage': [7, 1],
+    'The Reluctant Sage': [2.5, 4],
+    'The Idealist Turned Tyrant': [9, 4],
+    'The Joyful Mystery': [0.5, 3],
+  };
+}
+
+// fallback synthetic positions (inline roster when JSON unavailable)
+function generateSyntheticPositions() {
+  return positionItems(getRawItems());
+}
+
+// ─────────────────────────────────────────
+// RELATIONSHIP GRAPH
+// ─────────────────────────────────────────
+let relBuilt = false;
+
+async function buildRelGraph() {
+  relBuilt = true;
+  let items, rels;
+  try {
+    const [r1, r2] = await Promise.all([
+      fetch(ITEMS_URL).catch(() => fetch('items.json')),
+      fetch(RELS_URL),
+    ]);
+    items = await r1.json();
+    rels  = await r2.json();
+  } catch(e) {
+    items = getRawItems();
+    rels  = getRawRels();
+  }
+
+  const nodes = items.map(i => ({ ...i }));
+  const links = rels.map(r => ({ ...r }));
+
+  const svg = d3.select('#rel-svg');
+  const container = document.getElementById('rel-panel');
+  const W = container.clientWidth;
+  const H = container.clientHeight - 36;
+  svg.attr('width', W).attr('height', H);
+
+  const g = svg.append('g').attr('class', 'rel-root');
+  svg.call(d3.zoom().scaleExtent([0.3, 3]).on('zoom', e => g.attr('transform', e.transform)));
+
+  const gotX = W * 0.44;
+  const lotrX = W * 0.56;
+  const clusterY = H / 2;
+
+  const degree = {};
+  links.forEach(l => {
+    degree[l.source] = (degree[l.source] || 0) + 1;
+    degree[l.target] = (degree[l.target] || 0) + 1;
+  });
+  nodes.forEach(d => {
+    d.degree = degree[d.id] || 0;
+    const cx = d.universe === 'GoT' ? gotX : lotrX;
+    d.x = cx + (Math.random() - 0.5) * 50;
+    d.y = clusterY + (Math.random() - 0.5) * 50;
+  });
+
+  const clusterStrength = d => 0.1 + Math.max(0, 4 - d.degree) * 0.05;
+
+  const sim = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d => d.id).distance(65))
+    .force('charge', d3.forceManyBody().strength(-110))
+    .force('x', d3.forceX(d => d.universe === 'GoT' ? gotX : lotrX).strength(clusterStrength))
+    .force('y', d3.forceY(clusterY).strength(d => 0.04 + Math.max(0, 3 - d.degree) * 0.03))
+    .force('center', d3.forceCenter(W / 2, clusterY).strength(0.04))
+    .force('collision', d3.forceCollide(20));
+
+  const link = g.append('g').selectAll('.rel-link')
+    .data(links)
+    .join('line')
+    .attr('class', d => `rel-link ${d.type}`)
+    .attr('stroke-width', 1.2);
+
+  const node = g.append('g').selectAll('.rel-node')
+    .data(nodes)
+    .join('g')
+    .attr('class', 'rel-node')
+    .call(d3.drag()
+      .on('start', (e, d) => { if (!e.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+      .on('drag', (e, d) => { d.fx = e.x; d.fy = e.y; })
+      .on('end', (e, d) => { if (!e.active) sim.alphaTarget(0); d.fx = null; d.fy = null; })
+    );
+
+  node.append('circle')
+    .attr('r', d => 6 + (d.interest || 3) * 1.4)
+    .attr('fill', d => d.universe === 'GoT' ? 'var(--got)' : 'var(--lotr)')
+    .attr('fill-opacity', 0.8)
+    .attr('stroke', d => d.universe === 'GoT' ? '#e74c3c' : '#2e86c1')
+    .attr('stroke-width', 1);
+
+  node.append('text').text(d => d.label.split(' ')[0]).attr('y', 1);
+
+  const tooltip = document.getElementById('rel-tooltip');
+  node.on('mouseover', (event, d) => {
+    tooltip.style.display = 'block';
+    tooltip.innerHTML = `<strong style="color:${d.universe==='GoT'?'var(--got)':'var(--lotr)'}">${d.label}</strong><br><em style="color:#a89060;font-size:11px">${d.archetype}</em>`;
+  }).on('mousemove', event => {
+    tooltip.style.left = (event.offsetX + 14) + 'px';
+    tooltip.style.top  = (event.offsetY - 10) + 'px';
+  }).on('mouseout', () => { tooltip.style.display = 'none'; });
+
+  link.on('mouseover', (event, d) => {
+    tooltip.style.display = 'block';
+    tooltip.innerHTML = `<span style="font-size:11px;color:var(--text-muted)">${d.label}</span>`;
+  }).on('mousemove', event => {
+    tooltip.style.left = (event.offsetX + 14) + 'px';
+    tooltip.style.top  = (event.offsetY - 10) + 'px';
+  }).on('mouseout', () => { tooltip.style.display = 'none'; });
+
+  sim.on('tick', () => {
+    link
+      .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+    node.attr('transform', d => `translate(${d.x},${d.y})`);
+  });
+}
+
+// ─────────────────────────────────────────
+// RAW DATA FALLBACK (inline when JSON files unavailable)
+// ─────────────────────────────────────────
+function getRawItems() {
+  return [
+    { id:"got_tyrion", label:"Tyrion Lannister", universe:"GoT", archetype:"The Clever Outsider", text:"Brilliant political mind using wit and manipulation to survive.", interest:5 },
+    { id:"got_cersei", label:"Cersei Lannister", universe:"GoT", archetype:"The Ruthless Ruler", text:"Cunning queen who wields power through fear and dynastic ambition.", interest:4 },
+    { id:"got_jaime", label:"Jaime Lannister", universe:"GoT", archetype:"The Fallen Knight", text:"Legendary warrior defined by a single act of necessary betrayal.", interest:4 },
+    { id:"got_jon", label:"Jon Snow", universe:"GoT", archetype:"The Reluctant Hero", text:"Duty-bound leader who accepts burdens he does not seek.", interest:5 },
+    { id:"got_daenerys", label:"Daenerys Targaryen", universe:"GoT", archetype:"The Idealist Turned Tyrant", text:"Visionary liberator whose mission corrupts into authoritarian brutality.", interest:5 },
+    { id:"got_sansa", label:"Sansa Stark", universe:"GoT", archetype:"The Survivor", text:"Endures captivity and manipulation to emerge as a shrewd ruler.", interest:4 },
+    { id:"got_arya", label:"Arya Stark", universe:"GoT", archetype:"The Avenger", text:"Young warrior who abandons identity to pursue vengeance.", interest:5 },
+    { id:"got_ned", label:"Ned Stark", universe:"GoT", archetype:"The Honorable Martyr", text:"Principled lord whose rigid honor makes him fatally unsuited to intrigue.", interest:4 },
+    { id:"got_littlefinger", label:"Petyr Baelish", universe:"GoT", archetype:"The Schemer", text:"Master manipulator who engineered chaos from a position of low birth.", interest:5 },
+    { id:"got_varys", label:"Varys", universe:"GoT", archetype:"The Shadow Advisor", text:"Spymaster who claims to serve the realm above any individual ruler.", interest:4 },
+    { id:"got_stannis", label:"Stannis Baratheon", universe:"GoT", archetype:"The Rigid Claimant", text:"Uncompromising lord obsessed with legal right and duty.", interest:3 },
+    { id:"got_sandor", label:"Sandor Clegane", universe:"GoT", archetype:"The Brutal Protector", text:"Scarred warrior hiding compassion beneath violent cynicism.", interest:4 },
+    { id:"got_bran", label:"Bran Stark", universe:"GoT", archetype:"The Seer", text:"Physically crippled child who develops supernatural ability to perceive the past.", interest:3 },
+    { id:"got_melisandre", label:"Melisandre", universe:"GoT", archetype:"The Zealot", text:"Flame-wielding priestess who manipulates rulers in service of prophecy.", interest:3 },
+    { id:"got_oberyn", label:"Oberyn Martell", universe:"GoT", archetype:"The Passionate Duelist", text:"Brilliant hedonistic prince motivated by the desire to avenge his sister.", interest:4 },
+    { id:"got_theon", label:"Theon Greyjoy", universe:"GoT", archetype:"The Broken Redeemer", text:"Hostage-turned-traitor who finds redemption through self-sacrifice.", interest:4 },
+    { id:"got_tywin", label:"Tywin Lannister", universe:"GoT", archetype:"The Iron Patriarch", text:"Domineering patriarch who built supremacy through ruthless calculation.", interest:4 },
+    { id:"got_joffrey", label:"Joffrey Baratheon", universe:"GoT", archetype:"The Cruel Pretender", text:"Sadistic boy-king who inherited power without the capacity to wield it.", interest:3 },
+    { id:"got_margaery", label:"Margaery Tyrell", universe:"GoT", archetype:"The Political Seductress", text:"Charming noblewoman who cultivates popular love as a political resource.", interest:3 },
+    { id:"got_drogon", label:"The Night King", universe:"GoT", archetype:"The Existential Threat", text:"Ancient antagonist representing death and the erasure of memory.", interest:3 },
+    { id:"lotr_frodo", label:"Frodo Baggins", universe:"LotR", archetype:"The Reluctant Hero", text:"Ordinary creature chosen to bear an impossible burden through humility.", interest:5 },
+    { id:"lotr_gandalf", label:"Gandalf", universe:"LotR", archetype:"The Wise Mentor", text:"Ancient wizard who guides heroes without directly imposing his will.", interest:5 },
+    { id:"lotr_aragorn", label:"Aragorn", universe:"LotR", archetype:"The Hidden King", text:"Rightful heir in self-imposed exile who accepts destiny through duty.", interest:5 },
+    { id:"lotr_legolas", label:"Legolas", universe:"LotR", archetype:"The Elegant Warrior", text:"Elven prince of supernatural grace who represents a fading elder race.", interest:3 },
+    { id:"lotr_gimli", label:"Gimli", universe:"LotR", archetype:"The Loyal Companion", text:"Stout-hearted dwarf whose prejudice transforms into profound friendship.", interest:3 },
+    { id:"lotr_boromir", label:"Boromir", universe:"LotR", archetype:"The Fallen Knight", text:"Valiant captain who succumbs to temptation before dying in redemption.", interest:4 },
+    { id:"lotr_sam", label:"Samwise Gamgee", universe:"LotR", archetype:"The Steadfast Companion", text:"Devoted gardener whose love carries the quest to completion.", interest:5 },
+    { id:"lotr_sauron", label:"Sauron", universe:"LotR", archetype:"The Existential Threat", text:"Ancient dark lord who dissolved his will into an object of domination.", interest:4 },
+    { id:"lotr_saruman", label:"Saruman", universe:"LotR", archetype:"The Corrupted Sage", text:"Greatest wizard seduced by industrial power and the logic of control.", interest:4 },
+    { id:"lotr_gollum", label:"Gollum", universe:"LotR", archetype:"The Broken Soul", text:"Creature split by centuries of addiction to the Ring.", interest:5 },
+    { id:"lotr_arwen", label:"Arwen", universe:"LotR", archetype:"The Sacrificial Beloved", text:"Elven princess who freely chooses mortality for love.", interest:3 },
+    { id:"lotr_eowyn", label:"Éowyn", universe:"LotR", archetype:"The Hidden Warrior", text:"Shield-maiden who defeats the Witch-king by fulfilling prophecy subversively.", interest:5 },
+    { id:"lotr_faramir", label:"Faramir", universe:"LotR", archetype:"The Wise Second Son", text:"Scholarly captain who resists the Ring through wisdom, not strength.", interest:4 },
+    { id:"lotr_theoden", label:"Théoden", universe:"LotR", archetype:"The Restored King", text:"Enchanted king who reclaims dignity and dies in glorious battle.", interest:4 },
+    { id:"lotr_grima", label:"Gríma Wormtongue", universe:"LotR", archetype:"The Shadow Advisor", text:"Treacherous counselor who whispered despair into a king's ear.", interest:3 },
+    { id:"lotr_treebeard", label:"Treebeard", universe:"LotR", archetype:"The Ancient Guardian", text:"Oldest living being who represents nature's memory and capacity for wrath.", interest:3 },
+    { id:"lotr_pippin", label:"Pippin Took", universe:"LotR", archetype:"The Naive Catalyst", text:"Cheerful hobbit whose impulsiveness repeatedly creates crises that move the plot.", interest:3 },
+    { id:"lotr_merry", label:"Merry Brandybuck", universe:"LotR", archetype:"The Loyal Companion", text:"Thoughtful hobbit who chooses to fight with open eyes.", interest:3 },
+    { id:"lotr_elrond", label:"Elrond", universe:"LotR", archetype:"The Reluctant Sage", text:"Half-elven lord whose wisdom is inseparable from exhaustion and loss.", interest:4 },
+    { id:"lotr_galadriel", label:"Galadriel", universe:"LotR", archetype:"The Tempted Guardian", text:"Ancient elven queen who refuses the Ring, choosing to diminish rather than fall.", interest:5 },
+    { id:"lotr_legolas2", label:"Tom Bombadil", universe:"LotR", archetype:"The Joyful Mystery", text:"Ancient being immune to the Ring through sheer contentment.", interest:4 },
+  ];
+}
+
+function getRawRels() {
+  return [
+    {source:"got_tyrion",target:"got_cersei",type:"rival",label:"siblings / rivals"},
+    {source:"got_tyrion",target:"got_jaime",type:"ally",label:"brothers / protector"},
+    {source:"got_tyrion",target:"got_tywin",type:"rival",label:"father / son contempt"},
+    {source:"got_tyrion",target:"got_daenerys",type:"ally",label:"advisor"},
+    {source:"got_tyrion",target:"got_varys",type:"ally",label:"uneasy allies"},
+    {source:"got_cersei",target:"got_jaime",type:"ally",label:"twins / lovers"},
+    {source:"got_cersei",target:"got_joffrey",type:"ally",label:"mother / son"},
+    {source:"got_cersei",target:"got_margaery",type:"rival",label:"rivals for power"},
+    {source:"got_cersei",target:"got_tywin",type:"ally",label:"father / daughter"},
+    {source:"got_cersei",target:"got_littlefinger",type:"rival",label:"mutual distrust"},
+    {source:"got_jaime",target:"got_ned",type:"rival",label:"kingslayer / honorman"},
+    {source:"got_jon",target:"got_ned",type:"ally",label:"father / son (believed)"},
+    {source:"got_jon",target:"got_arya",type:"ally",label:"siblings / kindred spirits"},
+    {source:"got_jon",target:"got_sansa",type:"ally",label:"siblings"},
+    {source:"got_jon",target:"got_daenerys",type:"ally",label:"lovers / rivals"},
+    {source:"got_jon",target:"got_melisandre",type:"ally",label:"resurrected by / distrustful"},
+    {source:"got_daenerys",target:"got_varys",type:"rival",label:"queen / doubting advisor"},
+    {source:"got_sansa",target:"got_littlefinger",type:"rival",label:"manipulator / pawn turned player"},
+    {source:"got_sansa",target:"got_ned",type:"ally",label:"father / daughter"},
+    {source:"got_arya",target:"got_sandor",type:"ally",label:"captor turned protector"},
+    {source:"got_arya",target:"got_ned",type:"ally",label:"father / daughter"},
+    {source:"got_littlefinger",target:"got_varys",type:"rival",label:"rival schemers"},
+    {source:"got_littlefinger",target:"got_ned",type:"rival",label:"betrayer"},
+    {source:"got_stannis",target:"got_melisandre",type:"ally",label:"king / zealot advisor"},
+    {source:"got_theon",target:"got_sansa",type:"ally",label:"captor turned protector"},
+    {source:"got_theon",target:"got_ned",type:"ally",label:"ward / father figure"},
+    {source:"got_oberyn",target:"got_tywin",type:"rival",label:"avenger / villain"},
+    {source:"got_bran",target:"got_ned",type:"ally",label:"father / son"},
+    {source:"got_tywin",target:"got_ned",type:"rival",label:"rival lords"},
+    {source:"lotr_frodo",target:"lotr_sam",type:"ally",label:"ringbearer / devoted companion"},
+    {source:"lotr_frodo",target:"lotr_gandalf",type:"ally",label:"guide / charge"},
+    {source:"lotr_frodo",target:"lotr_gollum",type:"rival",label:"master / tormented guide"},
+    {source:"lotr_frodo",target:"lotr_aragorn",type:"ally",label:"fellowship"},
+    {source:"lotr_frodo",target:"lotr_boromir",type:"rival",label:"tempted betrayal"},
+    {source:"lotr_gandalf",target:"lotr_saruman",type:"rival",label:"good vs corrupted wizard"},
+    {source:"lotr_gandalf",target:"lotr_aragorn",type:"ally",label:"guide / destined king"},
+    {source:"lotr_gandalf",target:"lotr_galadriel",type:"ally",label:"ring-bearers / ancient allies"},
+    {source:"lotr_gandalf",target:"lotr_elrond",type:"ally",label:"council of the wise"},
+    {source:"lotr_gandalf",target:"lotr_pippin",type:"ally",label:"guardian / reckless ward"},
+    {source:"lotr_aragorn",target:"lotr_arwen",type:"ally",label:"lovers / sacrifice"},
+    {source:"lotr_aragorn",target:"lotr_boromir",type:"ally",label:"king / loyal captain"},
+    {source:"lotr_aragorn",target:"lotr_legolas",type:"ally",label:"fellowship"},
+    {source:"lotr_aragorn",target:"lotr_gimli",type:"ally",label:"fellowship"},
+    {source:"lotr_aragorn",target:"lotr_theoden",type:"ally",label:"kings united in battle"},
+    {source:"lotr_aragorn",target:"lotr_elrond",type:"ally",label:"foster father / son"},
+    {source:"lotr_legolas",target:"lotr_gimli",type:"ally",label:"unlikely friendship"},
+    {source:"lotr_boromir",target:"lotr_faramir",type:"ally",label:"brothers"},
+    {source:"lotr_sauron",target:"lotr_saruman",type:"ally",label:"master / corrupted servant"},
+    {source:"lotr_sauron",target:"lotr_gollum",type:"ally",label:"creator of addiction"},
+    {source:"lotr_sauron",target:"lotr_galadriel",type:"rival",label:"darkness vs light"},
+    {source:"lotr_saruman",target:"lotr_grima",type:"ally",label:"master / spy"},
+    {source:"lotr_saruman",target:"lotr_theoden",type:"rival",label:"corruptor / king"},
+    {source:"lotr_grima",target:"lotr_theoden",type:"rival",label:"whisperer / enchanted king"},
+    {source:"lotr_eowyn",target:"lotr_theoden",type:"ally",label:"niece / uncle"},
+    {source:"lotr_eowyn",target:"lotr_faramir",type:"ally",label:"lovers / healing"},
+    {source:"lotr_eowyn",target:"lotr_merry",type:"ally",label:"battle companions"},
+    {source:"lotr_treebeard",target:"lotr_saruman",type:"rival",label:"nature vs industry"},
+    {source:"lotr_treebeard",target:"lotr_pippin",type:"ally",label:"awakener / messengers"},
+    {source:"lotr_treebeard",target:"lotr_merry",type:"ally",label:"awakener / messengers"},
+    {source:"lotr_galadriel",target:"lotr_elrond",type:"ally",label:"ring-bearers / council"},
+    {source:"lotr_galadriel",target:"lotr_arwen",type:"ally",label:"grandmother / granddaughter"},
+    {source:"lotr_pippin",target:"lotr_merry",type:"ally",label:"cousins / inseparable"},
+    {source:"lotr_sam",target:"lotr_gollum",type:"rival",label:"rivals for Frodo"},
+  ];
+}
+
+buildConceptMap();
+</script>
+</body>
+</html>
