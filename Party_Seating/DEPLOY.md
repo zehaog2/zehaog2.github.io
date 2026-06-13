@@ -5,7 +5,7 @@ The interactive UI on GitHub Pages calls a Vercel serverless API for live optimi
 ## One-time setup
 
 1. Sign in at [vercel.com](https://vercel.com) and import the `zehaog2.github.io` repository.
-2. Deploy with the root [`vercel.json`](../vercel.json) (no build command required).
+2. Deploy with the root [`vercel.json`](../vercel.json) and [`api/run.py`](../api/run.py) (no build command required).
 3. Copy the deployment URL (e.g. `https://zehaog2-party-seating.vercel.app`).
 4. Set that URL in one of:
    - [`Party_Seating/config.js`](config.js) — copy from [`config.example.js`](config.example.js)

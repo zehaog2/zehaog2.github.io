@@ -8,7 +8,7 @@ from http.server import BaseHTTPRequestHandler
 from pathlib import Path
 from urllib.parse import urlparse
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent / "Party_Seating"
 sys.path.insert(0, str(ROOT))
 
 from party_cpsat import DEFAULTS, MAX_N, solve  # noqa: E402

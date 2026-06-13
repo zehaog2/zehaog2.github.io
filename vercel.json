@@ -1,13 +1,13 @@
 {
   "functions": {
-    "Party_Seating/api/run.py": {
-      "maxDuration": 60
+    "api/run.py": {
+      "maxDuration": 60,
+      "excludeFiles": "{project_popups/**,Project_Background/**,GoT_LoR/**,projects/**,js/**,*.html,*.jpg,*.png,unpublished.jpg,Party_Seating/party_seating.html,Party_Seating/seating_data.js,Party_Seating/server.py,Party_Seating/config*.js,Party_Seating/api/**}"
     }
   },
   "rewrites": [
-    { "source": "/api/run", "destination": "/Party_Seating/api/run.py" },
-    { "source": "/api/defaults", "destination": "/Party_Seating/api/run.py" },
-    { "source": "/api/config", "destination": "/Party_Seating/api/run.py" }
+    { "source": "/api/defaults", "destination": "/api/run.py" },
+    { "source": "/api/config", "destination": "/api/run.py" }
   ],
   "headers": [
     {
