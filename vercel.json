@@ -1,0 +1,25 @@
+{
+  "functions": {
+    "Party_Seating/api/run.py": {
+      "maxDuration": 60
+    }
+  },
+  "rewrites": [
+    { "source": "/api/run", "destination": "/Party_Seating/api/run.py" },
+    { "source": "/api/defaults", "destination": "/Party_Seating/api/run.py" },
+    { "source": "/api/config", "destination": "/Party_Seating/api/run.py" }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
+      ]
+    }
+  ],
+  "env": {
+    "SOLVER_MAX_SECONDS": "10"
+  }
+}

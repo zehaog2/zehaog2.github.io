@@ -1,0 +1,8 @@
+{
+  "id": "party-seating",
+  "cardTitle": "Party Seating Optimizer",
+  "cardDesc": "CP-SAT seating planner that balances food-preference alignment, conflict separation, and VIP co-location across tables — with an interactive table subgraph UI.",
+  "cardFooterTag": "Python · OR-Tools",
+  "backgroundImage": "party-seating.jpeg",
+  "cardLink": "Party_Seating/party_seating.html"
+}

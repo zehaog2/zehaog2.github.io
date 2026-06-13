@@ -1,0 +1,8 @@
+{
+  "id": "party-seating",
+  "cardTitle": "宴会座位优化器",
+  "cardDesc": "基于 CP-SAT 的座位分配：在餐桌间软优化口味匹配、冲突隔离与 VIP 同席，并提供交互式餐桌子图界面。",
+  "cardFooterTag": "Python · OR-Tools",
+  "backgroundImage": "party-seating.jpeg",
+  "cardLink": "Party_Seating/party_seating.html"
+}

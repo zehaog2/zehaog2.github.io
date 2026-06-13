@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Party seating — table subgraphs</title>
+<style>
+  :root{
+    --bg:#faf9f5; --panel:#ffffff; --border:#e3e1d8;
+    --text:#2c2c2a; --muted:#73726c; --warn:#B42318; --accent:#534AB7;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#1f1e1b; --panel:#2a2926; --border:#3d3c38;
+           --text:#e8e6df; --muted:#9c9a92; --accent:#9B93E8; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+       padding:24px;line-height:1.5}
+  h1{font-size:20px;font-weight:500;margin:0 0 4px}
+  h2{font-size:15px;font-weight:500;margin:0 0 10px}
+  p.sub{color:var(--muted);font-size:13px;margin:0 0 16px}
+  .wrap{max-width:1100px}
+  #controls{background:var(--panel);border:1px solid var(--border);
+            border-radius:14px;padding:16px;margin-bottom:16px}
+  .fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+  label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+  label .hint{font-size:11px;color:var(--muted);opacity:.85;font-weight:400}
+  label input{width:100%;padding:8px 10px;border:1px solid var(--border);
+              border-radius:8px;background:var(--bg);color:var(--text);font-size:14px}
+  .actions{display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap}
+  button{padding:9px 18px;border:none;border-radius:8px;background:var(--accent);
+         color:#fff;font-size:14px;font-weight:500;cursor:pointer}
+  button:disabled{opacity:.55;cursor:not-allowed}
+  #status{font-size:13px;color:var(--muted)}
+  #status.error{color:var(--warn)}
+  #guest-search{margin-bottom:16px}
+  #guest-search label{display:block;margin-bottom:6px}
+  #guest-search input{max-width:220px;padding:8px 10px;border:1px solid var(--border);
+                      border-radius:8px;background:var(--panel);color:var(--text);font-size:14px}
+  #stats{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+  .stat{background:var(--panel);border:1px solid var(--border);border-radius:10px;
+        padding:10px 14px;min-width:100px}
+  .stat b{display:block;font-size:18px;font-weight:500;line-height:1.2}
+  .stat span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+  #conflict-list{background:var(--panel);border:1px solid var(--border);
+                 border-radius:14px;padding:14px;margin-bottom:16px}
+  #conflict-list ul{margin:0;padding-left:18px;font-size:13px}
+  #conflict-list li{margin:2px 0}
+  .conflict-active{color:var(--warn)}
+  .conflict-idle{color:var(--muted)}
+  #grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+        gap:20px;align-items:start}
+  .panel{background:var(--panel);border:1px solid var(--border);
+         border-radius:14px;padding:14px;position:relative;z-index:1;cursor:pointer;
+         transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+  .panel:hover,.panel.expanded{z-index:20;transform:scale(1.45);
+               box-shadow:0 16px 48px rgba(0,0,0,.14)}
+  .panel.highlight{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+  @media (prefers-reduced-motion:reduce){
+    .panel{transition:none}
+    .panel:hover,.panel.expanded{transform:none}
+  }
+  .head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .title{font-size:15px;font-weight:500}
+  .seats{font-size:12px;color:var(--muted);white-space:nowrap}
+  .food,.score{font-size:12px;color:var(--muted);margin-top:2px}
+  .score b{color:var(--text);font-weight:500}
+  .conflicts{font-size:12px;margin-top:6px}
+  .conflicts li{margin:2px 0}
+  .vip-tag{font-size:11px;color:#854F0B;font-weight:500;margin-left:6px}
+  svg{display:block;width:100%;height:auto;margin-top:6px}
+  .legend{margin-top:18px;font-size:12px;color:var(--muted)}
+  .legend span{display:inline-block;margin-right:16px}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:50%;
+       vertical-align:middle;margin-right:4px}
+  #meta .status-optimal{color:var(--accent);font-weight:500}
+  #meta .status-feasible{color:var(--muted);font-weight:500}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Party seating — table subgraphs</h1>
+  <p class="sub">Adjust settings and run the optimizer · hover or tap a table to zoom.</p>
+
+  <div id="controls">
+    <h2>Settings</h2>
+    <div class="fields">
+      <label>Number of guests
+        <input id="pN" type="number" min="1" max="300" step="1" title="Total people to seat (max 300)"></label>
+      <label>Number of tables
+        <input id="pNTables" type="number" min="1" step="1" title="How many tables are available"></label>
+      <label>Max seats per table
+        <input id="pCap" type="number" min="2" step="1" title="Capacity of each table"></label>
+      <label>Food matching priority
+        <span class="hint">Higher = group similar tastes</span>
+        <input id="pWFood" type="number" min="0" step="1" title="How hard to match spice, sweet, and portion preferences at each table"></label>
+      <label>Conflict separation priority
+        <span class="hint">Higher = keep rivals apart</span>
+        <input id="pWConf" type="number" min="0" step="1" title="How hard to avoid seating conflicted guests together"></label>
+      <label>Random seed (optional)
+        <span class="hint">Leave blank for random</span>
+        <input id="pSeed" type="number" step="1" placeholder="random" title="Use the same seed to reproduce a seating plan"></label>
+    </div>
+    <div class="actions">
+      <button id="runBtn" type="button">Run optimizer</button>
+      <span id="status">Loading optimizer…</span>
+    </div>
+  </div>
+
+  <div id="stats"></div>
+  <div id="conflict-list"></div>
+  <div id="guest-search" hidden>
+    <label for="guestLookup">Find guest by ID</label>
+    <input id="guestLookup" type="number" min="0" step="1" placeholder="Guest ID">
+  </div>
+  <div id="grid"></div>
+  <p id="meta" class="sub"></p>
+  <div class="legend">
+    <span><span class="dot" style="background:#888780"></span>Stranger</span>
+    <span><span class="dot" style="background:#534AB7"></span>Family / couple</span>
+    <span>★ VIP</span>
+    <span><span class="dot" style="background:var(--warn);opacity:.7"></span>Conflict (co-seated)</span>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="seating_data.js"></script>
+<script>
+const MAX_GUESTS = 300;
+const PRODUCTION_API = (
+  (window.PARTY_SEATING_API || 'https://YOUR-VERCEL-PROJECT.vercel.app')
+).replace(/\/$/, '');
+const DEFAULTS = {N:56, N_TABLES:10, CAP:6, W_FOOD:50, W_CONF:100};
+const fields = {
+  N: document.getElementById('pN'),
+  N_TABLES: document.getElementById('pNTables'),
+  CAP: document.getElementById('pCap'),
+  W_FOOD: document.getElementById('pWFood'),
+  W_CONF: document.getElementById('pWConf'),
+};
+const seedField = document.getElementById('pSeed');
+const runBtn = document.getElementById('runBtn');
+const statusEl = document.getElementById('status');
+const guestSearchEl = document.getElementById('guest-search');
+const guestLookupEl = document.getElementById('guestLookup');
+const gridEl = document.getElementById('grid');
+
+let API_BASE = location.protocol === 'file:' ? 'http://127.0.0.1:8765' : '';
+let SERVER_URL = `${API_BASE}/party_seating.html`;
+let lastTables = null;
+let solveTimer = null;
+
+function setFields(params) {
+  for (const [k, el] of Object.entries(fields)) {
+    if (params[k] != null) el.value = params[k];
+  }
+}
+
+function readParams() {
+  const params = {
+    N: +fields.N.value,
+    N_TABLES: +fields.N_TABLES.value,
+    CAP: +fields.CAP.value,
+    W_FOOD: +fields.W_FOOD.value,
+    W_CONF: +fields.W_CONF.value,
+  };
+  const seedVal = seedField.value.trim();
+  if (seedVal !== '') params.seed = +seedVal;
+  return params;
+}
+
+function validateParams(params) {
+  if (!Number.isFinite(params.N) || params.N < 1) {
+    return 'Number of guests must be at least 1';
+  }
+  if (params.N > MAX_GUESTS) {
+    return `Number of guests must be at most ${MAX_GUESTS}`;
+  }
+  if (!Number.isFinite(params.N_TABLES) || params.N_TABLES < 1) {
+    return 'Number of tables must be at least 1';
+  }
+  if (!Number.isFinite(params.CAP) || params.CAP < 2) {
+    return 'Max seats per table must be at least 2';
+  }
+  return null;
+}
+
+async function apiReachable(base) {
+  try {
+    const res = await fetch(`${base}/api/config`, { cache: 'no-store' });
+    if (!res.ok) return false;
+    const cfg = await res.json();
+    return cfg && (cfg.port != null || cfg.maxN != null);
+  } catch {
+    return false;
+  }
+}
+
+function fmtIds(ids) { return ids.join(', '); }
+function fmtSide(ids) {
+  return ids.length === 1 ? `guest ${ids[0]}` : `guests ${fmtIds(ids)}`;
+}
+function conflictLabel(c) {
+  return `${fmtSide(c.a)} ↔ ${fmtSide(c.b)} (severity ${c.severity})`;
+}
+
+function qualityScore(penalty, ceiling) {
+  return Math.round(ceiling - penalty);
+}
+
+function estimateObjectiveCeiling(params, stats, conflicts, tables, objective, tableScores) {
+  const wFood = params.W_FOOD ?? 50;
+  const wConf = params.W_CONF ?? 100;
+  const wVip = params.W_VIP ?? 200;
+  const nTablesUsed = Object.keys(tables).length;
+  const nTables = stats.nTables ?? params.N_TABLES ?? 10;
+  const nConf = stats.nConflicts ?? conflicts.length;
+  const maxFood = wFood * 12 * Math.max(nTablesUsed, 1);
+  const maxConf = nConf * 5 * wConf;
+  const maxVip = wVip * Math.max(0, nTables - 1);
+  const estimated = maxFood + maxConf + maxVip;
+  const tableMax = Math.max(0, ...Object.values(tableScores).map(s => s.total));
+  return Math.max(estimated, objective, tableMax, 1);
+}
+
+function tableScoreCeilings(tableScores, params) {
+  const wFood = params.W_FOOD ?? 50;
+  const wConf = params.W_CONF ?? 100;
+  const entries = Object.values(tableScores);
+  const maxFoodEst = wFood * 12;
+  const maxConfEst = entries.length
+    ? Math.max(wConf * 5, ...entries.map(s => s.conflict))
+    : wConf * 5;
+  return {
+    total: Math.max(1, ...entries.map(s => s.total)),
+    food: Math.max(maxFoodEst, ...entries.map(s => s.food), 1),
+    conflict: Math.max(maxConfEst, ...entries.map(s => s.conflict), 1),
+  };
+}
+
+function scoreLine(sc, ceilings) {
+  if (!sc) return '';
+  const total = qualityScore(sc.total, ceilings.total);
+  const food = qualityScore(sc.food, ceilings.food);
+  const conflict = qualityScore(sc.conflict, ceilings.conflict);
+  return `<div class="score">Quality <b>${total}</b> (food ${food} · conflict ${conflict})</div>`;
+}
+
+function arcSeatDist(i, j, n) {
+  const d = Math.abs(i - j);
+  return Math.min(d, n - d);
+}
+
+function buildTableBlocks(members, familyGroups) {
+  const at = new Set(members), used = new Set(), blocks = [];
+  for (const g of familyGroups) {
+    const present = g.filter(p => at.has(p));
+    if (!present.length) continue;
+    blocks.push(present);
+    present.forEach(p => used.add(p));
+  }
+  for (const p of members) if (!used.has(p)) blocks.push([p]);
+  blocks.sort((a, b) => a[0] - b[0]);
+  return blocks;
+}
+
+function conflictBlockPairs(blocks, tableConflicts) {
+  const pairs = [];
+  for (const c of tableConflicts) {
+    const blockA = new Set(), blockB = new Set();
+    for (const p of c.a) {
+      const bi = blocks.findIndex(b => b.includes(p));
+      if (bi >= 0) blockA.add(bi);
+    }
+    for (const p of c.b) {
+      const bi = blocks.findIndex(b => b.includes(p));
+      if (bi >= 0) blockB.add(bi);
+    }
+    for (const bi of blockA) {
+      for (const bj of blockB) {
+        if (bi !== bj) pairs.push([bi, bj, c.severity]);
+      }
+    }
+  }
+  return pairs;
+}
+
+function scoreBlockArrangement(order, pairs, n) {
+  const pos = Object.create(null);
+  order.forEach((blockIdx, seat) => { pos[blockIdx] = seat; });
+  let s = 0;
+  for (const [bi, bj, w] of pairs) {
+    s += arcSeatDist(pos[bi], pos[bj], n) * w;
+  }
+  return s;
+}
+
+function optimizeBlockArrangement(blocks, pairs) {
+  const n = blocks.length;
+  if (n <= 1 || !pairs.length) return blocks;
+  const idx = [...Array(n).keys()];
+  let bestOrder = idx;
+  let bestScore = -1;
+  function permute(a, l) {
+    if (l === n) {
+      const sc = scoreBlockArrangement(a, pairs, n);
+      if (sc > bestScore) {
+        bestScore = sc;
+        bestOrder = [...a];
+      }
+      return;
+    }
+    for (let i = l; i < n; i++) {
+      [a[l], a[i]] = [a[i], a[l]];
+      permute(a, l + 1);
+      [a[l], a[i]] = [a[i], a[l]];
+    }
+  }
+  permute(idx, 0);
+  return bestOrder.map(i => blocks[i]);
+}
+
+function orderTableSeats(members, familyGroups, tableConflicts) {
+  const blocks = buildTableBlocks(members, familyGroups);
+  const pairs = conflictBlockPairs(blocks, tableConflicts);
+  return optimizeBlockArrangement(blocks, pairs).flat();
+}
+
+function statusBadge(status) {
+  if (status === 'OPTIMAL') return `<span class="status-optimal">${status}</span>`;
+  if (status === 'FEASIBLE') return `<span class="status-feasible">${status}</span>`;
+  return status;
+}
+
+function clearPanelHighlights() {
+  gridEl.querySelectorAll('.panel.highlight').forEach(el => el.classList.remove('highlight'));
+}
+
+function collapsePanels() {
+  gridEl.querySelectorAll('.panel.expanded').forEach(el => el.classList.remove('expanded'));
+}
+
+function findGuestTable(guestId, tables) {
+  const id = Number(guestId);
+  if (!Number.isInteger(id) || id < 0) return null;
+  for (const [t, members] of Object.entries(tables)) {
+    if (members.includes(id)) return t;
+  }
+  return null;
+}
+
+function highlightGuest(guestId) {
+  clearPanelHighlights();
+  if (!lastTables) return;
+  const tableId = findGuestTable(guestId, lastTables);
+  if (tableId == null) {
+    statusEl.className = 'error';
+    statusEl.textContent = `Guest ${guestId} not found in current seating`;
+    return;
+  }
+  const panel = gridEl.querySelector(`.panel[data-table="${tableId}"]`);
+  if (panel) {
+    panel.classList.add('highlight');
+    panel.scrollIntoView({behavior: 'smooth', block: 'center'});
+    statusEl.className = '';
+    statusEl.textContent = `Guest ${guestId} is at table ${tableId}`;
+  }
+}
+
+function render(D) {
+  const {people, groups, tables, status, objective, seed, conflicts = [],
+           stats = {}, tableScores = {}, params = {}} = D;
+
+  lastTables = tables;
+  guestSearchEl.hidden = false;
+  clearPanelHighlights();
+  collapsePanels();
+
+  const objectiveCeiling = estimateObjectiveCeiling(
+    params, stats, conflicts, tables, objective, tableScores
+  );
+  const qualityObjective = qualityScore(objective, objectiveCeiling);
+  const scoreCeilings = tableScoreCeilings(tableScores, params);
+
+  document.getElementById('meta').innerHTML =
+    `Seed ${seed} · ${statusBadge(status)} · quality score ${qualityObjective} · ${stats.solveTime ?? '?'}s`;
+
+  const gidOf = Object.create(null);
+  groups.forEach((g, i) => g.forEach(p => { gidOf[p] = i; }));
+
+  const isVip = p => !!people[p].vip;
+
+  const palette = [
+    {f:'#CECBF6',t:'#26215C'}, {f:'#9FE1CB',t:'#04342C'},
+    {f:'#F5C4B3',t:'#4A1B0C'}, {f:'#F4C0D1',t:'#4B1528'},
+    {f:'#FAC775',t:'#412402'}, {f:'#B8D4F0',t:'#1A3347'},
+    {f:'#D4E8A0',t:'#2A3A0A'}, {f:'#E8C4E8',t:'#3A1A3A'}
+  ];
+  const GRAY = {f:'#D3D1C7',t:'#2C2C2A'};
+  const gColor = Object.create(null);
+  let famIdx = 0;
+  groups.forEach((g, i) => {
+    if (g.length > 1) gColor[i] = palette[famIdx++ % palette.length];
+  });
+  const colorOf = p => gColor[gidOf[p]] || GRAY;
+  const familyGroups = groups.filter(g => g.length > 1);
+
+  const conflictsByTable = Object.create(null);
+  const sortedConflicts = [...conflicts].sort(
+    (a, b) => (b.sameTable - a.sameTable) || (b.severity - a.severity)
+  );
+  for (const c of conflicts) {
+    if (c.sameTable) (conflictsByTable[c.table] ??= []).push(c);
+  }
+
+  function tableMetrics(m) {
+    let sp = 0, sw = 0, po = 0;
+    for (const p of m) { sp += people[p].s; sw += people[p].w; po += people[p].p; }
+    const n = m.length;
+    return {sp: (sp / n).toFixed(1), sw: (sw / n).toFixed(1), po};
+  }
+
+  function layoutParams(n) {
+    const NR = n <= 6 ? 15 : n <= 8 ? 12 : n <= 10 ? 10 : 8;
+    const R = Math.min(62, 38 + n * 2.5);
+    const font = n <= 8 ? 12 : n <= 10 ? 10 : 9;
+    return {NR, R, font, W: 280, H: Math.round(R * 2 + NR * 2 + 24)};
+  }
+
+  function starPoints(x, y, rOuter, rInner) {
+    const pts = [];
+    for (let k = 0; k < 10; k++) {
+      const r = k % 2 ? rInner : rOuter;
+      const a = -Math.PI / 2 + k * Math.PI / 5;
+      pts.push(`${(x + r * Math.cos(a)).toFixed(1)},${(y + r * Math.sin(a)).toFixed(1)}`);
+    }
+    return pts.join(' ');
+  }
+
+  const statItems = [
+    ['Guests', stats.nPeople ?? params.N],
+    ['Solo guests', stats.nIndividuals ?? '—'],
+    ['Tables used', Object.keys(tables).length],
+    ['Table size (min / max seats)', `${stats.minTable ?? '?'}/${stats.capacity ?? params.CAP ?? '?'}`],
+    ['Quality score (higher is better)', qualityObjective],
+    ['VIPs', stats.nVips ?? 0],
+    ['Conflicts', stats.nConflicts ?? conflicts.length],
+    ['Conflicts at same table', stats.nCoSeated ?? conflicts.filter(c => c.sameTable).length],
+  ];
+  document.getElementById('stats').innerHTML = statItems.map(
+    ([label, val]) => `<div class="stat"><b>${val}</b><span>${label}</span></div>`
+  ).join('');
+
+  const conflictList = document.getElementById('conflict-list');
+  if (sortedConflicts.length) {
+    conflictList.innerHTML = `<h2>Conflicts (${sortedConflicts.length})</h2><ul>${
+      sortedConflicts.map(c => {
+        const cls = c.sameTable ? 'conflict-active' : 'conflict-idle';
+        const note = c.sameTable
+          ? ` — seated together at table ${c.table}` : ' — different tables';
+        return `<li class="${cls}">${conflictLabel(c)}${note}</li>`;
+      }).join('')
+    }</ul>`;
+  } else {
+    conflictList.innerHTML = '<h2>Conflicts</h2><p class="sub" style="margin:0">None</p>';
+  }
+
+  const tableIds = Object.keys(tables).map(Number).sort((a, b) => a - b);
+
+  if (!tableIds.length) {
+    gridEl.innerHTML = '<p class="sub">No seated tables in output.</p>';
+    return;
+  }
+
+  gridEl.innerHTML = tableIds.map(t => {
+    const tableConflicts = conflictsByTable[t] || [];
+    const m = orderTableSeats(tables[t], familyGroups, tableConflicts);
+    const {sp, sw, po} = tableMetrics(m);
+    const {NR, R, font, W, H} = layoutParams(m.length);
+    const cx = W / 2, cy = H / 2 + 6;
+    const vipTable = m.some(isVip);
+    const sc = tableScores[String(t)];
+    const pos = Object.create(null);
+
+    m.forEach((p, i) => {
+      const ang = 2 * Math.PI * i / m.length;
+      pos[p] = {x: cx + R * Math.sin(ang), y: cy - R * Math.cos(ang)};
+    });
+
+    let svg = '';
+    for (const c of (conflictsByTable[t] || [])) {
+      const ax = c.a.reduce((s, p) => s + pos[p].x, 0) / c.a.length;
+      const ay = c.a.reduce((s, p) => s + pos[p].y, 0) / c.a.length;
+      const bx = c.b.reduce((s, p) => s + pos[p].x, 0) / c.b.length;
+      const by = c.b.reduce((s, p) => s + pos[p].y, 0) / c.b.length;
+      svg += `<line x1="${ax.toFixed(1)}" y1="${ay.toFixed(1)}"
+                     x2="${bx.toFixed(1)}" y2="${by.toFixed(1)}"
+                     stroke="var(--warn)" stroke-width="1.5" stroke-dasharray="4 3" opacity=".75"/>`;
+    }
+
+    for (const p of m) {
+      const {x, y} = pos[p];
+      const c = colorOf(p);
+      svg += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${NR}"
+                      fill="${c.f}" stroke="${c.t}" stroke-opacity=".35" stroke-width=".5"/>
+              <text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle"
+                    dominant-baseline="central" font-size="${font}" fill="${c.t}">${p}</text>`;
+      if (isVip(p)) {
+        svg += `<polygon points="${starPoints(x + NR - 2, y - NR + 2, 7, 3)}"
+                          fill="#EF9F27" stroke="#854F0B" stroke-width=".5"/>`;
+      }
+    }
+
+    const conflictHtml = tableConflicts.length
+      ? `<ul class="conflicts">${tableConflicts.map(c =>
+          `<li class="conflict-active">${conflictLabel(c)}</li>`).join('')}</ul>`
+      : '';
+
+    return `<div class="panel" data-table="${t}">
+      <div class="head">
+        <span class="title">Table ${t}${vipTable ? '<span class="vip-tag">VIP</span>' : ''}</span>
+        <span class="seats">${m.length} / ${stats.capacity ?? params.CAP} seats</span>
+      </div>
+      ${scoreLine(sc, scoreCeilings)}
+      <div class="food">spice ${sp} · sweet ${sw} · portion ${po}</div>
+      ${conflictHtml}
+      <svg viewBox="0 0 ${W} ${H}" role="img"><title>Table ${t}</title>${svg}</svg>
+    </div>`;
+  }).join('');
+}
+
+function startSolveTimer() {
+  const t0 = Date.now();
+  statusEl.textContent = 'Running optimizer… 0s';
+  solveTimer = setInterval(() => {
+    const secs = Math.floor((Date.now() - t0) / 1000);
+    statusEl.textContent = `Running optimizer… ${secs}s`;
+  }, 1000);
+}
+
+function stopSolveTimer() {
+  if (solveTimer) {
+    clearInterval(solveTimer);
+    solveTimer = null;
+  }
+}
+
+async function runOptimizer() {
+  const params = readParams();
+  const validationError = validateParams(params);
+  if (validationError) {
+    statusEl.className = 'error';
+    statusEl.textContent = validationError;
+    return;
+  }
+
+  runBtn.disabled = true;
+  statusEl.className = '';
+  startSolveTimer();
+
+  try {
+    const res = await fetch(`${API_BASE}/api/run`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(params),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || res.statusText);
+    if (data.params) setFields(data.params);
+    if (data.seed != null) seedField.value = data.seed;
+    render(data);
+    const solveStatus = data.status === 'OPTIMAL' ? 'OPTIMAL' : 'FEASIBLE';
+    statusEl.textContent =
+      `Done · ${solveStatus} · seed ${data.seed} · ${data.stats?.solveTime ?? '?'}s`;
+  } catch (err) {
+    statusEl.className = 'error';
+    const msg = String(err.message || err);
+    statusEl.textContent = msg.includes('Failed to fetch')
+      ? (PRODUCTION_API.includes('YOUR-VERCEL-PROJECT')
+          ? 'Cannot reach optimizer API — deploy to Vercel and set PARTY_SEATING_API (see DEPLOY.md)'
+          : `Cannot reach optimizer API at ${API_BASE}`)
+      : msg;
+  } finally {
+    stopSolveTimer();
+    runBtn.disabled = false;
+  }
+}
+
+async function discoverApiBase() {
+  const defaultPort = 8765;
+  const localBase = `http://127.0.0.1:${defaultPort}`;
+
+  if (location.hostname.endsWith('github.io')) {
+    API_BASE = PRODUCTION_API;
+    SERVER_URL = `${location.origin}${location.pathname}`;
+    return;
+  }
+
+  const tryBases = location.protocol === 'file:'
+    ? [localBase, PRODUCTION_API]
+    : [localBase, PRODUCTION_API];
+
+  for (const base of tryBases) {
+    if (!base || base.includes('YOUR-VERCEL-PROJECT')) continue;
+    if (await apiReachable(base)) {
+      API_BASE = base;
+      if (base === localBase) {
+        SERVER_URL = `${localBase}/party_seating.html`;
+      } else {
+        SERVER_URL = `${location.origin}${location.pathname}`;
+      }
+      return;
+    }
+  }
+
+  if (!PRODUCTION_API.includes('YOUR-VERCEL-PROJECT')) {
+    API_BASE = PRODUCTION_API;
+  }
+  SERVER_URL = location.protocol === 'file:'
+    ? `${localBase}/party_seating.html`
+    : `${location.origin}${location.pathname}`;
+}
+
+runBtn.addEventListener('click', runOptimizer);
+
+guestLookupEl.addEventListener('input', () => {
+  const val = guestLookupEl.value.trim();
+  if (val === '') {
+    clearPanelHighlights();
+    return;
+  }
+  highlightGuest(val);
+});
+
+gridEl.addEventListener('click', (e) => {
+  const panel = e.target.closest('.panel');
+  if (!panel) {
+    collapsePanels();
+    return;
+  }
+  const wasExpanded = panel.classList.contains('expanded');
+  collapsePanels();
+  if (!wasExpanded) panel.classList.add('expanded');
+});
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#grid') && !e.target.closest('#guest-search')) {
+    collapsePanels();
+  }
+});
+
+(async function init() {
+  await discoverApiBase();
+  setFields(DEFAULTS);
+  try {
+    if (API_BASE && !API_BASE.includes('YOUR-VERCEL-PROJECT')) {
+      const res = await fetch(`${API_BASE}/api/defaults`, { cache: 'no-store' });
+      if (res.ok) setFields(await res.json());
+    }
+  } catch { /* offline */ }
+
+  if (window.SEATING_DATA) {
+    if (window.SEATING_DATA.params) setFields(window.SEATING_DATA.params);
+    if (window.SEATING_DATA.seed != null) seedField.value = window.SEATING_DATA.seed;
+    render(window.SEATING_DATA);
+    statusEl.textContent = 'Loaded last run — adjust settings and click Run optimizer';
+    return;
+  }
+
+  if (API_BASE && !API_BASE.includes('YOUR-VERCEL-PROJECT') && await apiReachable(API_BASE)) {
+    statusEl.textContent = 'Ready — click Run optimizer';
+    return;
+  }
+
+  statusEl.className = 'error';
+  statusEl.textContent = PRODUCTION_API.includes('YOUR-VERCEL-PROJECT')
+    ? 'Set PARTY_SEATING_API after deploying to Vercel (see DEPLOY.md), or run python3 server.py locally'
+    : `Optimizer API unavailable — try again later or run python3 server.py locally`;
+})();
+</script>
+</body>
+</html>
