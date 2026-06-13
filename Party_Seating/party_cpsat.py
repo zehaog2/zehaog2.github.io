@@ -29,11 +29,11 @@ GROUP_PATTERN = [2, 2, 3, 4, 5, 2]
 SPICE_HI = SWEET_HI = 5 * SCALE
 
 DEFAULTS = {
-    "N": 56,
-    "N_TABLES": 10,
+    "N": 30,
+    "N_TABLES": 5,
     "CAP": 6,
-    "W_FOOD": 50,
-    "W_CONF": 100,
+    "W_FOOD": 130,
+    "W_CONF": 200,
     "W_VIP": 200,
 }
 

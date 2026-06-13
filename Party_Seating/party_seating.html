@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Party seating — table subgraphs</title>
+<title>Party seating</title>
 <style>
   :root{
     --bg:#faf9f5; --panel:#ffffff; --border:#e3e1d8;
@@ -20,7 +20,7 @@
   h1{font-size:20px;font-weight:500;margin:0 0 4px}
   h2{font-size:15px;font-weight:500;margin:0 0 10px}
   p.sub{color:var(--muted);font-size:13px;margin:0 0 16px}
-  .wrap{max-width:1100px}
+  .wrap{max-width:min(1600px,96vw);margin:0 auto}
   #controls{background:var(--panel);border:1px solid var(--border);
             border-radius:14px;padding:16px;margin-bottom:16px}
   .fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
@@ -38,19 +38,23 @@
   #guest-search label{display:block;margin-bottom:6px}
   #guest-search input{max-width:220px;padding:8px 10px;border:1px solid var(--border);
                       border-radius:8px;background:var(--panel);color:var(--text);font-size:14px}
-  #stats{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
-  .stat{background:var(--panel);border:1px solid var(--border);border-radius:10px;
-        padding:10px 14px;min-width:100px}
-  .stat b{display:block;font-size:18px;font-weight:500;line-height:1.2}
-  .stat span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
   #conflict-list{background:var(--panel);border:1px solid var(--border);
                  border-radius:14px;padding:14px;margin-bottom:16px}
   #conflict-list ul{margin:0;padding-left:18px;font-size:13px}
   #conflict-list li{margin:2px 0}
   .conflict-active{color:var(--warn)}
   .conflict-idle{color:var(--muted)}
-  #grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  #grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
         gap:20px;align-items:start}
+  @media (min-width:1200px){
+    body{padding:32px 48px}
+    .fields{grid-template-columns:repeat(3,minmax(200px,1fr))}
+    #grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
+  }
+  @media (min-width:1600px){
+    .fields{grid-template-columns:repeat(3,minmax(220px,1fr));gap:16px}
+    #grid{grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+  }
   .panel{background:var(--panel);border:1px solid var(--border);
          border-radius:14px;padding:14px;position:relative;z-index:1;cursor:pointer;
          transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
@@ -80,13 +84,12 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Party seating — table subgraphs</h1>
-  <p class="sub">Adjust settings and run the optimizer · hover or tap a table to zoom.</p>
+  <h1>Party seating</h1>
 
   <div id="controls">
     <h2>Settings</h2>
     <div class="fields">
-      <label>Number of guests
+      <label>Number of guests (max 300)
         <input id="pN" type="number" min="1" max="300" step="1" title="Total people to seat (max 300)"></label>
       <label>Number of tables
         <input id="pNTables" type="number" min="1" step="1" title="How many tables are available"></label>
@@ -108,7 +111,6 @@
     </div>
   </div>
 
-  <div id="stats"></div>
   <div id="conflict-list"></div>
   <div id="guest-search" hidden>
     <label for="guestLookup">Find guest by ID</label>
@@ -131,7 +133,7 @@ const MAX_GUESTS = 300;
 const PRODUCTION_API = (
   (window.PARTY_SEATING_API || 'https://YOUR-VERCEL-PROJECT.vercel.app')
 ).replace(/\/$/, '');
-const DEFAULTS = {N:56, N_TABLES:10, CAP:6, W_FOOD:50, W_CONF:100};
+const DEFAULTS = {N:30, N_TABLES:5, CAP:6, W_FOOD:130, W_CONF:200};
 const fields = {
   N: document.getElementById('pN'),
   N_TABLES: document.getElementById('pNTables'),
@@ -437,20 +439,6 @@ function render(D) {
     }
     return pts.join(' ');
   }
-
-  const statItems = [
-    ['Guests', stats.nPeople ?? params.N],
-    ['Solo guests', stats.nIndividuals ?? '—'],
-    ['Tables used', Object.keys(tables).length],
-    ['Table size (min / max seats)', `${stats.minTable ?? '?'}/${stats.capacity ?? params.CAP ?? '?'}`],
-    ['Quality score (higher is better)', qualityObjective],
-    ['VIPs', stats.nVips ?? 0],
-    ['Conflicts', stats.nConflicts ?? conflicts.length],
-    ['Conflicts at same table', stats.nCoSeated ?? conflicts.filter(c => c.sameTable).length],
-  ];
-  document.getElementById('stats').innerHTML = statItems.map(
-    ([label, val]) => `<div class="stat"><b>${val}</b><span>${label}</span></div>`
-  ).join('');
 
   const conflictList = document.getElementById('conflict-list');
   if (sortedConflicts.length) {
