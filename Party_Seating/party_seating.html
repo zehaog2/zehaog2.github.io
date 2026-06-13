@@ -20,6 +20,7 @@
   h1{font-size:20px;font-weight:500;margin:0 0 4px}
   h2{font-size:15px;font-weight:500;margin:0 0 10px}
   p.sub{color:var(--muted);font-size:13px;margin:0 0 16px}
+  .intro{max-width:52em;line-height:1.6}
   .wrap{max-width:min(1600px,96vw);margin:0 auto}
   #controls{background:var(--panel);border:1px solid var(--border);
             border-radius:14px;padding:16px;margin-bottom:16px}
@@ -85,6 +86,7 @@
 <body>
 <div class="wrap">
   <h1>Party seating</h1>
+  <p class="sub intro">This tool assigns every guest to a table. Hard rules always apply: each person gets one seat, tables cannot overflow, and families stay together. The CP-SAT solver then tries many valid seatings and scores each one on food taste match, keeping rivals apart, and grouping VIPs—the priority settings below tell it which goals matter most. It returns the strongest overall plan it can find, not a random shuffle.</p>
 
   <div id="controls">
     <h2>Settings</h2>
@@ -208,7 +210,14 @@ function conflictLabel(c) {
 }
 
 function qualityScore(penalty, ceiling) {
-  return Math.round(ceiling - penalty);
+  const safeCeiling = Math.max(ceiling, 1);
+  const raw = 1 + 9 * (safeCeiling - penalty) / safeCeiling;
+  const clamped = Math.min(10, Math.max(1, raw));
+  return Math.round(clamped * 10) / 10;
+}
+
+function formatQualityScore(score) {
+  return Number(score).toFixed(1);
 }
 
 function estimateObjectiveCeiling(params, stats, conflicts, tables, objective, tableScores) {
@@ -246,7 +255,7 @@ function scoreLine(sc, ceilings) {
   const total = qualityScore(sc.total, ceilings.total);
   const food = qualityScore(sc.food, ceilings.food);
   const conflict = qualityScore(sc.conflict, ceilings.conflict);
-  return `<div class="score">Quality <b>${total}</b> (food ${food} · conflict ${conflict})</div>`;
+  return `<div class="score">Quality <b>${formatQualityScore(total)}</b> (food ${formatQualityScore(food)} · conflict ${formatQualityScore(conflict)})</div>`;
 }
 
 function arcSeatDist(i, j, n) {
@@ -386,7 +395,7 @@ function render(D) {
   const scoreCeilings = tableScoreCeilings(tableScores, params);
 
   document.getElementById('meta').innerHTML =
-    `Seed ${seed} · ${statusBadge(status)} · quality score ${qualityObjective} · ${stats.solveTime ?? '?'}s`;
+    `Seed ${seed} · ${statusBadge(status)} · quality score ${formatQualityScore(qualityObjective)} · ${stats.solveTime ?? '?'}s`;
 
   const gidOf = Object.create(null);
   groups.forEach((g, i) => g.forEach(p => { gidOf[p] = i; }));
