@@ -30,7 +30,7 @@ SPICE_HI = SWEET_HI = 5 * SCALE
 
 DEFAULTS = {
     "N": 30,
-    "N_TABLES": 5,
+    "N_TABLES": 6,
     "CAP": 6,
     "W_FOOD": 130,
     "W_CONF": 200,
@@ -86,6 +86,12 @@ def solve(params=None, *, seed=None, write_js=True, verbose=True):
         raise ValueError("N and N_TABLES must be ≥ 1; CAP must be ≥ 2")
     if n > MAX_N:
         raise ValueError(f"N must be ≤ {MAX_N}")
+    total_capacity = n_tables * cap
+    if total_capacity <= n:
+        raise ValueError(
+            f"Total seat capacity ({n_tables} × {cap} = {total_capacity}) "
+            f"must exceed the number of guests ({n})"
+        )
 
     seed = secrets.randbits(32) if seed is None else int(seed)
     random.seed(seed)

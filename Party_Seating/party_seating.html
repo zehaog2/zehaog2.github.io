@@ -135,7 +135,7 @@ const MAX_GUESTS = 300;
 const PRODUCTION_API = (
   (window.PARTY_SEATING_API || 'https://YOUR-VERCEL-PROJECT.vercel.app')
 ).replace(/\/$/, '');
-const DEFAULTS = {N:30, N_TABLES:5, CAP:6, W_FOOD:130, W_CONF:200};
+const DEFAULTS = {N:30, N_TABLES:6, CAP:6, W_FOOD:130, W_CONF:200};
 const fields = {
   N: document.getElementById('pN'),
   N_TABLES: document.getElementById('pNTables'),
@@ -187,7 +187,22 @@ function validateParams(params) {
   if (!Number.isFinite(params.CAP) || params.CAP < 2) {
     return 'Max seats per table must be at least 2';
   }
+  const totalCapacity = params.N_TABLES * params.CAP;
+  if (totalCapacity <= params.N) {
+    return `Total seat capacity (${params.N_TABLES} × ${params.CAP} = ${totalCapacity}) must exceed the number of guests (${params.N})`;
+  }
   return null;
+}
+
+function showValidationNotice() {
+  const err = validateParams(readParams());
+  if (err) {
+    statusEl.className = 'error';
+    statusEl.textContent = err;
+  } else if (statusEl.classList.contains('error')) {
+    statusEl.className = '';
+    statusEl.textContent = 'Ready — click Run optimizer';
+  }
 }
 
 async function apiReachable(base) {
@@ -620,6 +635,10 @@ async function discoverApiBase() {
 }
 
 runBtn.addEventListener('click', runOptimizer);
+
+[fields.N, fields.N_TABLES, fields.CAP].forEach(el => {
+  el.addEventListener('input', showValidationNotice);
+});
 
 guestLookupEl.addEventListener('input', () => {
   const val = guestLookupEl.value.trim();
